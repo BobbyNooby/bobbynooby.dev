@@ -113,8 +113,6 @@
 </body>
 
 <style>
-	@import url('https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/cascadia-code.min.css');
-
 	.terminal-container {
 		display: flex;
 		flex-direction: column;

@@ -1,7 +1,13 @@
-export const load = async () => {
-	const songData = await fetch('http://localhost:5173/api/spotify_now_playing', {
-		method: 'GET'
-	}).then((res) => res.json());
+import { getSongData } from '$lib/spotifyUtils';
+import { supabaseClient } from '$lib/supabase';
+import { getSpotifyLastPlayedTime } from '$lib/supabaseUtils';
 
-	return { songData };
+export const load = async () => {
+	const songData = await getSongData();
+	const spotifyLastPlayedTime = await getSpotifyLastPlayedTime();
+
+	return {
+		songData,
+		spotifyLastPlayedTime
+	};
 };

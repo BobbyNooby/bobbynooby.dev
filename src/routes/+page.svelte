@@ -2,6 +2,11 @@
 	import { onMount } from 'svelte';
 	import type { SpotifySongData } from '$lib/spotify';
 	import type { PageData } from './$types';
+	import { cubicOut } from 'svelte/easing';
+
+	import { getSongData } from '$lib/spotifyUtils';
+	import { getSpotifyLastPlayedTime, setSpotifyLastPlayedTime } from '$lib/supabaseUtils';
+	import { secondsToTimeString } from '$lib/utils/calculateTimeSinceLastUpdate';
 
 	export let data: PageData;
 
@@ -13,49 +18,62 @@
 		return validCharacters[Math.floor(Math.random() * validCharacters.length)];
 	}
 
-	function scrambleTextTransition(
-		inputText: string,
-		outputText: string,
-		duration: number,
-		iterations: number
-	) {
-		let tempText = inputText;
-		const intervalId = setInterval(() => {
-			tempText = tempText
-				.split('')
-				.map((c) => randomKeyboardCharacter())
-				.join('');
-		}, duration / iterations);
-		setTimeout(() => {
-			benistextgaming = outputText;
-			clearInterval(intervalId);
-		}, duration);
+	// function scrambleTextTransition(
+	// 	inputText: string,
+	// 	outputText: string,
+	// 	duration: number,
+	// 	iterations: number
+	// ) {
+	// 	let tempText = inputText;
+	// 	const intervalId = setInterval(() => {
+	// 		tempText = tempText
+	// 			.split('')
+	// 			.map((c) => randomKeyboardCharacter())
+	// 			.join('');
+	// 	}, duration / iterations);
+	// 	setTimeout(() => {
+	// 		benistextgaming = outputText;
+	// 		clearInterval(intervalId);
+	// 	}, duration);
+	// }
+
+	let timeSinceLastSong: number = 0;
+
+	async function updateComponent() {
+		const newSongData: SpotifySongData = await getSongData();
+
+		const dateClass = new Date();
+		const currentTime = dateClass.getTime();
+		const spotifyLastTime = await getSpotifyLastPlayedTime();
+
+		if (songData.isPlaying && !newSongData.isPlaying) {
+			timeSinceLastSong = 0;
+			setSpotifyLastPlayedTime(currentTime);
+		} else {
+			timeSinceLastSong = Math.round(Math.abs(currentTime - spotifyLastTime) / 1000);
+		}
+		songData = newSongData;
 	}
 
-	async function getSongData() {
-		const data = await fetch('http://localhost:5173/api/spotify_now_playing', {
-			method: 'GET'
-		}).then((res) => res.json());
-		songData = data;
-	}
-	setInterval(() => {
-		getSongData();
-	}, 3000);
+	setInterval(async () => {
+		updateComponent();
+	}, 1000);
+
 	onMount(() => {
-		getSongData();
-		scrambleTextTransition(benistextgaming, 'SvelteBonerGamingasdasd', 1000, 100);
+		updateComponent();
 	});
-
-	let benistextgaming = 'SvelteBonerGaming';
 </script>
 
-<button
-	on:click={() => {
-		benistextgaming = 'SvelteBonerGamingasdasd';
-	}}>ASDSAD</button
->
-<h1>Welcome to SvelteKit {benistextgaming}</h1>
+<h1>Welcome to SvelteKit</h1>
 
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-<p>{`Now Playing: ${songData.title} by ${songData.artist}`}</p>
+{#if songData.isPlaying}
+	<p>{`Now Playing: ${songData.title} by ${songData.artist}`}</p>
+{:else}
+	<p>
+		{`Last Song Played: ${songData.title} by ${songData.artist}, ${secondsToTimeString(
+			timeSinceLastSong
+		)} ago`}
+	</p>
+{/if}
 <img src={songData.albumImageUrl} alt="Album Art" />

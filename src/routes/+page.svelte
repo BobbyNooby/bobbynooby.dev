@@ -2,11 +2,9 @@
 	import { onMount } from 'svelte';
 	import type { SpotifySongData } from '$lib/spotify';
 	import type { PageData } from './$types';
-	import { cubicOut } from 'svelte/easing';
-
 	import { getSongData } from '$lib/spotifyUtils';
 	import { getSpotifyLastPlayedTime, setSpotifyLastPlayedTime } from '$lib/supabaseUtils';
-	import { secondsToTimeString } from '$lib/utils/calculateTimeSinceLastUpdate';
+	import { secondsToTimeString } from '$lib/utils/secondsToTimeString';
 
 	export let data: PageData;
 

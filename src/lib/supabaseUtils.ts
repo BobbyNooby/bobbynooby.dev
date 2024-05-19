@@ -1,27 +1,38 @@
-export async function getSpotifyLastPlayedTime(): Promise<number> {
-	const spotifyLastPlayedTime: number = await fetch(
+export async function getSpotifyLastPlayedData(): Promise<SpotifyLastPlayedData> {
+	const spotifyLastPlayedData: SpotifyLastPlayedData[] = await fetch(
 		'http://localhost:5173/api/spotify_last_played_time',
 		{
 			method: 'GET'
 		}
 	).then((res) => res.json());
 
-	return spotifyLastPlayedTime;
+	return spotifyLastPlayedData[0];
 }
 
-export async function setSpotifyLastPlayedTime(time: number): Promise<void> {
+export type SpotifyLastPlayedData = {
+	time: number;
+	title: string;
+	artist: string;
+	album: string;
+	albumImageUrl: string;
+	songUrl: string;
+};
+
+export async function setSpotifyLastPlayedData(
+	lastPlayedData: SpotifyLastPlayedData
+): Promise<void> {
 	const response = await fetch('http://localhost:5173/api/spotify_last_played_time', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ time: time })
+		body: JSON.stringify(lastPlayedData)
 	});
 
 	const result = await response.json();
 	if (result.error) {
-		console.log('Error setting spotify last played time: ', result.error);
+		// console.log('Error setting spotify last played data: ', result.error);
 	} else {
-		console.log('Success setting spotify last played time: ', time);
+		// console.log('Success setting spotify last played data: ', lastPlayedData);
 	}
 }

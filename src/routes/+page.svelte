@@ -3,12 +3,18 @@
 	import type { SpotifySongData } from '$lib/spotify';
 	import type { PageData } from './$types';
 	import { getSongData } from '$lib/spotifyUtils';
-	import { getSpotifyLastPlayedTime, setSpotifyLastPlayedTime } from '$lib/supabaseUtils';
+	import {
+		getSpotifyLastPlayedData,
+		setSpotifyLastPlayedData,
+		type SpotifyLastPlayedData
+	} from '$lib/supabaseUtils';
 	import { secondsToTimeString } from '$lib/utils/secondsToTimeString';
+	import SpotifyWidget from '$lib/components/SpotifyWidget.svelte';
 
 	export let data: PageData;
 
 	let songData: SpotifySongData = data.songData;
+	let lastSongData: SpotifyLastPlayedData = data.spotifyLastPlayedData;
 
 	function randomKeyboardCharacter(): string {
 		const validCharacters = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=,.<>/?\|{}[];`;
@@ -34,44 +40,7 @@
 	// 		clearInterval(intervalId);
 	// 	}, duration);
 	// }
-
-	let timeSinceLastSong: number = 0;
-
-	async function updateComponent() {
-		const newSongData: SpotifySongData = await getSongData();
-
-		const dateClass = new Date();
-		const currentTime = dateClass.getTime();
-		const spotifyLastTime = await getSpotifyLastPlayedTime();
-
-		if (songData.isPlaying && !newSongData.isPlaying) {
-			timeSinceLastSong = 0;
-			setSpotifyLastPlayedTime(currentTime);
-		} else {
-			timeSinceLastSong = Math.round(Math.abs(currentTime - spotifyLastTime) / 1000);
-		}
-		songData = newSongData;
-	}
-
-	setInterval(async () => {
-		updateComponent();
-	}, 1000);
-
-	onMount(() => {
-		updateComponent();
-	});
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-{#if songData.isPlaying}
-	<p>{`Now Playing: ${songData.title} by ${songData.artist}`}</p>
-{:else}
-	<p>
-		{`Last Song Played: ${songData.title} by ${songData.artist}, ${secondsToTimeString(
-			timeSinceLastSong
-		)} ago`}
-	</p>
-{/if}
-<img src={songData.albumImageUrl} alt="Album Art" />
+<p class="text-white text-7xl font-quicksand-300">bobbynooby.dev</p>
+<SpotifyWidget initialSongData={songData} initialLastSongData={lastSongData}></SpotifyWidget>

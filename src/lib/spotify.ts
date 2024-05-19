@@ -4,7 +4,7 @@ import {
 	SPOTIFY_CLIENT_REFRESH_TOKEN
 } from '$env/static/private';
 
-export type SpotifySongData = Partial<{
+export type SpotifySongData = {
 	song: any;
 	isPlaying: boolean;
 	title: string;
@@ -12,7 +12,7 @@ export type SpotifySongData = Partial<{
 	album: string;
 	albumImageUrl: string;
 	songUrl: string;
-}>;
+};
 const redirect_uri = 'http://localhost:5173/';
 const token_endpoint = 'https://accounts.spotify.com/api/token';
 

@@ -7,10 +7,9 @@
 </section>
 
 <style>
-	@import url('https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/cascadia-code.min.css');
-
 	.app {
 		display: flex;
+		background-color: black;
 		width: 100%;
 		flex-direction: column;
 		min-height: 100vh;

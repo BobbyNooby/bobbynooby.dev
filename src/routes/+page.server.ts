@@ -1,13 +1,13 @@
 import { getSongData } from '$lib/spotifyUtils';
 import { supabaseClient } from '$lib/supabase';
-import { getSpotifyLastPlayedTime } from '$lib/supabaseUtils';
+import { getSpotifyLastPlayedData } from '$lib/supabaseUtils';
 
 export const load = async () => {
 	const songData = await getSongData();
-	const spotifyLastPlayedTime = await getSpotifyLastPlayedTime();
+	const spotifyLastPlayedData = await getSpotifyLastPlayedData();
 
 	return {
 		songData,
-		spotifyLastPlayedTime
+		spotifyLastPlayedData
 	};
 };

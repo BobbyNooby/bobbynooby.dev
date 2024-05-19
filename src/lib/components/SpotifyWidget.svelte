@@ -54,7 +54,9 @@
 	});
 </script>
 
-<div class="flex flex-col h-auto w-96 items-center text-white font-cascadia-code">
+<div
+	class="flex flex-col h-auto w-36 bg-black items-center text-white font-cascadia-code border border-white rounded-md"
+>
 	<p>
 		{songData.isPlaying ? 'Now Playing' : `Last Played ${secondsToTimeString(timeSinceLastSong)}`}
 	</p>
@@ -63,6 +65,6 @@
 		src={songData.isPlaying ? songData.albumImageUrl : lastSongData.albumImageUrl}
 		alt="Album Art"
 	/>
-	<p>{songData.title}</p>
-	<p>{songData.artist}</p>
+	<p class="text-xs text-nowrap">{songData.title}</p>
+	<p class="text-xs text-nowrap">{songData.artist}</p>
 </div>

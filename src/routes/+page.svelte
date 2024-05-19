@@ -10,6 +10,7 @@
 	} from '$lib/supabaseUtils';
 	import { secondsToTimeString } from '$lib/utils/secondsToTimeString';
 	import SpotifyWidget from '$lib/components/SpotifyWidget.svelte';
+	import DiscordStatus from '$lib/components/DiscordStatus.svelte';
 
 	export let data: PageData;
 
@@ -44,3 +45,4 @@
 
 <p class="text-white text-7xl font-quicksand-300">bobbynooby.dev</p>
 <SpotifyWidget initialSongData={songData} initialLastSongData={lastSongData}></SpotifyWidget>
+<DiscordStatus initialDiscordStatus={data.discordStatus}></DiscordStatus>

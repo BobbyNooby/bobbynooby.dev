@@ -2,6 +2,7 @@ import { corsHeaders } from '$lib/corsHeaders';
 import { getSpotifyToken } from '$lib/spotify';
 import { json } from '@sveltejs/kit';
 import type { SpotifySongData } from '$lib/spotify';
+import { getSpotifyLastPlayedData } from '$lib/supabaseUtils';
 
 export async function GET(): Promise<Response> {
 	const access_token = await getSpotifyToken();
@@ -13,7 +14,9 @@ export async function GET(): Promise<Response> {
 	});
 
 	if (res.status === 204 || res.status > 400) {
-		return json({ isPlaying: false }, { status: 429, headers: corsHeaders });
+		const lastPlayedSong = await getSpotifyLastPlayedData();
+
+		return json({ isPlaying: false, ...lastPlayedSong }, { status: 429, headers: corsHeaders });
 	}
 
 	const song = await res.json();

@@ -13,7 +13,7 @@ export type SpotifySongData = {
 	albumImageUrl: string;
 	songUrl: string;
 };
-const redirect_uri = 'http://localhost:5173/';
+const redirect_uri = 'https://bobbynooby-dev.vercel.app/';
 const token_endpoint = 'https://accounts.spotify.com/api/token';
 
 export async function getSpotifyToken(): Promise<string> {

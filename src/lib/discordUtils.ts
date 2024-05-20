@@ -1,5 +1,5 @@
 export async function getDiscordStatus(): Promise<discordStatuses> {
-	const discordStatus = await fetch('http://localhost:5173/api/discord_status', {
+	const discordStatus = await fetch('https://bobbynooby-dev.vercel.app/api/discord_status', {
 		method: 'GET'
 	}).then((res) => res.json());
 	return discordStatus;

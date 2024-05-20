@@ -87,11 +87,13 @@
 	}
 	.content-box {
 		font-family: 'Cascadia Code', sans-serif;
-		margin: 5px;
+		margin-left: 5px;
+		margin-right: 5px;
+		margin-bottom: 20px;
 		word-wrap: break-word;
 		overflow-wrap: break-word;
 		word-break: normal;
-		border-width: 1px;
+		border-width: 2px;
 		border-radius: 0.2rem;
 		border-color: white;
 		padding: 10px;

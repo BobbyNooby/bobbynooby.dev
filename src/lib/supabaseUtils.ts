@@ -1,6 +1,7 @@
 export async function getSpotifyLastPlayedData(): Promise<SpotifyLastPlayedData> {
 	const spotifyLastPlayedData: SpotifyLastPlayedData[] = await fetch(
 		'http://localhost:5173/api/spotify_last_played_time',
+		// console.log(requestData, 'RequestData');
 		{
 			method: 'GET'
 		}
@@ -21,7 +22,7 @@ export type SpotifyLastPlayedData = {
 export async function setSpotifyLastPlayedData(
 	lastPlayedData: SpotifyLastPlayedData
 ): Promise<void> {
-	const response = await fetch('http://localhost:5173/api/spotify_last_played_time', {
+	const response = await fetch('https://bobbynooby-dev.vercel.app/api/spotify_last_played_time', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

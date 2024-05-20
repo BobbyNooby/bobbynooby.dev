@@ -5,6 +5,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.container-title-text{
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+}
+
 .font-cascadia-code {
     font-family: 'Cascadia Code', sans-serif;
 }

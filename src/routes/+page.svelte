@@ -1,21 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { SpotifySongData } from '$lib/spotify';
 	import type { PageData } from './$types';
-	import { getSongData } from '$lib/spotifyUtils';
-	import {
-		getSpotifyLastPlayedData,
-		setSpotifyLastPlayedData,
-		type SpotifyLastPlayedData
-	} from '$lib/supabaseUtils';
-	import { secondsToTimeString } from '$lib/utils/secondsToTimeString';
-	import SpotifyWidget from '$lib/components/SpotifyWidget.svelte';
-	import DiscordStatus from '$lib/components/DiscordStatus.svelte';
+	import { fade, fly } from 'svelte/transition';
+	import { cubicInOut, cubicOut } from 'svelte/easing';
+	import MyInfo from '$lib/text/mainpage/MyInfo.svelte';
+	import MyLinks from '$lib/text/mainpage/MyLinks.svelte';
+	import MyStatus from '$lib/text/mainpage/MyStatus.svelte';
+	import MySpotify from '$lib/text/mainpage/MySpotify.svelte';
 
 	export let data: PageData;
-
-	let songData: SpotifySongData = data.songData;
-	let lastSongData: SpotifyLastPlayedData = data.spotifyLastPlayedData;
 
 	function randomKeyboardCharacter(): string {
 		const validCharacters = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=,.<>/?\|{}[];`;
@@ -41,8 +34,68 @@
 	// 		clearInterval(intervalId);
 	// 	}, duration);
 	// }
+	let ready = false;
+	onMount(() => {
+		ready = true;
+	});
 </script>
 
-<p class="text-white text-7xl font-quicksand-300">bobbynooby.dev</p>
-<SpotifyWidget initialSongData={songData} initialLastSongData={lastSongData}></SpotifyWidget>
-<DiscordStatus initialDiscordStatus={data.discordStatus}></DiscordStatus>
+{#if ready}
+	<div class="main-screen items-center flex flex-col">
+		<p
+			in:fade={{ duration: 2000, easing: cubicInOut }}
+			out:fade={{ duration: 2000, easing: cubicInOut }}
+			class="text-white text-7xl font-quicksand-300 mt-10 mb-5"
+		>
+			<span class="font-cascadia-code">{'>'}</span>bobbynooby.dev
+		</p>
+		<div in:fly={{ y: 100, duration: 1000, easing: cubicOut, delay: 1000 }}>
+			<div class="main-container">
+				<div class="w-2/3">
+					<div class="content-box">
+						<p class="text-wrap">
+							<MyInfo />
+						</p>
+					</div>
+				</div>
+				<div class="w-1/3">
+					<div class="content-box"><MyLinks /></div>
+					<div class="content-box">
+						<MyStatus initialDiscordStatus={data.discordStatus || 'offline'} />
+					</div>
+					<div class="content-box">
+						<MySpotify
+							initialSongData={data.songData}
+							initialLastSongData={data.spotifyLastPlayedData}
+						/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{/if}
+
+<style>
+	.main-container {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+	}
+
+	.main-screen {
+		width: 70rem;
+	}
+	.content-box {
+		font-family: 'Cascadia Code', sans-serif;
+		margin: 5px;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+		word-break: normal;
+		border-width: 1px;
+		border-radius: 0.2rem;
+		border-color: white;
+		padding: 10px;
+		color: white;
+		max-width: 100vw;
+	}
+</style>

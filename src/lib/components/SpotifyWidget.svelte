@@ -52,19 +52,26 @@
 	onMount(async () => {
 		updateComponent();
 	});
+
+	function gotoURL(url: string) {
+		window.open(url, '_blank');
+	}
 </script>
 
-<div
-	class="flex flex-col h-auto w-36 bg-black items-center text-white font-cascadia-code border border-white rounded-md"
+<button
+	on:click={() => gotoURL(songData.songUrl)}
+	class=" flex flex-col h-auto w-full bg-black items-center text-white font-cascadia-code rounded-md space-y-2"
 >
-	<p>
-		{songData.isPlaying ? 'Now Playing' : `Last Played ${secondsToTimeString(timeSinceLastSong)}`}
+	<p class=" {songData.isPlaying ? 'text-green-400' : 'text-gray-400'}">
+		{songData.isPlaying
+			? 'Now Playing'
+			: `Last Played ${secondsToTimeString(timeSinceLastSong)} ago`}
 	</p>
 	<img
-		class=" w-24 h-24"
+		class=" w-24 h-24 border border-white"
 		src={songData.isPlaying ? songData.albumImageUrl : lastSongData.albumImageUrl}
 		alt="Album Art"
 	/>
 	<p class="text-xs text-nowrap">{songData.title}</p>
 	<p class="text-xs text-nowrap">{songData.artist}</p>
-</div>
+</button>

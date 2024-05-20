@@ -78,8 +78,8 @@
 	}
 </script>
 
-<body class="h-full bg-black m-5 border-white border rounded-md p-5 pb-10">
-	<div id="terminal" class="terminal-container">
+<div class="h-full w-full border-white border rounded-md p-5">
+	<div id="terminal" class="terminal-container pb-7">
 		<div class="terminal-history">
 			{#each terminalHistory as pastLine, index}
 				<p
@@ -95,10 +95,10 @@
 			{/each}
 		</div>
 	</div>
-	<div class="flex flex-row">
+	<div class="flex flex-row absolute bottom-5 w-full">
 		<p class="text-white">{'> '}</p>
 		<input
-			class="terminal-input border rounded-md border-white ml-2 mr-5"
+			class="terminal-input border rounded-md border-white w-full"
 			placeholder="Type a command"
 			type="text"
 			style="font-family: 'Cascadia Code', sans-serif;"
@@ -110,7 +110,7 @@
 			}}
 		/>
 	</div>
-</body>
+</div>
 
 <style>
 	.terminal-container {
@@ -120,7 +120,6 @@
 		overflow-y: auto;
 		overflow-x: hidden;
 		scrollbar-width: 0;
-		background-color: black;
 	}
 	.terminal-history {
 		flex-grow: 1;
@@ -131,7 +130,6 @@
 	.terminal-input {
 		color: white;
 		background-color: rgba(0, 0, 0, 0);
-		width: 100%;
 	}
 	.terminal-line {
 		font-family: 'Cascadia Code', sans-serif;

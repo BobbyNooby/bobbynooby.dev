@@ -2,7 +2,7 @@
 	import '../app.css';
 </script>
 
-<section class=" overflow-auto app">
+<section class="overflow-auto app items-center">
 	<main><slot /></main>
 </section>
 

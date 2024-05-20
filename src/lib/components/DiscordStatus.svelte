@@ -1,13 +1,22 @@
 <script lang="ts">
-	import { getDiscordStatus } from '$lib/discordUtils';
+	import { getDiscordStatus, type discordStatuses } from '$lib/discordUtils';
 
-	export let initialDiscordStatus: string;
+	export let initialDiscordStatus: discordStatuses;
 
-	let discordStatus: string = initialDiscordStatus;
+	const colors: Record<discordStatuses, string> = {
+		online: '#23A55A',
+		idle: '#F0B232',
+		dnd: '#F23F43',
+		offline: '#80848E'
+	};
+
+	let discordStatus: discordStatuses = initialDiscordStatus || 'offline';
 
 	setInterval(async () => {
 		discordStatus = await getDiscordStatus();
 	}, 5000);
 </script>
 
-<p class="text-white font-quicksand-300">{discordStatus}</p>
+<p class="text-white font-cascadia-code" style="color: {colors[discordStatus]};">
+	{`${discordStatus}.sh`}
+</p>

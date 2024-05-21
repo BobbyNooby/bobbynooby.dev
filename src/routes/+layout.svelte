@@ -1,13 +1,15 @@
 <script lang="ts">
+	import AfkChecker from '$lib/components/AFKChecker.svelte';
 	import '../app.css';
 </script>
 
 <section class="overflow-auto app items-center">
-	<main><slot /></main>
+	<main><slot /><AfkChecker /></main>
 </section>
 
 <style>
 	.app {
+		z-index: 10;
 		display: flex;
 		background-color: black;
 		width: 100%;

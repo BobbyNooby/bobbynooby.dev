@@ -1,12 +1,14 @@
 import { getDiscordStatus } from '$lib/discordUtils';
-import { getSongData } from '$lib/spotifyUtils';
-import { supabaseClient } from '$lib/supabase';
-import { getSpotifyLastPlayedData } from '$lib/supabaseUtils';
+import { getCurrentSongData, getLastPlayedSongData } from '$lib/spotifyUtils';
 
 export const load = async () => {
-	const songData = await getSongData();
-	const spotifyLastPlayedData = await getSpotifyLastPlayedData();
+	let songData = await getCurrentSongData();
+	const spotifyLastPlayedData = await getLastPlayedSongData();
 	const discordStatus = await getDiscordStatus();
+
+	if (Object.values(songData).includes(undefined)) {
+		songData = { isPlaying: false, ...spotifyLastPlayedData };
+	}
 
 	return {
 		songData,

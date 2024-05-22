@@ -1,13 +1,10 @@
 <script lang="ts">
 	import type { SpotifySongData } from '$lib/spotify';
-	import { getSongData } from '$lib/spotifyUtils';
-	import {
-		getSpotifyLastPlayedData,
-		setSpotifyLastPlayedData,
-		type SpotifyLastPlayedData
-	} from '$lib/supabaseUtils';
 	import { secondsToTimeString } from '$lib/utils/secondsToTimeString';
 	import { onMount } from 'svelte';
+	import ScrollingText from './ScrollingText.svelte';
+	import { getCurrentSongData, getLastPlayedSongData } from '$lib/spotifyUtils';
+	import { setSpotifyLastPlayedData, type SpotifyLastPlayedData } from '$lib/supabaseUtils';
 
 	export let initialSongData: SpotifySongData, initialLastSongData: SpotifyLastPlayedData;
 
@@ -19,10 +16,10 @@
 	);
 
 	async function updateComponent() {
-		const newSongData: SpotifySongData = await getSongData();
+		const newSongData: SpotifySongData = await getCurrentSongData();
 		const currentTime = new Date().getTime();
-		const spotifyLastPlayedData: SpotifyLastPlayedData = await getSpotifyLastPlayedData();
-
+		const spotifyLastPlayedData: SpotifyLastPlayedData = await getLastPlayedSongData();
+		console.log();
 		if (songData.isPlaying && !newSongData.isPlaying) {
 			timeSinceLastSong = 0;
 
@@ -60,7 +57,7 @@
 
 <button
 	on:click={() => gotoURL(songData.songUrl)}
-	class=" flex flex-col h-auto w-full bg-black items-center text-white font-cascadia-code rounded-md space-y-2"
+	class=" flex flex-col h-auto w-full bg-black items-center text-white font-cascadia-code rounded-md space-y-2 overflow-hidden"
 >
 	<p class=" {songData.isPlaying ? 'text-green-400' : 'text-gray-400'}">
 		{songData.isPlaying
@@ -72,6 +69,6 @@
 		src={songData.isPlaying ? songData.albumImageUrl : lastSongData.albumImageUrl}
 		alt="Album Art"
 	/>
-	<p class="text-xs text-nowrap">{songData.title}</p>
-	<p class="text-xs text-nowrap">{songData.artist}</p>
+	<ScrollingText text={songData.title} tailwindcss="text-xs text-nowrap" />
+	<ScrollingText text={songData.artist} tailwindcss="text-xs text-nowrap" />
 </button>

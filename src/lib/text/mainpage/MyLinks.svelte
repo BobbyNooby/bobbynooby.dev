@@ -19,7 +19,12 @@
 			href: 'https://open.spotify.com/artist/3ixFauWAVAnvtA1u7VJ5Ju?si=BxypzrtlT3aKuNPeqBFu2g',
 			color: '#1FDF64'
 		},
-		{ name: 'SoundCloud', href: 'https://soundcloud.com/bobbynooby', color: '#FF5500' }
+		{ name: 'SoundCloud', href: 'https://soundcloud.com/bobbynooby', color: '#FF5500' },
+		{
+			name: 'osu!',
+			href: 'https://osu.ppy.sh/users/11574990',
+			color: '#E6649E'
+		}
 	];
 
 	let ready = false;

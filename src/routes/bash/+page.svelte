@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Terminal from '$lib/components/Terminal.svelte';
+	import { SignIn } from '@auth/sveltekit/components';
+	import { page } from '$app/stores';
 </script>
 
-<body class="w-full h-full bg-black">
-	<div class=" w-full h-96">
-		<Terminal />
-	</div>
+<body class="w-screen h-screen bg-black p-10 overflow-hidden">
+	<Terminal />
 </body>

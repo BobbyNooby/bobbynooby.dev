@@ -5,7 +5,6 @@ import {
 } from '$env/static/private';
 
 export type SpotifySongData = {
-	song: any;
 	isPlaying: boolean;
 	title: string;
 	artist: string;
@@ -13,7 +12,8 @@ export type SpotifySongData = {
 	albumImageUrl: string;
 	songUrl: string;
 };
-const redirect_uri = 'https://bobbynooby-dev.vercel.app/';
+
+const redirect_uri = 'https://bobbynooby.dev/';
 const token_endpoint = 'https://accounts.spotify.com/api/token';
 
 export async function getSpotifyToken(): Promise<string> {

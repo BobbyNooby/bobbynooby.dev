@@ -7,6 +7,7 @@
 	import MyLinks from '$lib/text/mainpage/MyLinks.svelte';
 	import MyStatus from '$lib/text/mainpage/MyStatus.svelte';
 	import MySpotify from '$lib/text/mainpage/MySpotify.svelte';
+	import MyProjects from '$lib/text/mainpage/MyProjects.svelte';
 
 	export let data: PageData;
 
@@ -53,10 +54,9 @@
 			<div class="main-container">
 				<div class="w-2/3">
 					<div class="content-box">
-						<p class="text-wrap">
-							<MyInfo />
-						</p>
+						<MyInfo />
 					</div>
+					<div class="content-box"><MyProjects /></div>
 				</div>
 				<div class="w-1/3">
 					<div class="content-box"><MyLinks /></div>

@@ -1,10 +1,14 @@
 <script lang="ts">
+	import { signIn, signOut } from '@auth/sveltekit/client';
+	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { cubicInOut } from 'svelte/easing';
 	import { writable } from 'svelte/store';
-	import { fly } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 
-	let terminalHistory: { text: string; animated: boolean }[] = [];
+	let terminalHistory: { text: string; animated: boolean }[] = [
+		{ text: $page.data.session?.user?.name, animated: false }
+	];
 
 	let currentCommand: string = '';
 
@@ -27,6 +31,16 @@
 		},
 		cd: {
 			response: 'Nuh uh you aint navigating anywhere bruh',
+			function: () => {}
+		},
+		auth: {
+			response: 'Logging in...',
+			function: () => {
+				signIn('discord', { redirect: false });
+			}
+		},
+		status: {
+			response: `${$page.data.session?.expires}`,
 			function: () => {}
 		}
 	};
@@ -76,47 +90,57 @@
 	function updateTheKey() {
 		updateKey.set(!$updateKey);
 	}
+
+	let ready = false;
+	onMount(() => {
+		ready = true;
+	});
 </script>
 
-<div class="h-full w-full border-white border rounded-md p-5">
-	<div id="terminal" class="terminal-container pb-7">
-		<div class="terminal-history">
-			{#each terminalHistory as pastLine, index}
-				<p
-					in:fly={{
-						x: index === terminalHistory.length - 1 ? 100 : 0,
-						duration: 200,
-						easing: cubicInOut
-					}}
-					class="terminal-line"
-				>
-					{pastLine.text}
-				</p>
-			{/each}
+{#if ready}
+	<div
+		in:fade={{ duration: 2000, easing: cubicInOut }}
+		class="h-full w-full border-white border rounded-md p-3"
+	>
+		<div id="terminal" class="terminal-container pb-3">
+			<div class="terminal-history">
+				{#each terminalHistory as pastLine, index}
+					<p
+						in:fly={{
+							x: index === terminalHistory.length - 1 ? 100 : 0,
+							duration: 200,
+							easing: cubicInOut
+						}}
+						class="terminal-line"
+					>
+						{pastLine.text}
+					</p>
+				{/each}
+			</div>
+		</div>
+		<div class="flex flex-row w-full">
+			<p class="text-white">{'> '}</p>
+			<input
+				class="terminal-input border rounded-md border-white w-full ml-6"
+				placeholder="Type a command"
+				type="text"
+				style="font-family: 'Cascadia Code', sans-serif;"
+				bind:value={currentCommand}
+				on:keydown={(e) => {
+					if (e.key === 'Enter') {
+						executeCommand(currentCommand);
+					}
+				}}
+			/>
 		</div>
 	</div>
-	<div class="flex flex-row absolute bottom-5 w-full">
-		<p class="text-white">{'> '}</p>
-		<input
-			class="terminal-input border rounded-md border-white w-full"
-			placeholder="Type a command"
-			type="text"
-			style="font-family: 'Cascadia Code', sans-serif;"
-			bind:value={currentCommand}
-			on:keydown={(e) => {
-				if (e.key === 'Enter') {
-					executeCommand(currentCommand);
-				}
-			}}
-		/>
-	</div>
-</div>
+{/if}
 
 <style>
 	.terminal-container {
 		display: flex;
 		flex-direction: column;
-		height: 100%;
+		height: calc(100% - 2rem);
 		overflow-y: auto;
 		overflow-x: hidden;
 		scrollbar-width: 0;

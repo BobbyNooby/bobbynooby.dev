@@ -7,22 +7,8 @@ export type SpotifyLastPlayedData = {
 	songUrl: string;
 };
 
-export async function setSpotifyLastPlayedData(
-	lastPlayedData: SpotifyLastPlayedData
-): Promise<void> {
-	const response = await fetch('https://bobbynooby.dev/api/spotify/last_played', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			authKey: import.meta.env.VITE_GENERAL_AUTH_KEY
-		},
-		body: JSON.stringify(lastPlayedData)
+export async function updateSpotifyLastPlayedData(): Promise<void> {
+	const response = await fetch('http://localhost:5173/api/spotify/update_last_played', {
+		method: 'GET'
 	});
-
-	const result = await response.json();
-	if (result.error) {
-		// console.log('Error setting spotify last played data: ', result.error);
-	} else {
-		// console.log('Success setting spotify last played data: ', lastPlayedData);
-	}
 }

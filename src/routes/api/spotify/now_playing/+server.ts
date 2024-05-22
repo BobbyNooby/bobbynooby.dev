@@ -2,20 +2,10 @@ import { corsHeaders } from '$lib/corsHeaders';
 import { getSpotifyToken } from '$lib/spotify';
 import { json } from '@sveltejs/kit';
 import type { SpotifySongData } from '$lib/spotify';
-import { VITE_GENERAL_AUTH_KEY } from '$env/static/private';
+import { GENERAL_AUTH_KEY } from '$env/static/private';
 import { getLastPlayedSongData } from '$lib/spotifyUtils.js';
 
-export async function GET({ request }): Promise<Response> {
-	try {
-		const authKey = request.headers.get('authKey');
-
-		if (authKey !== VITE_GENERAL_AUTH_KEY) {
-			throw new Error('Brodie you really tryna do sumn with no auth!?!??!?!');
-		}
-	} catch (error) {
-		return json({ error: error.message }, { status: 500, headers: corsHeaders });
-	}
-
+export async function GET(): Promise<Response> {
 	const access_token = await getSpotifyToken();
 
 	const res = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {

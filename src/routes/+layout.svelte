@@ -11,7 +11,7 @@
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://bobbynooby.dev/" />
+	<meta property="og:url" content="http://localhost:5173/" />
 	<meta property="og:title" content=">bobbynooby.dev" />
 	<meta property="og:description" content="" />
 	<meta
@@ -21,7 +21,7 @@
 
 	<!-- Twitter -->
 	<meta property="twitter:card" content="summary_large_image" />
-	<meta property="twitter:url" content="https://bobbynooby.dev/" />
+	<meta property="twitter:url" content="http://localhost:5173/" />
 	<meta property="twitter:title" content=">bobbynooby.dev" />
 	<meta property="twitter:description" content="" />
 	<meta

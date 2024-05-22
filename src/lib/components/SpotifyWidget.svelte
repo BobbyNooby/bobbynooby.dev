@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import ScrollingText from './ScrollingText.svelte';
 	import { getCurrentSongData, getLastPlayedSongData } from '$lib/spotifyUtils';
-	import { setSpotifyLastPlayedData, type SpotifyLastPlayedData } from '$lib/supabaseUtils';
+	import { updateSpotifyLastPlayedData, type SpotifyLastPlayedData } from '$lib/supabaseUtils';
 
 	export let initialSongData: SpotifySongData, initialLastSongData: SpotifyLastPlayedData;
 
@@ -23,18 +23,9 @@
 		if (songData.isPlaying && !newSongData.isPlaying) {
 			timeSinceLastSong = 0;
 
-			const dataForFunction: SpotifyLastPlayedData = {
-				time: currentTime,
-				title: newSongData.title,
-				artist: newSongData.artist,
-				album: newSongData.album,
-				albumImageUrl: newSongData.albumImageUrl,
-				songUrl: newSongData.songUrl
-			};
+			await updateSpotifyLastPlayedData();
 
-			setSpotifyLastPlayedData(dataForFunction);
-
-			lastSongData = dataForFunction;
+			lastSongData = { time: currentTime, ...newSongData };
 		} else {
 			timeSinceLastSong = Math.round(Math.abs(currentTime - spotifyLastPlayedData.time) / 1000);
 		}

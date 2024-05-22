@@ -8,7 +8,7 @@ export type SpotifyLastPlayedData = {
 };
 
 export async function updateSpotifyLastPlayedData(): Promise<void> {
-	const response = await fetch('http://localhost:5173/api/spotify/update_last_played', {
+	const response = await fetch('https://bobbynooby.dev/api/spotify/update_last_played', {
 		method: 'GET'
 	});
 }

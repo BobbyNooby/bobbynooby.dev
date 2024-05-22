@@ -10,6 +10,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 			authorization: 'https://discord.com/api/oauth2/authorize?scope=identify'
 		})
 	],
+	trustHost: true,
 	callbacks: {
 		async jwt({ token, account, profile }) {
 			if (profile) {

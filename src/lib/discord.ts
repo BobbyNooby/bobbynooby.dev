@@ -20,4 +20,3 @@ const discordReadyPromise = new Promise<void>((resolve, reject) => {
 client.login(DISCORD_BOT_TOKEN);
 
 export const discordClient = client;
-export { discordReadyPromise };

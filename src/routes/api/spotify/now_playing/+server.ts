@@ -15,9 +15,7 @@ export async function GET(): Promise<Response> {
 	});
 
 	if (res.status === 204 || res.status > 400) {
-		const lastPlayedSong = await getLastPlayedSongData();
-
-		return json({ isPlaying: false, ...lastPlayedSong }, { status: 429, headers: corsHeaders });
+		return json({ isPlaying: false }, { status: 429, headers: corsHeaders });
 	}
 
 	const song = await res.json();

@@ -6,7 +6,10 @@ export const load = async () => {
 	const spotifyLastPlayedData = await getLastPlayedSongData();
 	const discordStatus = await getDiscordStatus();
 
-	if (Object.values(songData).includes(undefined)) {
+	if (
+		Object.values(songData).some((value) => value === null || value === undefined) ||
+		songData.isPlaying === false
+	) {
 		songData = { isPlaying: false, ...spotifyLastPlayedData };
 	}
 

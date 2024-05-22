@@ -22,7 +22,7 @@
 	<div
 		class={`scrolling-text ${isOverflowing ? (rightToLeft ? 'is-overflowing-right-to-left' : 'is-overflowing-left-to-right') : ''} ${tailwindcss}`}
 		bind:clientWidth={textWidth}
-		style="animation-duration: {duration}s;"
+		style="animation-duration: {duration}s; animation-timing-function: steps({duration * 24}, end);"
 	>
 		{text}
 	</div>
@@ -39,7 +39,7 @@
 
 	.scrolling-text {
 		display: inline-block;
-		transition: transform 0.5s ease;
+		/* transition: transform 0.5s steps(12) ease; */
 	}
 
 	.is-overflowing-left-to-right {

@@ -52,14 +52,29 @@
 >
 	<p class=" {songData.isPlaying ? 'text-green-400' : 'text-gray-400'}">
 		{songData.isPlaying
-			? 'Now Playing'
-			: `Last Played ${secondsToTimeString(timeSinceLastSong)} ago`}
+			? '< Now Playing >'
+			: `! Last Played ${secondsToTimeString(timeSinceLastSong)} ago !`}
 	</p>
 	<img
-		class=" w-24 h-24 border border-white"
+		class=" w-24 h-24 border border-white rotating-image"
 		src={songData.isPlaying ? songData.albumImageUrl : lastSongData.albumImageUrl}
 		alt="Album Art"
 	/>
 	<ScrollingText text={songData.title} tailwindcss="text-xs text-nowrap" />
 	<ScrollingText text={songData.artist} rightToLeft={true} tailwindcss="text-xs text-nowrap" />
 </button>
+
+<style>
+	.rotating-image {
+		animation: rotate 3s steps(72) infinite;
+	}
+
+	@keyframes rotate {
+		from {
+			transform: rotate3d(0, 0, 0, 0deg);
+		}
+		to {
+			transform: rotate3d(0, 1, 0, 360deg);
+		}
+	}
+</style>

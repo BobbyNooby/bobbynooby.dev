@@ -5,7 +5,7 @@ import { type SpotifyLastPlayedData } from '$lib/supabaseUtils';
 import { json } from '@sveltejs/kit';
 
 async function setSpotifyLastPlayedData(lastPlayedData: SpotifyLastPlayedData): Promise<void> {
-	const response = await fetch('https://bobbynooby.dev/api/spotify/last_played', {
+	const response = await fetch('http://localhost:5173/api/spotify/last_played', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

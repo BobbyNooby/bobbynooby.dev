@@ -3,7 +3,7 @@
 		This is the AFK page of the website. Click <a
 			class="text-yellow-500"
 			style="text-decoration: underline;"
-			href="https://bobbynooby.dev">here</a
+			href="http://localhost:5173">here</a
 		> to go back to the main site.
 	</p>
 </div>

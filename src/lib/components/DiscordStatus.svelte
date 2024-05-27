@@ -17,11 +17,10 @@
 	onMount(async () => {
 		discordStatus = await getDiscordStatus();
 
-		window.addEventListener('focus', () => {
+		window.addEventListener('focus', async () => {
 			discordStatus = await getDiscordStatus();
-		})
-
-	})
+		});
+	});
 
 	setInterval(async () => {
 		discordStatus = await getDiscordStatus();

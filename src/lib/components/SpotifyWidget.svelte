@@ -38,14 +38,14 @@
 	}
 
 	setInterval(async () => {
-		updateComponent();
+		await updateComponent();
 	}, 5000);
 
 	onMount(async () => {
-		updateComponent();
+		await updateComponent();
 
-		window.addEventListener('focus', () => {
-			updateComponent();
+		window.addEventListener('focus', async () => {
+			await updateComponent();
 		});
 	});
 

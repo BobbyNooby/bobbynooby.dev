@@ -10,9 +10,11 @@
 	onMount(() => {
 		window.addEventListener('mousemove', () => {
 			sessionTime = 0;
+			isAFK = false;
 		});
 		window.addEventListener('keydown', () => {
 			sessionTime = 0;
+			isAFK = false;
 		});
 	});
 

@@ -43,6 +43,10 @@
 
 	onMount(async () => {
 		updateComponent();
+
+		window.addEventListener('focus', () => {
+			updateComponent();
+		});
 	});
 
 	function gotoURL(url: string) {

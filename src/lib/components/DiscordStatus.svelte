@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getDiscordStatus, type discordStatuses } from '$lib/discordUtils';
+	import { onMount } from 'svelte';
 
 	export let initialDiscordStatus: discordStatuses;
 
@@ -12,6 +13,15 @@
 	};
 
 	let discordStatus: discordStatuses = initialDiscordStatus || 'offline';
+
+	onMount(async () => {
+		discordStatus = await getDiscordStatus();
+
+		window.addEventListener('focus', () => {
+			discordStatus = await getDiscordStatus();
+		})
+
+	})
 
 	setInterval(async () => {
 		discordStatus = await getDiscordStatus();

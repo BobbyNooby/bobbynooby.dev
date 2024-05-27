@@ -134,7 +134,7 @@
 					}
 				} else {
 					try {
-						response = await fetch('http://localhost:5173/api/handle_command', {
+						response = await fetch('https://bobbynooby.dev/api/handle_command', {
 							method: 'POST',
 							body: JSON.stringify({ command: command })
 						}).then((res) => res.json());

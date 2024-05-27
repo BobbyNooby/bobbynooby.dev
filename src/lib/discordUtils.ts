@@ -1,7 +1,7 @@
 import { corsHeaders } from './corsHeaders';
 
 export async function getDiscordStatus(): Promise<discordStatuses> {
-	const { data, error } = await fetch('http://localhost:5173/api/discord_status', {
+	const { data, error } = await fetch('https://bobbynooby.dev/api/discord_status', {
 		method: 'GET'
 	}).then((res) => res.json());
 

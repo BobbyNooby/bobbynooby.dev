@@ -2,7 +2,7 @@ import type { SpotifySongData } from './spotify';
 import type { SpotifyLastPlayedData } from './supabaseUtils';
 export async function getCurrentSongData(): Promise<SpotifySongData> {
 	const { data, error }: { data: SpotifySongData; error: any } = await fetch(
-		'http://localhost:5173/api/spotify/now_playing',
+		'https://bobbynooby.dev/api/spotify/now_playing',
 		{
 			method: 'GET'
 		}
@@ -23,7 +23,7 @@ export async function getCurrentSongData(): Promise<SpotifySongData> {
 
 export async function getLastPlayedSongData(): Promise<SpotifyLastPlayedData> {
 	const { data, error }: { data: SpotifyLastPlayedData[]; error: any } = await fetch(
-		'http://localhost:5173/api/spotify/last_played',
+		'https://bobbynooby.dev/api/spotify/last_played',
 		{
 			method: 'GET'
 		}

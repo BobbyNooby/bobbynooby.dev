@@ -5,72 +5,164 @@
 	import { cubicInOut } from 'svelte/easing';
 	import { writable } from 'svelte/store';
 	import { fade, fly } from 'svelte/transition';
+	import { parseCommand } from '$lib/utils/parseCommand';
+	import { getCommandTreeServer } from '$lib/utils/getCommandTreeServer';
+	import { argChecker } from '$lib/utils/argsChecker';
+	// import { commandTreePublic } from '$lib/commands/commandTree';
 
-	let terminalHistory: { text: string; animated: boolean }[] = [
-		{ text: $page.data.session?.user?.name, animated: false }
-	];
+	let terminalHistory: { text: string; animated: boolean }[] = [];
 
 	let currentCommand: string = '';
 
-	const validCommands = {
-		test: {
-			response: 'This command is the test command',
-			function: () => {
-				console.log('Amogogs.');
-			}
-		},
+	const clientSideCommandTree: Record<
+		string,
+		{ args: 0; function: (args: string[]) => { isValid: boolean; history: string[] } }
+	> = {
 		help: {
-			response: 'HAHAHA BITCH YOU THOUGHT XD',
-			function: () => {
-				console.log('boner');
+			args: 0,
+			function: (args) => {
+				return {
+					isValid: true,
+					history: ['HAHAHA BITCH YOU THOUGHT XD']
+				};
 			}
 		},
 		ls: {
-			response: `/src /home /etc /dev /homework /passwords /boner`,
-			function: () => {}
+			args: 0,
+			function: (args) => {
+				return {
+					isValid: true,
+					history: ['/src /home /etc /dev /homework /passwords /boner']
+				};
+			}
 		},
 		cd: {
-			response: 'Nuh uh you aint navigating anywhere bruh',
-			function: () => {}
+			args: 0,
+			function: (args) => {
+				return {
+					isValid: true,
+					history: ['Nuh uh you aint navigating anywhere bruh']
+				};
+			}
 		},
 		auth: {
-			response: 'Logging in...',
-			function: () => {
+			args: 0,
+			function: (args) => {
 				signIn('discord', { redirect: false });
+				return {
+					isValid: true,
+					history: ['Logging in...']
+				};
+			}
+		},
+		logout: {
+			args: 0,
+			function: (args) => {
+				signOut();
+				return {
+					isValid: true,
+					history: ['Logging out...']
+				};
 			}
 		},
 		status: {
-			response: `${$page.data.session?.expires}`,
-			function: () => {}
+			args: 0,
+			function: (args) => {
+				return {
+					isValid: true,
+					history: [$page.data.session?.expires || 'error']
+				};
+			}
+		},
+		user: {
+			args: 0,
+			function: (args) => {
+				return {
+					isValid: true,
+					history: [JSON.stringify($page.data.session) || 'error']
+				};
+			}
+		},
+		clear: {
+			args: 0,
+			function: (args) => {
+				terminalHistory = [];
+				return {
+					isValid: true,
+					history: []
+				};
+			}
 		}
 	};
 
-	function executeCommand(command: string) {
-		let responseMessage: string = '';
+	async function executeCommand(command: string) {
+		try {
+			let response: { isValid: boolean; history: string[] } = {
+				isValid: false,
+				history: ['Error : Client Side']
+			};
 
-		if (command == '') {
-			terminalHistory = [
-				...terminalHistory.map((item) => ({ ...item, animated: false })),
-				{ text: '', animated: true }
-			];
-		} else {
-			if (Object.keys(validCommands).includes(command)) {
-				responseMessage = validCommands[command as keyof typeof validCommands].response;
-				validCommands[command as keyof typeof validCommands].function();
+			if (command !== '') {
+				const commandArray = parseCommand(command);
+
+				const rootCommand = commandArray[0];
+				const args = commandArray.slice(1);
+				const commandTreeServer = await getCommandTreeServer($page.data.session);
+
+				let isClientSide = true;
+
+				if (Object.keys(commandTreeServer).includes(rootCommand)) {
+					isClientSide = false;
+				}
+				if (isClientSide) {
+					try {
+						response = argChecker(clientSideCommandTree[rootCommand].args, args);
+						if (response.isValid) {
+							response = {
+								isValid: true,
+								history: [
+									rootCommand == 'clear' ? '' : commandArray.join(' '),
+									...clientSideCommandTree[rootCommand].function(args).history
+								]
+							};
+						}
+					} catch (e) {
+						response = {
+							isValid: false,
+							history: [commandArray.join(' '), `Command "${rootCommand}" not found`]
+						};
+					}
+				} else {
+					try {
+						response = await fetch('http://localhost:5173/api/handle_command', {
+							method: 'POST',
+							body: JSON.stringify({ command: command })
+						}).then((res) => res.json());
+					} catch (e) {
+						response = {
+							isValid: false,
+							history: [commandArray.join(' '), `Command "${rootCommand}" not found`]
+						};
+					}
+				}
 			} else {
-				responseMessage = `Command "${command}" not found`;
+				response = {
+					isValid: true,
+					history: ['>']
+				};
 			}
-
 			terminalHistory = [
 				...terminalHistory.map((item) => ({ ...item, animated: false })),
-				{ text: command, animated: true },
-				{ text: responseMessage, animated: true }
+				...response.history.map((item) => ({ text: item, animated: true }))
 			];
+
+			console.log(terminalHistory);
+			currentCommand = '';
+			updateTheKey();
+			scrollToBottom();
+		} catch (e) {
+			console.log(e);
 		}
-		console.log(terminalHistory);
-		currentCommand = '';
-		updateTheKey();
-		scrollToBottom();
 	}
 
 	function scrollToBottom() {

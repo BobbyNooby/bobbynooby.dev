@@ -30,11 +30,11 @@ export async function POST({ request }): Promise<Response> {
 }
 
 export async function GET(): Promise<Response> {
-	const { data, error } = await supabaseClient.from('spotifyLastPlayedSong').select().eq('id', 1);
+	const { data, error } = await supabaseClient.from('spotifyLastPlayedSong').select().eq('uid', 1);
 
 	if (error) {
 		return json({ error: error.message }, { status: 500, headers: corsHeaders });
 	} else {
-		return json(data, { status: 200, headers: corsHeaders });
+		return json({ data }, { status: 200, headers: corsHeaders });
 	}
 }

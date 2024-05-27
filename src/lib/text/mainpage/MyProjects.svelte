@@ -1,17 +1,7 @@
 <script lang="ts">
-	const projects: { name: string; description: string; href: string }[] = [
-		{
-			name: 'Arcane Odyssey Tools',
-			description: 'A website used to plan armor sets for a game called Arcane Odyssey on Roblox.',
-			href: 'https://github.com/BobbyNooby/AOGearBuilder/'
-		},
-		{
-			name: 'Arcane Odyssey API',
-			description:
-				'A simple API to allow users to interact with the database used in Arcane Odyssey Tools.',
-			href: 'https://github.com/BobbyNooby/arcane-odyssey-api'
-		}
-	];
+	import type { projectsSchema } from '$lib/types/projectsSchema';
+
+	export let projects: projectsSchema[];
 </script>
 
 <p class="container-title-text">/Projects</p>

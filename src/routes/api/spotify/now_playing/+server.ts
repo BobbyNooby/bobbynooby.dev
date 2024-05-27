@@ -15,7 +15,7 @@ export async function GET(): Promise<Response> {
 	});
 
 	if (res.status === 204 || res.status > 400) {
-		return json({ isPlaying: false }, { status: 429, headers: corsHeaders });
+		return json({ data: { isPlaying: false } }, { status: 429, headers: corsHeaders });
 	}
 
 	const song = await res.json();
@@ -34,5 +34,5 @@ export async function GET(): Promise<Response> {
 		albumImageUrl,
 		songUrl
 	};
-	return json(body as SpotifySongData, { status: 200, headers: corsHeaders });
+	return json({ data: body }, { status: 200, headers: corsHeaders });
 }

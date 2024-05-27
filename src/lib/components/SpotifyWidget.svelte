@@ -64,8 +64,15 @@
 		src={songData.isPlaying ? songData.albumImageUrl : lastSongData.albumImageUrl}
 		alt="Album Art"
 	/>
-	<ScrollingText text={songData.title} tailwindcss="text-xs text-nowrap" />
-	<ScrollingText text={songData.artist} rightToLeft={true} tailwindcss="text-xs text-nowrap" />
+	<ScrollingText
+		text={songData.isPlaying ? songData.title : lastSongData.title}
+		tailwindcss="text-xs text-nowrap"
+	/>
+	<ScrollingText
+		text={songData.isPlaying ? songData.artist : lastSongData.artist}
+		rightToLeft={true}
+		tailwindcss="text-xs text-nowrap"
+	/>
 </button>
 
 <style>

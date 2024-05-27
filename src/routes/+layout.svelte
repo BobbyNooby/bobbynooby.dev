@@ -1,5 +1,6 @@
 <script lang="ts">
 	import AfkChecker from '$lib/components/AFKChecker.svelte';
+	import { Toaster } from 'svelte-french-toast';
 	import '../app.css';
 </script>
 
@@ -11,7 +12,7 @@
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://bobbynooby.dev/" />
+	<meta property="og:url" content="http://localhost:5173/" />
 	<meta property="og:title" content=">bobbynooby.dev" />
 	<meta property="og:description" content="" />
 	<meta
@@ -21,7 +22,7 @@
 
 	<!-- Twitter -->
 	<meta property="twitter:card" content="summary_large_image" />
-	<meta property="twitter:url" content="https://bobbynooby.dev/" />
+	<meta property="twitter:url" content="http://localhost:5173/" />
 	<meta property="twitter:title" content=">bobbynooby.dev" />
 	<meta property="twitter:description" content="" />
 	<meta
@@ -32,6 +33,12 @@
 	<!-- Meta Tags Generated with https://metatags.io -->
 </head>
 
+<Toaster
+	toastOptions={{
+		duration: 5000,
+		style: 'background-color: black; border-width : 0.2rem; border-color: white; color:white;'
+	}}
+/>
 <section class="overflow-auto app items-center">
 	<main><slot /><AfkChecker /></main>
 </section>
@@ -44,5 +51,6 @@
 		width: 100%;
 		flex-direction: column;
 		min-height: 100vh;
+		color: white;
 	}
 </style>

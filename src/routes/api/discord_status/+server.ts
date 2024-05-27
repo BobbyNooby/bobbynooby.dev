@@ -8,7 +8,10 @@ export async function GET(): Promise<Response> {
 	try {
 		const server = await discordClient.guilds.fetch(DISCORD_GUILD_ID);
 		const user: GuildMember = await server.members.fetch(DISCORD_USER_ID);
-		return json(user.presence?.status || 'unknown', { status: 200, headers: corsHeaders });
+		return json(
+			{ data: user.presence?.status || 'unknown' },
+			{ status: 200, headers: corsHeaders }
+		);
 	} catch (error) {
 		return json({ error: error.message }, { status: 500, headers: corsHeaders });
 	}

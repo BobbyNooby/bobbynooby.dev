@@ -8,6 +8,8 @@
 	import MyStatus from '$lib/text/mainpage/MyStatus.svelte';
 	import MySpotify from '$lib/text/mainpage/MySpotify.svelte';
 	import MyProjects from '$lib/text/mainpage/MyProjects.svelte';
+	import MySystemsStatus from '$lib/text/mainpage/MySystemsStatus.svelte';
+	import { playAudio } from '$lib/utils/playAudio';
 
 	export let data: PageData;
 
@@ -48,7 +50,14 @@
 			out:fade={{ duration: 2000, easing: cubicInOut }}
 			class="text-white text-7xl font-quicksand-300 mt-10 mb-5"
 		>
-			<span class="font-cascadia-code">{'>'}</span>bobbynooby.dev
+			<button
+				on:click={() =>
+					playAudio(
+						'https://raw.githubusercontent.com/BobbyNooby/bobbynooby-dev-static-assets/main/a.mp3'
+					)}
+			>
+				<span class="font-cascadia-code">{'>'}</span>bobbynooby.dev</button
+			>
 		</p>
 		<div in:fly={{ y: 100, duration: 1000, easing: cubicOut, delay: 1000 }}>
 			<div class="main-container">
@@ -56,10 +65,11 @@
 					<div class="content-box">
 						<MyInfo />
 					</div>
-					<div class="content-box"><MyProjects /></div>
+					<div class="content-box"><MyProjects projects={data.projects} /></div>
+					<div class="content-box"><MySystemsStatus /></div>
 				</div>
 				<div class="w-1/3">
-					<div class="content-box"><MyLinks /></div>
+					<div class="content-box"><MyLinks links={data.links} /></div>
 					<div class="content-box">
 						<MyStatus initialDiscordStatus={data.discordStatus || 'offline'} />
 					</div>

@@ -1,10 +1,14 @@
 import { corsHeaders } from './corsHeaders';
 
 export async function getDiscordStatus(): Promise<discordStatuses> {
-	const discordStatus = await fetch('https://bobbynooby.dev/api/discord_status', {
+	const { data, error } = await fetch('http://localhost:5173/api/discord_status', {
 		method: 'GET'
 	}).then((res) => res.json());
-	return discordStatus;
+
+	if (error) {
+		return 'unknown';
+	}
+	return data;
 }
 
-export type discordStatuses = 'online' | 'idle' | 'dnd' | 'offline';
+export type discordStatuses = 'online' | 'idle' | 'dnd' | 'offline' | 'unknown';

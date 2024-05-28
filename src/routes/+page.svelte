@@ -10,6 +10,7 @@
 	import MyProjects from '$lib/text/mainpage/MyProjects.svelte';
 	import MySystemsStatus from '$lib/text/mainpage/MySystemsStatus.svelte';
 	import { playAudio } from '$lib/utils/playAudio';
+	import { staticFilesUrl } from '$lib/utils/staticContentDirectory';
 
 	export let data: PageData;
 
@@ -50,12 +51,7 @@
 			out:fade={{ duration: 2000, easing: cubicInOut }}
 			class="text-white text-7xl font-quicksand-300 mt-10 mb-5"
 		>
-			<button
-				on:click={() =>
-					playAudio(
-						'https://raw.githubusercontent.com/BobbyNooby/bobbynooby-dev-static-assets/main/a.mp3'
-					)}
-			>
+			<button on:click={() => playAudio(`${staticFilesUrl}/a.mp3`)}>
 				<span class="font-cascadia-code">{'>'}</span>bobbynooby.dev</button
 			>
 		</p>

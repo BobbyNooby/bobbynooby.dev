@@ -2,8 +2,6 @@ import { corsHeaders } from '$lib/corsHeaders';
 import { getSpotifyToken } from '$lib/spotify';
 import { json } from '@sveltejs/kit';
 import type { SpotifySongData } from '$lib/spotify';
-import { GENERAL_AUTH_KEY } from '$env/static/private';
-import { getLastPlayedSongData } from '$lib/spotifyUtils.js';
 
 export async function GET(): Promise<Response> {
 	const access_token = await getSpotifyToken();

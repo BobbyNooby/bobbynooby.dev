@@ -1,11 +1,20 @@
+<script>
+	import { playAudio } from '$lib/utils/playAudio';
+	import { staticFilesUrl } from '$lib/utils/staticContentDirectory';
+</script>
+
 <p class="container-title-text">/About_Me</p>
 <br />
 <div class="flex flex-row">
-	<img
-		class="w-24 h-24 border border-white mx-5"
-		src="https://raw.githubusercontent.com/BobbyNooby/bobbynooby.dev/master/static/logowhitetransparent.png"
-		alt="logo"
-	/>
+	<button
+		on:click={() => playAudio(`${staticFilesUrl}/honk.mp3`)}
+		class="flex items-center justify-center border border-white mx-5 aspect-square h-24 honk-button"
+	>
+		<img
+			src="https://raw.githubusercontent.com/BobbyNooby/bobbynooby.dev/master/static/logowhitetransparent.png"
+			alt="logo"
+		/>
+	</button>
 	<div>
 		<p>
 			Welcome to my small corner of the internet! This page was inspired by <a
@@ -29,3 +38,18 @@
 	<span style="color : #23A55A;">am currently</span>
 	<span class=" text-blue-600">{'}'}</span> up to.
 </p>
+
+<style>
+	@keyframes honk {
+		0% {
+			transform: scale(1.2);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
+	.honk-button:active {
+		animation: honk 0.2s steps(2);
+	}
+</style>

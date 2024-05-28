@@ -1,6 +1,4 @@
-import { supabaseClient } from '$lib/supabase';
-import type { Session } from '@auth/sveltekit';
-import { fail, json } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import { parseCommand } from '$lib/utils/parseCommand.js';
 import { commandTree } from '$lib/commands/commandTree.js';
 import { verifySession } from '$lib/utils/verifySession.js';

@@ -1,7 +1,6 @@
 import { getDiscordStatus } from '$lib/discordUtils';
 import { getCurrentSongData, getLastPlayedSongData } from '$lib/spotifyUtils';
 import { getLinks, getProjects } from '$lib/supabaseServerUtils';
-import { updateSpotifyLastPlayedData } from '$lib/supabaseUtils';
 import { verifySession } from '$lib/utils/verifySession.js';
 
 export const load = async ({ locals }) => {
@@ -17,14 +16,6 @@ export const load = async ({ locals }) => {
 	const discordStatus = await getDiscordStatus();
 	const links = await getLinks();
 	const projects = await getProjects();
-
-	if (
-		songData.songUrl &&
-		spotifyLastPlayedData.songUrl &&
-		songData.songUrl != spotifyLastPlayedData.songUrl
-	) {
-		await updateSpotifyLastPlayedData();
-	}
 
 	if (
 		Object.values(songData).some((value) => value === null || value === undefined) ||

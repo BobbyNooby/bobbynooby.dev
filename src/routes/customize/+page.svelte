@@ -11,7 +11,6 @@
 	import { page } from '$app/stores';
 	import { SignIn, SignOut } from '@auth/sveltekit/components';
 	import { toast } from 'svelte-french-toast';
-	import CustomToast from '$lib/components/CustomToast.svelte';
 	import { goto } from '$app/navigation';
 
 	export let data: PageData;

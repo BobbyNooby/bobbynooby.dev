@@ -1,5 +1,5 @@
 import type { linksSchema } from '$lib/types/linksSchema';
-import { get, writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 
 function sortLinks(links: linksSchema[]) {
 	return links.sort((a, b) => a.item_order - b.item_order);

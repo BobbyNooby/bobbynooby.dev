@@ -1,6 +1,5 @@
-import type { linksSchema } from '$lib/types/linksSchema';
 import type { projectsSchema } from '$lib/types/projectsSchema';
-import { get, writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 
 function sortProjects(projects: projectsSchema[]) {
 	return projects.sort((a, b) => a.item_order - b.item_order);

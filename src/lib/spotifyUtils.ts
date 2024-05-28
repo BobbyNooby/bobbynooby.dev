@@ -22,7 +22,7 @@ export async function getCurrentSongData(): Promise<SpotifySongData> {
 }
 
 export async function getLastPlayedSongData(): Promise<SpotifyLastPlayedData> {
-	const { data, error }: { data: SpotifyLastPlayedData[]; error: any } = await fetch(
+	const { data, error }: { data: SpotifyLastPlayedData; error: any } = await fetch(
 		'https://bobbynooby.dev/api/spotify/last_played',
 		{
 			method: 'GET'
@@ -40,5 +40,5 @@ export async function getLastPlayedSongData(): Promise<SpotifyLastPlayedData> {
 		};
 	}
 
-	return data[0];
+	return data;
 }

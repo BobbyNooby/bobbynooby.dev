@@ -1,40 +1,41 @@
-import { GENERAL_AUTH_KEY } from '$env/static/private';
 import { corsHeaders } from '$lib/corsHeaders.js';
-import { supabaseClient } from '$lib/supabase.js';
+import { getSpotifyToken } from '$lib/spotify.js';
 import type { SpotifyLastPlayedData } from '$lib/supabaseUtils.js';
 import { json } from '@sveltejs/kit';
 
-export async function POST({ request }): Promise<Response> {
-	const requestData: SpotifyLastPlayedData = await request.json();
-
-	try {
-		const authKey = request.headers.get('authKey');
-
-		if (authKey !== GENERAL_AUTH_KEY) {
-			throw new Error('Brodie you really tryna do sumn with no auth!?!??!?! ');
-		}
-	} catch (error) {
-		return json({ error: error.message }, { status: 500 });
-	}
-
-	const { data, error } = await supabaseClient
-		.from('spotifyLastPlayedSong')
-		.update({ ...requestData })
-		.eq('id', 1);
-
-	if (error) {
-		return json({ error: error.message }, { status: 500 });
-	}
-
-	return json({ data }, { status: 200 });
-}
-
 export async function GET(): Promise<Response> {
-	const { data, error } = await supabaseClient.from('spotifyLastPlayedSong').select().eq('uid', 1);
+	const access_token = await getSpotifyToken();
 
-	if (error) {
-		return json({ error: error.message }, { status: 500, headers: corsHeaders });
-	} else {
-		return json({ data }, { status: 200, headers: corsHeaders });
+	const res = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=1', {
+		headers: {
+			Authorization: `Bearer ${access_token}`
+		}
+	});
+
+	if (res.status === 204 || res.status > 400) {
+		return json({ data: { isPlaying: false } }, { status: 429, headers: corsHeaders });
 	}
+
+	const recentlyPlayedSongs = await res.json();
+	const latestSong = recentlyPlayedSongs.items[0];
+	const date = latestSong.played_at;
+	const title = latestSong.track.name;
+	const artist = latestSong.track.artists.map((_artist) => _artist.name).join(', ');
+	const album = latestSong.track.album.name;
+	const albumImageUrl = latestSong.track.album.images[0].url;
+	const songUrl = latestSong.track.external_urls.spotify;
+
+	const dateClass = new Date(date);
+	const time = Math.floor(dateClass.getTime());
+
+	const lastPlayedSong: SpotifyLastPlayedData = {
+		time,
+		title,
+		artist,
+		album,
+		albumImageUrl,
+		songUrl
+	};
+
+	return json({ data: lastPlayedSong }, { status: 200, headers: corsHeaders });
 }

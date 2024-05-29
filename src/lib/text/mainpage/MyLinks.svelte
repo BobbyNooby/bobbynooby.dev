@@ -36,13 +36,23 @@
 </script>
 
 <p in:fly={{ x: 100, duration: 500, easing: cubicInOut }} class="container-title-text">/Links</p>
-{#each links as link, i}
-	{#if ready}
-		<div
-			in:fly={{ x: 100, duration: 500, easing: cubicInOut, delay: (i + 1) * 50 }}
-			style="color: {link.color};"
-		>
-			<p style="text-indent: 2em">/<a href={link.href}>{link.name}</a></p>
-		</div>
-	{/if}
-{/each}
+<div class="flex flex-col">
+	{#each links as link, i}
+		{#if ready}
+			<div style="color: {link.color};" class="link">
+				<p style="text-indent: 2em"><a href={link.href}>/{link.name}</a></p>
+			</div>
+		{/if}
+	{/each}
+</div>
+
+<style>
+	.link {
+		display: inline-block;
+		transition: transform 0.1s ease-in-out;
+	}
+
+	/* .link:hover {
+		transform: translateX(10px);
+	} */
+</style>

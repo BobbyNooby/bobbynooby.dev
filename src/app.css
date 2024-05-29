@@ -29,6 +29,13 @@
     font-style: normal;
 }
 
+.font-quicksand-700 {
+    font-family: 'Quicksand', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+}
+
 .font-josefin-sans-400{
   font-family: "Josefin Sans", sans-serif;
   font-optical-sizing: auto;

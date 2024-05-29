@@ -49,7 +49,7 @@
 		<p
 			in:fade={{ duration: 2000, easing: cubicInOut }}
 			out:fade={{ duration: 2000, easing: cubicInOut }}
-			class="text-white text-7xl font-quicksand-300 mt-10 mb-5"
+			class="text-white text-7xl font-quicksand-300 mt-5 mb-5"
 		>
 			<button on:click={() => playAudio(`${staticFilesUrl}/a.mp3`)}>
 				<span class="font-cascadia-code">{'>'}</span>bobbynooby.dev</button

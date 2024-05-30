@@ -30,7 +30,8 @@
 				}
 				if (isAFK && sessionTime > maxSessionTime + gracePeriod) {
 					isAFK = false;
-					goto('/afk'); // Redirect to the AFK page
+					goto('/afk');
+					window.history.pushState({}, '', '/afk');
 				}
 			}
 		}, 1000);

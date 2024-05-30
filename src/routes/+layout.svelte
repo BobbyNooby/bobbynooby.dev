@@ -7,6 +7,9 @@
 <head>
 	<!-- Primary Meta Tags -->
 	<title>{'>bobbynooby.dev'}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<!-- Add viewport meta tag -->
+
 	<meta name="title" content="bobbynooby.dev" />
 	<meta name="description" content="" />
 
@@ -39,7 +42,7 @@
 		style: 'background-color: black; border-width : 0.2rem; border-color: white; color:white;'
 	}}
 />
-<section class="overflow-auto app items-center">
+<section class="app">
 	<main><slot /><AfkChecker /></main>
 </section>
 
@@ -49,8 +52,13 @@
 		display: flex;
 		background-color: black;
 		width: 100%;
+		justify-content: center;
+		align-items: center;
 		flex-direction: column;
 		min-height: 100vh;
 		color: white;
+		overflow: auto;
+		overflow-x: scroll;
+		overflow-y: auto;
 	}
 </style>

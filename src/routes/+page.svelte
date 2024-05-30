@@ -11,6 +11,7 @@
 	import MySystemsStatus from '$lib/text/mainpage/MySystemsStatus.svelte';
 	import { playAudio } from '$lib/utils/playAudio';
 	import { staticFilesUrl } from '$lib/utils/staticContentDirectory';
+	import MyChat from '$lib/text/mainpage/MyChat.svelte';
 
 	export let data: PageData;
 
@@ -62,7 +63,8 @@
 						<MyInfo />
 					</div>
 					<div class="content-box"><MyProjects projects={data.projects} /></div>
-					<div class="content-box"><MySystemsStatus /></div>
+					<!-- <div class="content-box"><MySystemsStatus /></div> -->
+					<div class="content-box"><MyChat initialChatData={data.chatMessages} /></div>
 				</div>
 				<div class="w-1/3">
 					<div class="content-box"><MyLinks links={data.links} /></div>

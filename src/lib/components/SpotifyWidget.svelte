@@ -19,7 +19,6 @@
 		const newSongData: SpotifySongData = await getCurrentSongData();
 		const spotifyLastPlayedData: SpotifyLastPlayedData = await getLastPlayedSongData();
 		const currentTime = new Date().getTime();
-		console.log(currentTime, spotifyLastPlayedData.time);
 
 		if (songData.isPlaying && !newSongData.isPlaying) {
 			lastSongData = spotifyLastPlayedData;

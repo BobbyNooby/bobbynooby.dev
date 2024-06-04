@@ -45,6 +45,7 @@
 
 	let message: string;
 
+	let canMessageSend = true;
 	async function handleEnter(event: Event) {
 		event.preventDefault();
 
@@ -58,12 +59,17 @@
 			return;
 		}
 
-		if (message.trim() !== '') {
-			const isMessageValid = await chatStore.sendMessage({ name: username, message: message });
+		if (message.trim() !== '' && canMessageSend) {
+			try {
+				canMessageSend = false;
+				const isMessageValid = await chatStore.sendMessage({ name: username, message: message });
 
-			if (isMessageValid) {
-				message = '';
-				scrollToBottom();
+				if (isMessageValid) {
+					message = '';
+					scrollToBottom();
+				}
+			} finally {
+				canMessageSend = true;
 			}
 		}
 	}
@@ -93,17 +99,26 @@
 	class=" my-3 p-2 border border-white rounded-md w-full max-w-full text-sm"
 >
 	{#each $chatStore as message}
-		<div class="flex flex-row w-full justify-between">
+		<div
+			class="flex flex-row w-full justify-between"
+			style={message.rank == 'system' ? 'color : #02EEF7' : ''}
+		>
 			<div class="flex-shrink-0 min-w-min">
 				<p>
-					<span style="color : {message.rank == 'owner' ? '#00FF00' : '#CECECE'}">
+					<span
+						style="color : {message.rank == 'system'
+							? ''
+							: message.rank == 'owner'
+								? '#00FF00'
+								: '#CECECE'}"
+					>
 						{`<${message.name}>`}
 					</span>
 					:{' '}
 				</p>
 			</div>
 			<div class="flex-grow min-w-0" style="max-width: 30rem;">
-				<p class="text-white break-words">
+				<p class="{message.rank == 'system' ? '' : 'text-white'} break-words">
 					{message.message}
 				</p>
 			</div>
@@ -115,21 +130,24 @@
 </div>
 
 <form id="chatBar" method="POST" action="?/sendMessage" on:submit|preventDefault={handleEnter}>
-	<input
-		class=" w-full text-white font-cascadia-code bg-black border border-white rounded-md p-1"
-		type="text"
-		placeholder="Message"
-		bind:value={message}
-		on:keydown={async (e) => {
-			if (e.key === 'Enter') {
-				await handleEnter(e);
-			}
-		}}
-	/>
-	<input
-		type="hidden"
-		name="messageData"
-		value={JSON.stringify({ name: username, message: message })}
-		required
-	/>
+	<div class="flex flex-row">
+		<input
+			class=" w-full text-white font-cascadia-code bg-black border border-white rounded-md p-1"
+			type="text"
+			placeholder="Message"
+			bind:value={message}
+			on:keydown={async (e) => {
+				if (e.key === 'Enter') {
+					await handleEnter(e);
+				}
+			}}
+		/>
+		<button type="submit" class="border border-white rounded-md px-5 ml-3">Send</button>
+		<input
+			type="hidden"
+			name="messageData"
+			value={JSON.stringify({ name: username, message: message })}
+			required
+		/>
+	</div>
 </form>

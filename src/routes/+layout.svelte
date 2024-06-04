@@ -42,7 +42,7 @@
 		style: 'background-color: black; border-width : 0.2rem; border-color: white; color:white;'
 	}}
 />
-<section class="app">
+<section class="app md:items-center">
 	<main><slot /><AfkChecker /></main>
 </section>
 
@@ -53,7 +53,6 @@
 		background-color: black;
 		width: 100%;
 		justify-content: center;
-		align-items: center;
 		flex-direction: column;
 		min-height: 100vh;
 		color: white;

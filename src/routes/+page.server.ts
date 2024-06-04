@@ -1,8 +1,13 @@
 import { discordClient } from '$lib/discord.js';
-import { getDiscordStatus } from '$lib/discordUtils';
+import { getDiscordStatus, type discordStatuses } from '$lib/discordUtils';
+import type { SpotifySongData } from '$lib/spotify.js';
 import { getCurrentSongData, getLastPlayedSongData } from '$lib/spotifyUtils';
 import { supabaseClient } from '$lib/supabase.js';
 import { getChatMessages, getLinks, getProjects } from '$lib/supabaseServerUtils';
+import type { SpotifyLastPlayedData } from '$lib/supabaseUtils.js';
+import type { chatMessageSchema } from '$lib/types/chatMessageSchema.js';
+import type { linksSchema } from '$lib/types/linksSchema.js';
+import type { projectsSchema } from '$lib/types/projectsSchema.js';
 import { verifySession } from '$lib/utils/verifySession.js';
 import { fail } from '@sveltejs/kit';
 import type { Channel } from 'discord.js';
@@ -15,13 +20,22 @@ export const load = async ({ locals }) => {
 	if (validSession != true) {
 		validSession = false;
 	}
+	const dateClass = new Date();
 
-	let songData = await getCurrentSongData();
-	const spotifyLastPlayedData = await getLastPlayedSongData();
-	const discordStatus = await getDiscordStatus();
-	const links = await getLinks();
-	const projects = await getProjects();
-	const chatMessages = await getChatMessages();
+	let songData: SpotifySongData = await getCurrentSongData();
+	const spotifyLastPlayedData: SpotifyLastPlayedData = await getLastPlayedSongData();
+	const discordStatus: discordStatuses = await getDiscordStatus();
+	const links: linksSchema[] = await getLinks();
+	const projects: projectsSchema[] = await getProjects();
+	const chatMessages: chatMessageSchema[] = [
+		...(await getChatMessages()),
+		{
+			created_at: dateClass.toUTCString(),
+			name: 'SYSTEM',
+			message: 'Type /nick to change your username.',
+			rank: 'system'
+		}
+	];
 
 	if (
 		Object.values(songData).some((value) => value === null || value === undefined) ||

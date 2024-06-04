@@ -2,6 +2,7 @@
 	import { createMessageStore } from '$lib/stores/chatMessages';
 	import { chatClient } from '$lib/supabaseChat';
 	import type { chatMessageSchema } from '$lib/types/chatMessageSchema';
+	import { wrapEmojis } from '$lib/utils/wrapEmojis';
 	import { onDestroy, onMount } from 'svelte';
 	import { cubicInOut } from 'svelte/easing';
 	import { get } from 'svelte/store';
@@ -119,7 +120,7 @@
 			</div>
 			<div class="flex-grow min-w-0" style="max-width: 30rem;">
 				<p class="{message.rank == 'system' ? '' : 'text-white'} break-words">
-					{message.message}
+					{@html wrapEmojis(message.message)}
 				</p>
 			</div>
 			<div class="flex-shrink-0 min-w-min">

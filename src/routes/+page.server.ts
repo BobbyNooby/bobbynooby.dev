@@ -37,12 +37,12 @@ export const load = async ({ locals }) => {
 		}
 	];
 
-	if (
-		Object.values(songData).some((value) => value === null || value === undefined) ||
-		songData.isPlaying === false
-	) {
-		songData = { isPlaying: false, ...spotifyLastPlayedData };
-	}
+	// if (
+	// 	Object.values(songData).some((value) => value === null || value === undefined) ||
+	// 	songData.isPlaying === false
+	// ) {
+	// 	songData = { isPlaying: false, ...spotifyLastPlayedData };
+	// }
 
 	return {
 		songData,

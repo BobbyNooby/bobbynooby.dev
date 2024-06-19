@@ -13,7 +13,10 @@ export async function GET(): Promise<Response> {
 	});
 
 	if (res.status === 204 || res.status > 400) {
-		return json({ data: { isPlaying: false } }, { status: 429, headers: corsHeaders });
+		return json(
+			{ data: { isPlaying: false } },
+			{ status: res.status, headers: corsHeaders, statusText: res.statusText }
+		);
 	}
 
 	const recentlyPlayedSongs = await res.json();

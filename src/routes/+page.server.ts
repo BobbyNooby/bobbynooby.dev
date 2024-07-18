@@ -1,3 +1,4 @@
+import { getManga } from '$lib/anilist.js';
 import { discordClient } from '$lib/discord.js';
 import { getDiscordStatus, type discordStatuses } from '$lib/discordUtils';
 import type { SpotifySongData } from '$lib/spotify.js';

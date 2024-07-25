@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { Anime, Manga } from '$lib/types/aniListMedia';
 	import { fly, type FlyParams } from 'svelte/transition';
 	import MediaItem from './MediaItem.svelte';
 	import { cubicInOut } from 'svelte/easing';
 	import { onMount } from 'svelte';
+	import type { GeneralMedia } from '$lib/types/3x3/GeneralMedia';
 
-	export let list: Anime[] & Manga[];
+	export let mediaList: GeneralMedia[];
 
 	let ready = false;
 
@@ -36,10 +36,10 @@
 </script>
 
 <div class="grid grid-cols-3 space-x-0 space-y-0">
-	{#each list as entry, i}
+	{#each mediaList as entry, i}
 		{#if ready}
-			<div in:fly={getTransitionData(i)} class="h-72 w-48">
-				<MediaItem tailwindcss={'h-72 w-48'} media={entry} />
+			<div in:fly={getTransitionData(i)} style={entry.css.outer}>
+				<MediaItem css={entry.css} media={entry} />
 			</div>
 		{/if}
 	{/each}

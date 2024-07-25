@@ -4,7 +4,7 @@ import {
 	type Anime,
 	type Manga,
 	type MediaQuery
-} from './types/aniListMedia';
+} from './types/3x3/aniListMedia';
 
 export async function getMedia(mediaId: number): Promise<MediaQuery | null> {
 	const query = `

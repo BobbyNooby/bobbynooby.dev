@@ -1,129 +1,8 @@
 <script lang="ts">
-	import type { Anime, Manga } from '$lib/types/aniListMedia';
-	import { clamp } from '$lib/utils/clamp';
-	import { rgbToHex } from '$lib/utils/rgbToHex';
+	import type { GeneralMedia } from '$lib/types/3x3/GeneralMedia';
+	import { getGreenRedColorFromScore } from '$lib/utils/getGreenRedColorFromScore';
 
-	export let media: Anime & Manga;
-
-	// Filter out titles that are the same as the preferred title
-	let filteredTitles = [
-		media.title.english,
-		media.title.romaji,
-		media.title.native,
-		media.title.userPreferred
-	].filter((title) => title !== media.title.userPreferred);
-
-	const statusDetails: { [key in typeof media.status]: { text: string; color: string } } = {
-		FINISHED: { text: 'Finished', color: '#68D639' },
-		RELEASING: { text: 'Releasing', color: '#02A9FF' },
-		HIATUS: { text: 'Hiatus', color: '#D2D22D' },
-		NOT_YET_RELEASED: { text: 'Not yet released', color: '#F779A4' },
-		CANCELLED: { text: 'Cancelled', color: '#E85D75' }
-	};
-
-	const mediaFormatDetails: { [key in Anime['format'] | Manga['format']]: { text: string } } = {
-		MANGA: { text: 'Manga' },
-		TV: { text: 'TV' },
-		TV_SHORT: { text: 'TV Short' },
-		MOVIE: { text: 'Movie' },
-		SPECIAL: { text: 'Special' },
-		ONE_SHOT: { text: 'One-shot' },
-		OVA: { text: 'OVA' },
-		ONA: { text: 'ONA' },
-		NOVEL: { text: 'Novel' },
-		MUSIC: { text: 'Music' }
-	};
-
-	function generateAnimeData() {
-		let detailsArray: { header: string; text: { value: string; color: string } }[] = [];
-
-		//Status
-		detailsArray.push({
-			header: 'Status',
-			text: { value: statusDetails[media.status].text, color: statusDetails[media.status].color }
-		});
-
-		if (media.status !== 'NOT_YET_RELEASED') {
-			//Start Date
-			detailsArray.push({
-				header: 'Start Date',
-				text: {
-					value: `${media.startDate.day}/${media.startDate.month}/${media.startDate.year}`,
-					color: '#FFFFFF'
-				}
-			});
-
-			//End Date
-			if (media.status === 'FINISHED') {
-				detailsArray.push({
-					header: 'End Date',
-					text: {
-						value: `${media.endDate.day}/${media.endDate.month}/${media.endDate.year}`,
-						color: '#FFFFFF'
-					}
-				});
-			}
-
-			if (media.type === 'MANGA') {
-				detailsArray.push({
-					header: 'Chapters',
-					text: {
-						value: media.chapters?.toString() || 'N/A',
-						color: '#FFFFFF'
-					}
-				});
-
-				detailsArray.push({
-					header: 'Volumes',
-					text: {
-						value: media.volumes?.toString() || 'N/A',
-						color: '#FFFFFF'
-					}
-				});
-			} else if (media.type === 'ANIME') {
-				detailsArray.push({
-					header: 'Type',
-					text: {
-						value: mediaFormatDetails[media.format].text,
-						color: '#FFFFFF'
-					}
-				});
-
-				detailsArray.push({
-					header: 'Episodes',
-					text: {
-						value: media.episodes?.toString() || 'N/A',
-						color: '#FFFFFF'
-					}
-				});
-
-				detailsArray.push({
-					header: 'Duration',
-					text: {
-						value: media.duration?.toString() || 'N/A',
-						color: '#FFFFFF'
-					}
-				});
-			}
-
-			detailsArray.push({
-				header: 'Rating',
-				text: {
-					value: media.averageScore?.toString() + '%' || 'N/A',
-					color: getGreenRedColorFromScore(media.averageScore || 0)
-				}
-			});
-		}
-
-		return detailsArray;
-	}
-
-	function getGreenRedColorFromScore(score: number): string {
-		let greenValue = Math.floor((clamp(score * 2, 0, 100) / 100) * 255);
-		let redValue = Math.floor((clamp((100 - score) * 2, 0, 100) / 100) * 255);
-		return rgbToHex(redValue, greenValue, 0);
-	}
-
+	export let media: GeneralMedia, css: { outer: string; inner: string };
 	function openLink(url: string) {
 		window.open(url, '_blank');
 	}
@@ -131,39 +10,41 @@
 
 <div class="flex flex-row box">
 	<div class="flex flex-col mr-8">
-		<button on:click={() => openLink(media.siteUrl)}>
+		<button on:click={() => openLink(media.url)}>
 			<div
 				class=" rounded-lg cover-art-container"
-				style="border-color: {media.coverImage.color}; background-color: {media.coverImage.color};"
+				style="border-color: {media.color}; background-color: {media.coverImageURL}; {css}"
 			>
 				<img
 					class="w-full h-full rounded-lg"
-					src={media.coverImage.extraLarge}
-					alt={media.title.userPreferred}
+					src={media.coverImageURL}
+					alt={media.titles[0].value}
 				/>
 			</div>
 		</button>
 
 		<!-- Details -->
 		<div class="mt-5">
-			{#each generateAnimeData() as detail}
-				<p>{detail.header} : <span style="color: {detail.text.color}">{detail.text.value}</span></p>
+			{#each media.details as detail}
+				<p>
+					{detail.category.value} :
+					<span style="color: {detail.text.color}">{detail.text.value}</span>
+				</p>
 			{/each}
 		</div>
 
 		<!-- Genre -->
 		<div class="text-center mt-5">
 			{#each media.genres as genre}
-				<p style="color : {media.coverImage.color}">{genre}</p>
+				<p style="color : {media.color}">{genre}</p>
 			{/each}
 		</div>
 	</div>
 	<div class="flex flex-col">
 		<!-- Titles -->
 		<div class="titles">
-			<p class="text-6xl">{media.title.userPreferred}</p>
-			{#each filteredTitles as title}
-				<p>{title}</p>
+			{#each media.titles as title, i}
+				<p class={i == 0 ? 'text-6xl' : ''} style="color: {title.color};">{title.value}</p>
 			{/each}
 		</div>
 
@@ -175,8 +56,8 @@
 		<!-- BobStats -->
 		<div class=" mt-5 space-y-4">
 			<p class="text-5xl">BobStats™</p>
-			<p style="color: {getGreenRedColorFromScore(media.bobStats.bobscore * 100)};">
-				Score : {media.bobStats.bobscore * 10}
+			<p style="color: {getGreenRedColorFromScore(media.bobStats.score * 100)};">
+				Score : {media.bobStats.score * 10}
 			</p>
 			<p>{media.bobStats.review}</p>
 		</div>

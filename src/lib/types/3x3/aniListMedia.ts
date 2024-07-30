@@ -133,7 +133,7 @@ export const errorAnime: Anime = {
 };
 
 export type threeByThreeEntry = {
-	id: number;
+	id: string;
 	review: string;
 	label: string;
 	item_order: number;

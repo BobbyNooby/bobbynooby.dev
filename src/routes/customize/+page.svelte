@@ -12,14 +12,20 @@
 	import { SignIn, SignOut } from '@auth/sveltekit/components';
 	import { toast } from 'svelte-french-toast';
 	import { goto } from '$app/navigation';
+	import type { PageServerData } from './$types';
+	import { createThreeByThreeList } from '$lib/stores/threeByThreeList';
 
-	export let data: PageData;
+	export let data: PageServerData;
 
 	const linksTable = createLinksTable(data.links);
 	let linksReady = false;
 
 	const projectsTable = createProjectsTable(data.projects);
 	let projectsReady = false;
+
+	const all3x3Data = createThreeByThreeList(data.all3x3Data);
+	let all3x3Visible = false;
+	let allThreeData = $all3x3Data;
 
 	let isDeleteMenuActive = false;
 	let deleteMenuData: {} = { none: 'None' };
@@ -48,10 +54,6 @@
 		const textarea = event.target as HTMLTextAreaElement;
 		textarea.style.height = 'auto';
 		textarea.style.height = `${textarea.scrollHeight}px`;
-	}
-
-	$: {
-		console.log($projectsTable);
 	}
 </script>
 
@@ -93,7 +95,14 @@
 							value={JSON.stringify($projectsTable)}
 							required
 						/>
-						<GenericButton buttonType={'submit'} text={'Update'} />
+						<input type="hidden" name="all3x3Data" value={JSON.stringify(allThreeData)} required />
+						<GenericButton
+							buttonType={'submit'}
+							text={'Update'}
+							inputFunction={() => {
+								allThreeData = all3x3Data.getData();
+							}}
+						/>
 					</form>
 					<div>
 						<GenericButton text={'Home'} inputFunction={() => goto('/')} />
@@ -150,7 +159,7 @@
 							{#each $linksTable as link, i (link.uid)}
 								<div
 									animate:flip={{ duration: 200, easing: cubicOut }}
-									class="border rounded-md border-white p-3 m-2"
+									class="border rounded-md border-white p-3 m-2 link-entry"
 								>
 									<div class="flex flex-row">
 										<div class="flex flex-col w-full">
@@ -290,7 +299,7 @@
 							{#each $projectsTable as project, i (project.uid)}
 								<div
 									animate:flip={{ duration: 200, easing: cubicOut }}
-									class="border rounded-md border-white p-3 m-2"
+									class="border rounded-md border-white p-3 m-2 projects-entry"
 								>
 									<div class="flex flex-row">
 										<div class="flex flex-col w-full">
@@ -316,7 +325,7 @@
 												</div>
 											</div>
 											<div class="flex flex-col">
-												<p class="font-cascadia-code">description</p>
+												<p class="font-cascadia-code">Description</p>
 												<textarea
 													class="edit-input rounded w-full h-auto"
 													bind:value={project.description}
@@ -379,6 +388,117 @@
 									extraClasses={'text-xl'}
 								/>
 							</div>
+						</div>
+					{/if}
+				</div>
+				<div class="all3x3-root">
+					<div class="flex flex-row items-center">
+						<p class=" container-title-text font-cascadia-code">/3x3s</p>
+						<button on:click={() => (all3x3Visible = !all3x3Visible)}>
+							{#if !all3x3Visible}
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									width="32"
+									height="32"
+									fill="currentColor"
+									><path
+										d="M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM11 11V7H13V11H17V13H13V17H11V13H7V11H11Z"
+									></path></svg
+								>
+							{:else}
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									width="32"
+									height="32"
+									fill="currentColor"
+									><path
+										d="M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM7 11H17V13H7V11Z"
+									></path></svg
+								>
+							{/if}
+						</button>
+					</div>
+					{#if all3x3Visible}
+						<div
+							in:fly={{ y: 100, duration: 500, easing: cubicOut, delay: 100 }}
+							out:fly={{ y: 100, duration: 500, easing: cubicOut }}
+						>
+							{#each $all3x3Data as threeByThreeList, i (threeByThreeList)}
+								<div animate:flip={{ duration: 200, easing: cubicOut }} class="p-3 m-2">
+									<div class="flex flex-row items-center">
+										<p class=" container-title-text font-cascadia-code">
+											/{threeByThreeList.label}
+										</p>
+										<button on:click={() => all3x3Data.toggle(threeByThreeList.label)}>
+											{#if !threeByThreeList.visible}
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													viewBox="0 0 24 24"
+													width="32"
+													height="32"
+													fill="currentColor"
+													><path
+														d="M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM11 11V7H13V11H17V13H13V17H11V13H7V11H11Z"
+													></path></svg
+												>
+											{:else}
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													viewBox="0 0 24 24"
+													width="32"
+													height="32"
+													fill="currentColor"
+													><path
+														d="M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM7 11H17V13H7V11Z"
+													></path></svg
+												>
+											{/if}
+										</button>
+									</div>
+									{#if threeByThreeList.visible}
+										{#each threeByThreeList.data as entry}
+											<div
+												class="flex flex-col border border-white rounded-md my-4 p-4 font-cascadia-code space-y-2 threebythree-entry"
+											>
+												<div class="flex flex-row space-x-2">
+													<p>Id</p>
+													<input
+														class=" edit-input rounded w-full"
+														bind:value={entry.id}
+														placeholder="Id"
+													/>
+												</div>
+												<div class="flex flex-row space-x-2">
+													<p>Label</p>
+													<input
+														class=" edit-input rounded w-full"
+														bind:value={entry.label}
+														placeholder="Label"
+													/>
+												</div>
+												<div class="flex flex-row space-x-2">
+													<p>Score</p>
+													<input
+														class=" edit-input rounded w-full"
+														bind:value={entry.bobscore}
+														placeholder="Score"
+													/>
+												</div>
+												<div class="flex flex-row space-x-2">
+													<p>Review</p>
+													<textarea
+														class=" edit-input rounded w-full h-32"
+														bind:value={entry.review}
+														placeholder="Review"
+													/>
+												</div>
+											</div>
+										{/each}
+									{/if}
+								</div>
+							{/each}
 						</div>
 					{/if}
 				</div>
@@ -446,13 +566,30 @@
 
 <style>
 	.link-root {
-		width: 28rem;
+		width: auto;
 		margin-bottom: 1rem;
 	}
 
+	.link-entry {
+		width: 28rem;
+	}
+
 	.projects-root {
-		width: 56rem;
+		width: auto;
 		margin-bottom: 1rem;
+	}
+
+	.projects-entry {
+		width: 56rem;
+	}
+
+	.all3x3-root {
+		width: auto;
+		margin-bottom: 1rem;
+	}
+
+	.threebythree-entry {
+		width: 56rem;
 	}
 
 	.link-container {

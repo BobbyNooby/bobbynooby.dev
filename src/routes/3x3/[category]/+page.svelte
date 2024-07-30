@@ -1,12 +1,30 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { navigating } from '$app/stores';
+	import GenericButton from '$lib/components/GenericButton.svelte';
 	import ThreeByThree from '$lib/components/ThreeByThree.svelte';
 	import type { GeneralMedia } from '$lib/types/3x3/GeneralMedia';
-	import { staticFilesUrl } from '$lib/utils/staticContentDirectory';
+	import { onMount } from 'svelte';
+	import { cubicInOut } from 'svelte/easing';
+	import { fade } from 'svelte/transition';
 
 	export let data: { mediaList: GeneralMedia[] | null; category: string };
 	let mediaList: GeneralMedia[] = data.mediaList;
+
+	let ready = false;
+
+	onMount(() => {
+		ready = true;
+	});
 </script>
 
+{#if !$navigating}
+	{#if ready}
+		<div class="backbutton" in:fade={{ duration: 1000, easing: cubicInOut }}>
+			<GenericButton text={'Back'} inputFunction={() => goto('/3x3')}></GenericButton>
+		</div>
+	{/if}
+{/if}
 {#if mediaList != null}
 	<p><ThreeByThree {mediaList}></ThreeByThree></p>
 {:else}
@@ -17,3 +35,13 @@
 		Please do enjoy yourself.
 	</p>
 {/if}
+
+<style>
+	.backbutton {
+		position: fixed;
+		top: 20px;
+		left: 20px;
+		z-index: 1;
+		display: flex;
+	}
+</style>

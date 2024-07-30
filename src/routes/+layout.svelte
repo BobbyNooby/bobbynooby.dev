@@ -2,6 +2,9 @@
 	import AfkChecker from '$lib/components/AFKChecker.svelte';
 	import { Toaster } from 'svelte-french-toast';
 	import '../app.css';
+	import { navigating } from '$app/stores';
+	import { fade } from 'svelte/transition';
+	import { cubicIn, cubicInOut } from 'svelte/easing';
 </script>
 
 <head>
@@ -44,9 +47,37 @@
 />
 <section class="app md:items-center">
 	<main><slot /><AfkChecker /></main>
+	{#if $navigating}
+		<div
+			class="loader"
+			in:fade={{ duration: 100, easing: cubicInOut }}
+			out:fade={{ duration: 100, easing: cubicInOut }}
+		>
+			<img
+				in:fade={{ duration: 100, easing: cubicInOut }}
+				out:fade={{ duration: 100, easing: cubicInOut }}
+				class="w-1/2 aspect-square"
+				src="/spinninglogo.gif"
+				alt="logo"
+			/>
+		</div>
+	{/if}
 </section>
 
 <style>
+	.loader {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: black;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 10;
+	}
+
 	.app {
 		z-index: 10;
 		display: flex;

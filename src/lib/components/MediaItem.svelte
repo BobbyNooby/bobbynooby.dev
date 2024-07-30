@@ -30,6 +30,7 @@
 		out:fade={{ duration: 200 }}
 		class="menubackground"
 		on:click={handleBackgroundClick}
+		on:click={handleBackgroundClick}
 	>
 		<MediaDetails {media} {css} />
 	</div>

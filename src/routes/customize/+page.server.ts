@@ -1,23 +1,20 @@
-import { supabaseClient } from '$lib/supabase.js';
-import { getAll3x3Data, getLinks, getProjects } from '$lib/supabaseServerUtils';
-import type { threeByThreeEntry } from '$lib/types/3x3/aniListMedia.js';
-import type { linksSchema } from '$lib/types/linksSchema.js';
-import type { projectsSchema } from '$lib/types/projectsSchema.js';
-import type { threeByThreeServerData } from '$lib/types/threeByThreeTypes.js';
+import { db } from '$lib/db/mongo';
+import { getAll3x3Data, getLinks, getProjects } from '$lib/db/mongoUtils.js';
+import type { threeByThreeEntry } from '$lib/types.js';
 import { verifySession } from '$lib/utils/verifySession.js';
 import { fail, json, type Actions } from '@sveltejs/kit';
 
-export const load = async ({ locals }) => {
+export const load = async ({ locals, fetch }) => {
 	let session = await locals.auth();
 	let validSession = await verifySession(session);
 	if (validSession != true) {
 		validSession = false;
 	}
 
-	const all3x3Data = await getAll3x3Data();
+	const all3x3Data = await getAll3x3Data(fetch);
 
-	const links = await getLinks();
-	const projects = await getProjects();
+	const links = await getLinks(fetch);
+	const projects = await getProjects(fetch);
 	return { links, projects, isSessionValid: validSession, all3x3Data };
 };
 
@@ -42,14 +39,14 @@ export const actions = {
 		];
 
 		for (const entry of all3x3Data) {
-			queryList.push({ table: entry.label.toLowerCase() + '3x3', data: entry.data });
+			queryList.push({ table: '3x3_' + entry.label.toLowerCase(), data: entry.data });
 		}
 
 		for (const query of queryList) {
-			const { data, error } = await supabaseClient.from(query.table).upsert(query.data).select();
-
-			if (error) {
-				return fail(500, { error: error.message });
+			await db.collection(query.table).deleteMany({});
+			const result = await db.collection(query.table).insertMany(query.data, { ordered: false });
+			if (!result.acknowledged) {
+				return fail(500, { error: 'Failed to insert data' });
 			}
 		}
 	}

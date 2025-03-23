@@ -1,13 +1,11 @@
 <script lang="ts">
-	import AfkChecker from '$lib/components/AFKChecker.svelte';
+	import Loader from '$lib/components/widgets/Loader.svelte';
 	import { Toaster } from 'svelte-french-toast';
 	import '../app.css';
-	import { navigating } from '$app/stores';
-	import { fade } from 'svelte/transition';
-	import { cubicIn, cubicInOut } from 'svelte/easing';
+	let { children } = $props();
 </script>
 
-<head>
+<svelte:head>
 	<!-- Primary Meta Tags -->
 	<title>{'>bobbynooby.dev'}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -37,7 +35,7 @@
 	/>
 
 	<!-- Meta Tags Generated with https://metatags.io -->
-</head>
+</svelte:head>
 
 <Toaster
 	toastOptions={{
@@ -45,41 +43,10 @@
 		style: 'background-color: black; border-width : 0.2rem; border-color: white; color:white;'
 	}}
 />
-<section class="app md:items-center">
-	<main><slot /><AfkChecker /></main>
-	{#if $navigating}
-		<div
-			class="loader"
-			in:fade={{ duration: 100, easing: cubicInOut }}
-			out:fade={{ duration: 100, easing: cubicInOut }}
-		>
-			<img
-				in:fade={{ duration: 100, easing: cubicInOut }}
-				out:fade={{ duration: 100, easing: cubicInOut }}
-				class="w-1/2 aspect-square"
-				src="/spinninglogo.gif"
-				alt="logo"
-			/>
-		</div>
-	{/if}
-</section>
+<main class="main-content font-cascadia-code items-center">{@render children()}<Loader /></main>
 
 <style>
-	.loader {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background-color: black;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		z-index: 10;
-	}
-
-	.app {
-		z-index: 10;
+	.main-content {
 		display: flex;
 		background-color: black;
 		width: 100%;

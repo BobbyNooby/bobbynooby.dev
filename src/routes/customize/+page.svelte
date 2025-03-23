@@ -1,34 +1,33 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { PageData } from '../$types';
 	import 'remixicon/fonts/remixicon.css';
-	import { createLinksTable } from '$lib/stores/linksTable';
+	import { createLinksTable } from '$lib/admin/linksTable';
 	import { flip } from 'svelte/animate';
 	import { cubicIn, cubicInOut, cubicOut } from 'svelte/easing';
 	import { fade, fly } from 'svelte/transition';
-	import { createProjectsTable } from '$lib/stores/projectsTable';
+	import { createProjectsTable } from '$lib/admin/projectsTable';
 	import GenericButton from '$lib/components/GenericButton.svelte';
 	import { page } from '$app/stores';
 	import { SignIn, SignOut } from '@auth/sveltekit/components';
 	import { toast } from 'svelte-french-toast';
 	import { goto } from '$app/navigation';
 	import type { PageServerData } from './$types';
-	import { createThreeByThreeList } from '$lib/stores/threeByThreeList';
+	import { createThreeByThreeList } from '$lib/admin/threeByThreeList';
 
-	export let data: PageServerData;
+	let { data }: { data: PageServerData } = $props();
 
 	const linksTable = createLinksTable(data.links);
-	let linksReady = false;
+	let linksReady = $state(false);
 
 	const projectsTable = createProjectsTable(data.projects);
-	let projectsReady = false;
+	let projectsReady = $state(false);
 
 	const all3x3Data = createThreeByThreeList(data.all3x3Data);
-	let all3x3Visible = false;
-	let allThreeData = $all3x3Data;
+	let all3x3Visible = $state(false);
+	let allThreeData = $state(all3x3Data.getData());
 
-	let isDeleteMenuActive = false;
-	let deleteMenuData: {} = { none: 'None' };
+	let isDeleteMenuActive = $state(false);
+	let deleteMenuData: {} = $state({ none: 'None' });
 	let deleteFunction = () => {};
 
 	function handleDelete(inputFunction: () => any, data: any) {
@@ -59,7 +58,7 @@
 
 {#if $page.data.session}
 	{#if data.isSessionValid}
-		<div class="flex flex-col z-0 mt-5">
+		<div class="z-0 mt-5 flex flex-col">
 			<div class="flex flex-row space-x-5">
 				<div class="space-y-2">
 					<SignOut>
@@ -111,7 +110,7 @@
 				<div class="link-root">
 					<div class="flex flex-row items-center">
 						<p class=" container-title-text font-cascadia-code">/Links</p>
-						<button on:click={() => (linksReady = !linksReady)}>
+						<button onclick={() => (linksReady = !linksReady)}>
 							{#if !linksReady}
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -137,7 +136,7 @@
 							{/if}
 						</button>
 						{#if linksReady}
-							<button on:click={() => linksTable.createNew()}>
+							<button aria-label="add" onclick={() => linksTable.createNew()}>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									viewBox="0 0 24 24"
@@ -159,24 +158,24 @@
 							{#each $linksTable as link, i (link.uid)}
 								<div
 									animate:flip={{ duration: 200, easing: cubicOut }}
-									class="border rounded-md border-white p-3 m-2 link-entry"
+									class="link-entry m-2 rounded-md border border-white p-3"
 								>
 									<div class="flex flex-row">
-										<div class="flex flex-col w-full">
+										<div class="flex w-full flex-col">
 											<div class="link-container">
-												<p class="mr-2 font-cascadia-code">/</p>
+												<p class="font-cascadia-code mr-2">/</p>
 												<input
 													style="color : {link.color}"
-													class="edit-input rounded w-full"
+													class="edit-input w-full rounded"
 													type="text"
 													placeholder="Name"
-													bind:value={link.name}
+													bind:value={link.label}
 												/>
 											</div>
 											<div class="link-container">
-												<p class="mr-2 font-cascadia-code">#</p>
+												<p class="font-cascadia-code mr-2">#</p>
 												<input
-													class="edit-input rounded w-full"
+													class="edit-input w-full rounded"
 													style="color :{link.color}"
 													type="text"
 													placeholder="Color"
@@ -184,17 +183,21 @@
 												/>
 											</div>
 											<div class="link-container">
-												<p class="mr-2 font-cascadia-code">@</p>
+												<p class="font-cascadia-code mr-2">@</p>
 												<input
 													placeholder="Link"
-													class="edit-input rounded w-full"
+													class="edit-input w-full rounded"
 													type="text"
 													bind:value={link.href}
 												/>
 											</div>
 										</div>
-										<div class="flex flex-col items-center w-min justify-center ml-2">
-											<button class="my-1" on:click={() => linksTable.swapOrder(i, i - 1)}>
+										<div class="ml-2 flex w-min flex-col items-center justify-center">
+											<button
+												aria-label="up"
+												class="my-1"
+												onclick={() => linksTable.swapOrder(i, i - 1)}
+											>
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
 													viewBox="0 0 24 24"
@@ -207,9 +210,10 @@
 												></button
 											>
 											<button
-												on:click={() =>
+												aria-label="delete"
+												onclick={() =>
 													handleDelete(() => linksTable.deleteEntry(i), {
-														name: link.name,
+														name: link.label,
 														href: link.href,
 														color: link.color
 													})}
@@ -224,7 +228,11 @@
 													></path></svg
 												></button
 											>
-											<button class="my-1" on:click={() => linksTable.swapOrder(i, i + 1)}>
+											<button
+												aria-label="down"
+												class="my-1"
+												onclick={() => linksTable.swapOrder(i, i + 1)}
+											>
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
 													viewBox="0 0 24 24"
@@ -251,7 +259,7 @@
 				<div class="projects-root">
 					<div class="flex flex-row items-center">
 						<p class=" container-title-text font-cascadia-code">/Projects</p>
-						<button on:click={() => (projectsReady = !projectsReady)}>
+						<button onclick={() => (projectsReady = !projectsReady)}>
 							{#if !projectsReady}
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -277,7 +285,7 @@
 							{/if}
 						</button>
 						{#if projectsReady}
-							<button on:click={() => projectsTable.createNew()}>
+							<button aria-label="add" onclick={() => projectsTable.createNew()}>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									viewBox="0 0 24 24"
@@ -299,25 +307,25 @@
 							{#each $projectsTable as project, i (project.uid)}
 								<div
 									animate:flip={{ duration: 200, easing: cubicOut }}
-									class="border rounded-md border-white p-3 m-2 projects-entry"
+									class="projects-entry m-2 rounded-md border border-white p-3"
 								>
 									<div class="flex flex-row">
-										<div class="flex flex-col w-full">
-											<div class="flex flex-row w-full">
+										<div class="flex w-full flex-col">
+											<div class="flex w-full flex-row">
 												<div class="link-container w-1/2" style="color : #FACC15">
-													<p class="mr-2 font-cascadia-code">/</p>
+													<p class="font-cascadia-code mr-2">/</p>
 													<input
-														class="edit-input rounded w-full"
+														class="edit-input w-full rounded"
 														style="color : #FACC15"
 														type="text"
 														placeholder="Name"
-														bind:value={project.name}
+														bind:value={project.title}
 													/>
 												</div>
 												<div class="link-container w-1/2">
-													<p class="mr-2 font-cascadia-code">@</p>
+													<p class="font-cascadia-code mr-2">@</p>
 													<input
-														class="edit-input rounded w-full"
+														class="edit-input w-full rounded"
 														type="text"
 														placeholder="Link"
 														bind:value={project.href}
@@ -327,15 +335,19 @@
 											<div class="flex flex-col">
 												<p class="font-cascadia-code">Description</p>
 												<textarea
-													class="edit-input rounded w-full h-auto"
+													class="edit-input h-auto w-full rounded"
 													bind:value={project.description}
 													placeholder="Description"
-													on:input={resizeTextArea}
-												/>
+													oninput={resizeTextArea}
+												></textarea>
 											</div>
 										</div>
-										<div class="flex flex-col items-center w-min justify-center ml-2">
-											<button class="mb-1" on:click={() => projectsTable.swapOrder(i, i - 1)}>
+										<div class="ml-2 flex w-min flex-col items-center justify-center">
+											<button
+												aria-label="up"
+												class="mb-1"
+												onclick={() => projectsTable.swapOrder(i, i - 1)}
+											>
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
 													viewBox="0 0 24 24"
@@ -348,9 +360,10 @@
 												></button
 											>
 											<button
-												on:click={() =>
+												aria-label="delete"
+												onclick={() =>
 													handleDelete(() => projectsTable.deleteEntry(i), {
-														name: project.name,
+														name: project.title,
 														href: project.href,
 														description: project.description
 													})}
@@ -365,7 +378,11 @@
 													></path></svg
 												></button
 											>
-											<button class="mt-1" on:click={() => projectsTable.swapOrder(i, i + 1)}>
+											<button
+												aria-label="down"
+												class="mt-1"
+												onclick={() => projectsTable.swapOrder(i, i + 1)}
+											>
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
 													viewBox="0 0 24 24"
@@ -381,7 +398,7 @@
 									</div>
 								</div>
 							{/each}
-							<div class="border rounded-md border-white m-2 text-center">
+							<div class="m-2 rounded-md border border-white text-center">
 								<GenericButton
 									text={'+'}
 									inputFunction={() => projectsTable.createNew()}
@@ -394,7 +411,7 @@
 				<div class="all3x3-root">
 					<div class="flex flex-row items-center">
 						<p class=" container-title-text font-cascadia-code">/3x3s</p>
-						<button on:click={() => (all3x3Visible = !all3x3Visible)}>
+						<button onclick={() => (all3x3Visible = !all3x3Visible)}>
 							{#if !all3x3Visible}
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -426,12 +443,12 @@
 							out:fly={{ y: 100, duration: 500, easing: cubicOut }}
 						>
 							{#each $all3x3Data as threeByThreeList, i (threeByThreeList)}
-								<div animate:flip={{ duration: 200, easing: cubicOut }} class="p-3 m-2">
+								<div animate:flip={{ duration: 200, easing: cubicOut }} class="m-2 p-3">
 									<div class="flex flex-row items-center">
 										<p class=" container-title-text font-cascadia-code">
 											/{threeByThreeList.label}
 										</p>
-										<button on:click={() => all3x3Data.toggle(threeByThreeList.label)}>
+										<button onclick={() => all3x3Data.toggle(threeByThreeList.label)}>
 											{#if !threeByThreeList.visible}
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
@@ -460,12 +477,12 @@
 									{#if threeByThreeList.visible}
 										{#each threeByThreeList.data as entry}
 											<div
-												class="flex flex-col border border-white rounded-md my-4 p-4 font-cascadia-code space-y-2 threebythree-entry"
+												class="font-cascadia-code threebythree-entry my-4 flex flex-col space-y-2 rounded-md border border-white p-4"
 											>
 												<div class="flex flex-row space-x-2">
 													<p>Id</p>
 													<input
-														class=" edit-input rounded w-full"
+														class=" edit-input w-full rounded"
 														bind:value={entry.id}
 														placeholder="Id"
 													/>
@@ -473,7 +490,7 @@
 												<div class="flex flex-row space-x-2">
 													<p>Label</p>
 													<input
-														class=" edit-input rounded w-full"
+														class=" edit-input w-full rounded"
 														bind:value={entry.label}
 														placeholder="Label"
 													/>
@@ -481,7 +498,7 @@
 												<div class="flex flex-row space-x-2">
 													<p>Score</p>
 													<input
-														class=" edit-input rounded w-full"
+														class=" edit-input w-full rounded"
 														bind:value={entry.bobscore}
 														placeholder="Score"
 													/>
@@ -489,10 +506,10 @@
 												<div class="flex flex-row space-x-2">
 													<p>Review</p>
 													<textarea
-														class=" edit-input rounded w-full h-32"
+														class=" edit-input h-32 w-full rounded"
 														bind:value={entry.review}
 														placeholder="Review"
-													/>
+													></textarea>
 												</div>
 											</div>
 										{/each}
@@ -507,16 +524,16 @@
 
 		{#if isDeleteMenuActive}
 			<div
-				class="bg-black bg-opacity-80 fixed w-screen h-screen z-10 top-0 left-0 text-white flex items-center justify-center"
+				class="bg-opacity-80 fixed top-0 left-0 z-10 flex h-screen w-screen items-center justify-center bg-black text-white"
 				in:fade={{ duration: 200, easing: cubicInOut }}
 				out:fade={{ duration: 200, easing: cubicInOut }}
 			>
-				<div class="z-20 flex flex-col font-cascadia-code text-center">
-					<p class="mb-10 text-3xl z-20">Are you sure you want to delete</p>
+				<div class="font-cascadia-code z-20 flex flex-col text-center">
+					<p class="z-20 mb-10 text-3xl">Are you sure you want to delete</p>
 					{#each Object.values(deleteMenuData) as value}
 						<p class="my-2">{value}</p>
 					{/each}
-					<div class="mt-10 flex flex-row h-10 space-x-2 my-5">
+					<div class="my-5 mt-10 flex h-10 flex-row space-x-2">
 						<GenericButton
 							text={'No'}
 							inputFunction={cancelDelete}
@@ -527,8 +544,8 @@
 			</div>
 		{/if}
 	{:else}
-		<div class="flex h-screen items-center justify-center overflow-hidden text-center flex-col">
-			<p class="font-cascadia-code text-3xl bouncy-animation">
+		<div class="flex h-screen flex-col items-center justify-center overflow-hidden text-center">
+			<p class="font-cascadia-code bouncy-animation text-3xl">
 				NAH BRUH you aint the admin bruh GETCHO ASS OUTTA HERE <span class="emoji-font"
 					>🗣🗣🗣🔥🔥🔥💯💯🤣🤣🤣🫵🫵🫵🫵</span
 				>
@@ -545,7 +562,8 @@
 		<SignIn provider="discord">
 			<div slot="submitButton" class="buttonPrimary">
 				<button
-					class="flex items-center border-2 rounded-full border-white hover:bg-gray-900"
+					aria-label="Sign in with Discord"
+					class="flex items-center rounded-full border-2 border-white hover:bg-gray-900"
 					style="padding: 5rem;"
 				>
 					<svg

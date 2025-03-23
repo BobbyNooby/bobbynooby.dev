@@ -1,16 +1,10 @@
-import { supabaseClient } from '$lib/supabase';
+import { db } from '$lib/db/mongo';
 
 export const load = async () => {
-	const { data, error } = await supabaseClient.from('3x3list').select('key');
+	const data = await db.collection('3x3_dynamic_routes').findOne({}, { projection: { _id: 0 } });
 
-	const serverData: { key: string }[] = data;
-
-	const finalData = serverData.map((item) => {
-		return item.key;
-	});
-	console.log(finalData);
-
+	if (!data) return { routes: [] };
 	return {
-		categories: finalData
+		routes: data.routes || []
 	};
 };

@@ -1,9 +1,12 @@
-import { corsHeaders } from '$lib/corsHeaders';
-import { getSpotifyToken } from '$lib/spotify';
+import { db } from '$lib/db/mongo';
+import { getSpotifyToken } from '$lib/spotify/spotify';
+import type { SpotifyLastPlayedData, SpotifySongData } from '$lib/spotify/spotifyTypes';
+import { errorSong } from '$lib/spotify/spotifyUtils';
+import { corsHeaders } from '$lib/utils/corsHeaders';
 import { json } from '@sveltejs/kit';
-import type { SpotifySongData } from '$lib/spotify';
 
 export async function GET(): Promise<Response> {
+	// Getting Current Song Logic
 	const access_token = await getSpotifyToken();
 
 	const res = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
@@ -15,7 +18,7 @@ export async function GET(): Promise<Response> {
 	if (res.status === 204 || res.status > 400) {
 		console.log(res.status);
 		return json(
-			{ data: { isPlaying: false } },
+			{ data: errorSong },
 			{ status: 429, headers: corsHeaders, statusText: res.statusText }
 		);
 	}
@@ -36,5 +39,28 @@ export async function GET(): Promise<Response> {
 		albumImageUrl,
 		songUrl
 	};
+
+	// Setting new recently played.
+	const recentlyPlayed = (await db
+		.collection('recently_played')
+		.findOne({})) as SpotifyLastPlayedData | null;
+	const currentDateTime = new Date().toISOString();
+
+	let lastPlayedSong: SpotifyLastPlayedData = {
+		...body,
+		playedAt: currentDateTime
+	};
+	lastPlayedSong.isPlaying = false;
+
+	if (!recentlyPlayed) {
+		await db.collection('recently_played').deleteMany({});
+		await db.collection('recently_played').insertOne(lastPlayedSong);
+	} else {
+		if (recentlyPlayed.songUrl === body.songUrl)
+			return json({ data: body }, { status: 200, headers: corsHeaders });
+		await db.collection('recently_played').deleteMany({});
+		await db.collection('recently_played').insertOne(lastPlayedSong);
+	}
+
 	return json({ data: body }, { status: 200, headers: corsHeaders });
 }

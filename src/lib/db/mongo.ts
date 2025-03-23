@@ -1,7 +1,7 @@
 import { MONGO_ADMIN_URL } from '$env/static/private';
 import { MongoClient } from 'mongodb';
 
-const mongoClient = new MongoClient(MONGO_ADMIN_URL);
+const mongoClient = new MongoClient(MONGO_ADMIN_URL, { tls: true, ssl: true });
 
 export function startMongoDB() {
 	console.log('Connecting to MongoDB...');

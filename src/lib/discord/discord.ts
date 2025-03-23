@@ -5,8 +5,6 @@ const client = new Client({
 	intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildPresences]
 });
 
-client.login(DISCORD_BOT_TOKEN);
-
 export async function startDiscord() {
 	console.log('Connecting to Discord...');
 	try {

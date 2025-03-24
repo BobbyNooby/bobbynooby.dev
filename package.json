@@ -37,9 +37,10 @@
 	"dependencies": {
 		"@auth/sveltekit": "^1.8.0",
 		"@sveltejs/adapter-vercel": "^5.6.3",
+		"bobbynooby.dev": "file:",
 		"discord.js": "^14.18.0",
 		"mongodb": "^6.15.0",
 		"remixicon": "^4.6.0",
 		"svelte-french-toast": "^1.2.0"
 	}
-  }
+}

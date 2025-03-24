@@ -23,7 +23,8 @@
 		projects: 2,
 		links: 3,
 		status: 4,
-		music: 5
+		music: 5,
+		threeByThree: 6
 	};
 
 	onMount(() => {
@@ -73,7 +74,12 @@
 						initialLastSongData={data.lastSongData}
 					/>
 				</div>
-				<div class="content-box"><My3x3 /></div>
+				<div
+					class="content-box"
+					transition:fade={{ delay: arrangement.threeByThree * interval, duration: duration }}
+				>
+					<My3x3 />
+				</div>
 			</div>
 		</div>
 	</div>

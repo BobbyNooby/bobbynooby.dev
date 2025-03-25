@@ -6,8 +6,9 @@ import type { Actions } from './$types';
 // URL validation function
 function isValidURL(url: string): boolean {
 	try {
-		// Comprehensive URL regex
-		const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
+		// More comprehensive URL regex
+		const urlRegex =
+			/^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+)(@?[a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]*)?$/;
 
 		// Additional checks
 		if (!urlRegex.test(url)) {
@@ -33,7 +34,6 @@ function isValidURL(url: string): boolean {
 		return false;
 	}
 }
-
 export const load = async ({ locals }) => {
 	const session = await locals.auth();
 

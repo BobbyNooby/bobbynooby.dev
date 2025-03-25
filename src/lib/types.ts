@@ -14,3 +14,8 @@ export type threeByThreeServerData = {
 	label: string;
 	data: threeByThreeEntry[];
 };
+
+export type ShortURL = {
+	shortURL: string;
+	longURL: string;
+};

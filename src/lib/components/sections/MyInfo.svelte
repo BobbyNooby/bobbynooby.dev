@@ -56,7 +56,7 @@
 	<Emoji emoji={'😁'} />. I've been trying to get back into this internet socializing thing so if
 	you'd like to join a
 	<span style="color : #5865F2;"
-		><a href="https://discord.com/invite/9Xj9b7u">
+		><a href="https://discord.gg/Bn9qX8hzNQ">
 			Discord<svg
 				xmlns="http://www.w3.org/2000/svg"
 				height="1rem"

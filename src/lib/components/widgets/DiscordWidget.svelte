@@ -1,9 +1,6 @@
 <script lang="ts">
+	import { PUBLIC_WEBSOCKET_BASE_URL } from '$env/static/public';
 	import type { discordStatuses } from '$lib/discord/discordTypes';
-	import { getDiscordStatus } from '$lib/discord/discordUtils';
-	import { onMount } from 'svelte';
-
-	let { initialDiscordStatus }: { initialDiscordStatus: discordStatuses } = $props();
 
 	const colors: Record<discordStatuses, string> = {
 		online: '#23A55A',
@@ -13,19 +10,15 @@
 		unknown: '#80848E'
 	};
 
-	let discordStatus: discordStatuses = $state(initialDiscordStatus || 'offline');
+	let discordStatus: discordStatuses = $state('offline');
+	const ws = new WebSocket(`${PUBLIC_WEBSOCKET_BASE_URL}/discord`);
 
-	onMount(async () => {
-		discordStatus = await getDiscordStatus();
-
-		window.addEventListener('focus', async () => {
-			discordStatus = await getDiscordStatus();
-		});
-	});
-
-	setInterval(async () => {
-		discordStatus = await getDiscordStatus();
-	}, 5000);
+	ws.onmessage = (event) => {
+		const { data } = event;
+		const { status } = JSON.parse(data);
+		console.log(status);
+		discordStatus = status;
+	};
 </script>
 
 <p class="font-cascadia-code text-white" style="color: {colors[discordStatus]};">

@@ -1,3 +1,6 @@
+// This feature has been deprecated due do implementation of a websocket server
+// The code is left here as a backup for one day if the websocket server is down
+
 import {
 	SPOTIFY_CLIENT_SECRET,
 	SPOTIFY_CLIENT_ID,

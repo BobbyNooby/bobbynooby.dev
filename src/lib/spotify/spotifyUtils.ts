@@ -6,7 +6,7 @@ export const errorSong: SpotifySongData = {
 	artist: 'BobbyNooby',
 	album: 'Credits Song For My Breakdown',
 	albumImageUrl:
-		'ahttps://via.placeholder.com/150https://i.scdn.co/image/ab67616d0000b2730e4888261e7b8c069eff0eb7',
+		'https://via.placeholder.com/150https://i.scdn.co/image/ab67616d0000b2730e4888261e7b8c069eff0eb7',
 	songUrl: 'https://open.spotify.com/album/1Wd1mI2VMP9YHf3Zcp1qhG'
 };
 

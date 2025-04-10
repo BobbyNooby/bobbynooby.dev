@@ -9,7 +9,7 @@
 	import MyStatus from '$lib/components/sections/MyStatus.svelte';
 	import MySpotify from '$lib/components/sections/MySpotify.svelte';
 	import My3x3 from '$lib/components/sections/My3x3.svelte';
-	import { navigating } from '$app/state';
+	import MyChat from '$lib/components/sections/MyChat.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -24,7 +24,8 @@
 		links: 3,
 		status: 4,
 		music: 5,
-		threeByThree: 6
+		threeByThree: 6,
+		chat: 7
 	};
 
 	onMount(() => {
@@ -38,6 +39,7 @@
 			<Title />
 		</div>
 		<div class="main-container">
+			<!-- Left Side  -->
 			<div class="w-2/3">
 				<div
 					class="content-box"
@@ -51,7 +53,16 @@
 				>
 					<MyProjects projects={data.projects} />
 				</div>
+
+				<div
+					class="content-box"
+					transition:fade={{ delay: arrangement.threeByThree * interval, duration: duration }}
+				>
+					<MyChat />
+				</div>
 			</div>
+
+			<!-- Right Side  -->
 			<div class="w-1/3">
 				<div
 					class="content-box"
@@ -63,16 +74,13 @@
 					class="content-box"
 					transition:fade={{ delay: arrangement.status * interval, duration: duration }}
 				>
-					<MyStatus initialDiscordStatus={data.discordStatus} />
+					<MyStatus />
 				</div>
 				<div
 					class="content-box"
 					transition:fade={{ delay: arrangement.music * interval, duration: duration }}
 				>
-					<MySpotify
-						initialCurrentSongData={data.currentSongData}
-						initialLastSongData={data.lastSongData}
-					/>
+					<MySpotify />
 				</div>
 				<div
 					class="content-box"

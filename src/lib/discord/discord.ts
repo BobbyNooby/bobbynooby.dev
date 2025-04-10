@@ -1,3 +1,6 @@
+// This feature has been deprecated due do implementation of a websocket server
+// The code is left here as a backup for one day if the websocket server is down
+
 import { DISCORD_BOT_TOKEN } from '$env/static/private';
 import { Client, IntentsBitField } from 'discord.js';
 

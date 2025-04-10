@@ -1,51 +1,27 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import type { SpotifyLastPlayedData, SpotifySongData } from '$lib/spotify/spotifyTypes';
-	import { getCurrentSongData, getLastPlayedSongData } from '$lib/spotify/spotifyUtils';
+	import { PUBLIC_WEBSOCKET_BASE_URL } from '$env/static/public';
+	import { errorLastPlayedSong, errorSong } from '$lib/spotify/spotifyUtils';
 	import { secondsToTimeString } from '$lib/utils/secondsToTimeString';
 	import ScrollingText from '../ui/ScrollingText.svelte';
 
-	let {
-		initialCurrentSongData,
-		initialLastSongData
-	}: { initialCurrentSongData: SpotifySongData; initialLastSongData: SpotifyLastPlayedData } =
-		$props();
+	let songData = $state(errorLastPlayedSong);
 
-	let songData = $state(initialCurrentSongData);
-	let lastSongData = $state(initialLastSongData);
+	const ws = new WebSocket(`${PUBLIC_WEBSOCKET_BASE_URL}/spotify`);
 
-	let timeSinceLastSong = $state(
+	ws.onmessage = (event) => {
+		const { data } = event;
+		const { song } = JSON.parse(data);
+
+		songData = song;
+	};
+
+	let timeSinceLastSong = $derived(
 		Math.round(
 			Math.abs(
-				new Date(new Date().toISOString()).getTime() -
-					new Date(initialLastSongData.playedAt).getTime()
+				new Date(new Date().toISOString()).getTime() - new Date(songData.playedAt).getTime()
 			) / 1000
 		)
 	);
-
-	async function updateComponent() {
-		const newCurrentSongData: SpotifySongData = await getCurrentSongData(fetch);
-		const newLastSongData: SpotifyLastPlayedData = await getLastPlayedSongData(fetch);
-		const currentTime = new Date().getTime();
-		const lastPlayedTime = new Date(lastSongData.playedAt).getTime();
-
-		songData = newCurrentSongData;
-		lastSongData = newLastSongData;
-		timeSinceLastSong = Math.round(Math.abs(currentTime - lastPlayedTime) / 1000);
-		console.log(timeSinceLastSong);
-	}
-
-	setInterval(async () => {
-		await updateComponent();
-	}, 5000);
-
-	onMount(async () => {
-		await updateComponent();
-
-		window.addEventListener('focus', async () => {
-			await updateComponent();
-		});
-	});
 
 	function gotoURL(url: string) {
 		window.open(url, '_blank');
@@ -63,18 +39,11 @@
 	</p>
 	<img
 		class=" rotating-image h-24 w-24 border border-white"
-		src={songData.isPlaying ? songData.albumImageUrl : lastSongData.albumImageUrl}
+		src={songData.albumImageUrl}
 		alt="Album Art"
 	/>
-	<ScrollingText
-		text={songData.isPlaying ? songData.title : lastSongData.title}
-		tailwindcss="text-xs text-nowrap"
-	/>
-	<ScrollingText
-		text={songData.isPlaying ? songData.artist : lastSongData.artist}
-		rightToLeft={true}
-		tailwindcss="text-xs text-nowrap"
-	/>
+	<ScrollingText text={songData.title} tailwindcss="text-xs text-nowrap" />
+	<ScrollingText text={songData.artist} rightToLeft={true} tailwindcss="text-xs text-nowrap" />
 </button>
 
 <style>

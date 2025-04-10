@@ -19,3 +19,16 @@ export type ShortURL = {
 	shortURL: string;
 	longURL: string;
 };
+
+export type ChatMessage = {
+	created_at: string;
+	name: string;
+	message: string;
+	rank: string;
+};
+
+export type SentChatMessage = {
+	name: string;
+	message: string;
+	sessionId: string | undefined;
+};

@@ -1,12 +1,7 @@
 <script lang="ts">
-	import type { discordStatuses } from '$lib/discord/discordTypes';
 	import { onMount } from 'svelte';
 	import DiscordWidget from '../widgets/DiscordWidget.svelte';
 	import Emoji from '$lib/components/ui/Emoji.svelte';
-
-	let { initialDiscordStatus }: { initialDiscordStatus: discordStatuses } = $props();
-
-	let discordStatus: discordStatuses = initialDiscordStatus || 'offline';
 
 	let malaysiaTimeString: string = $state('');
 	let ukTimeString: string = $state('');
@@ -27,7 +22,7 @@
 <p class="container-title-text">/Status</p>
 <p style="text-indent: 2em;">/discord</p>
 <div style=" text-indent: 4em ">
-	<DiscordWidget initialDiscordStatus={discordStatus} />
+	<DiscordWidget />
 </div>
 <p style="text-indent: 2em;">/time</p>
 <p style="text-indent: 4em;">/UK <span><Emoji emoji={'🇬🇧'} /></span></p>

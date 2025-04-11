@@ -29,7 +29,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 			options: {
 				httpOnly: true,
 				sameSite: IS_PRODUCTION ? 'none' : 'lax',
-				secure: Boolean(IS_PRODUCTION),
+				secure: IS_PRODUCTION == 'true' ? true : false,
 				path: '/',
 				domain: IS_PRODUCTION ? '.bobbynooby.dev' : undefined
 			}

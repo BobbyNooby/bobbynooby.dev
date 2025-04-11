@@ -23,16 +23,19 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 			return session;
 		}
 	},
-	cookies: {
-		sessionToken: {
-			name: 'sessionToken',
-			options: {
-				httpOnly: true,
-				sameSite: IS_PRODUCTION ? 'none' : 'lax',
-				secure: IS_PRODUCTION == 'true' ? true : false,
-				path: '/',
-				domain: IS_PRODUCTION ? '.bobbynooby.dev' : undefined
-			}
-		}
-	}
+	cookies:
+		IS_PRODUCTION == 'true'
+			? {
+					sessionToken: {
+						name: 'sessionToken',
+						options: {
+							httpOnly: true,
+							sameSite: 'none', 
+							secure: true, 
+							path: '/',
+							domain: '.bobbynooby.dev'
+						}
+					}
+				}
+			: undefined
 });

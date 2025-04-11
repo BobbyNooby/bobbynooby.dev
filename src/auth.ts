@@ -1,6 +1,6 @@
 import { SvelteKitAuth } from '@auth/sveltekit';
 import Discord from '@auth/sveltekit/providers/discord';
-import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from '$env/static/private';
+import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, IS_PRODUCTION } from '$env/static/private';
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
 	providers: [
@@ -21,6 +21,18 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 		async session({ session, token, user }) {
 			session.user.id = token.id as string;
 			return session;
+		}
+	},
+	cookies: {
+		sessionToken: {
+			name: 'sessionToken',
+			options: {
+				httpOnly: true,
+				sameSite: IS_PRODUCTION ? 'none' : 'lax',
+				secure: Boolean(IS_PRODUCTION),
+				path: '/',
+				domain: IS_PRODUCTION ? '.bobbynooby.dev' : undefined
+			}
 		}
 	}
 });

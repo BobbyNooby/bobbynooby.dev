@@ -30,5 +30,4 @@ export type ChatMessage = {
 export type SentChatMessage = {
 	name: string;
 	message: string;
-	sessionId: string | undefined;
 };

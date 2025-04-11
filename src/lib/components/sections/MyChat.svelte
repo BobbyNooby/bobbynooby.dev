@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import { PUBLIC_WEBSOCKET_BASE_URL } from '$env/static/public';
 	import type { ChatMessage, SentChatMessage } from '$lib/types';
 	import { playAudio } from '$lib/utils/playAudio';
@@ -90,8 +89,7 @@
 
 		const messageObject: SentChatMessage = {
 			name: username,
-			message: trimmedMessage,
-			sessionId: page.data.session?.user?.id || undefined
+			message: trimmedMessage
 		};
 
 		lastMessageISent = { name: username, message: trimmedMessage };

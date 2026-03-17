@@ -114,3 +114,7 @@ font-style: normal;
 button{
     cursor: pointer;
 }
+
+html, body {
+    background-color: black;
+}

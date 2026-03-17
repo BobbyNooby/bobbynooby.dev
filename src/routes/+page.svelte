@@ -103,6 +103,8 @@
 
 	.main-screen {
 		width: 70rem;
+		min-width: 70rem;
+		align-self: flex-start;
 		margin: 0 auto;
 	}
 

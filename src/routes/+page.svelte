@@ -34,13 +34,13 @@
 </script>
 
 {#if ready}
-	<div class="main-screen flex flex-col items-center">
-		<div class="mb-5" transition:fade={{ delay: 0, duration: duration }}>
+	<div class="main-screen flex flex-col">
+		<div class="mb-5 self-center" transition:fade={{ delay: 0, duration: duration }}>
 			<Title />
 		</div>
 		<div class="main-container">
 			<!-- Left Side  -->
-			<div class="w-2/3">
+			<div class="left-column">
 				<div
 					class="content-box"
 					transition:fade={{ delay: arrangement.info * interval, duration: duration }}
@@ -63,7 +63,7 @@
 			</div>
 
 			<!-- Right Side  -->
-			<div class="w-1/3">
+			<div class="right-column">
 				<div
 					class="content-box"
 					transition:fade={{ delay: arrangement.links * interval, duration: duration }}
@@ -103,7 +103,17 @@
 
 	.main-screen {
 		width: 70rem;
+		margin: 0 auto;
 	}
+
+	.left-column {
+		width: 66.67%;
+	}
+
+	.right-column {
+		width: 33.33%;
+	}
+
 	.content-box {
 		font-family: 'Cascadia Code', sans-serif;
 		margin-left: 5px;
@@ -117,6 +127,6 @@
 		border-color: white;
 		padding: 10px;
 		color: white;
-		max-width: 100vw;
+		max-width: 100%;
 	}
 </style>

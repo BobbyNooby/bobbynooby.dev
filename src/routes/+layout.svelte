@@ -43,19 +43,15 @@
 		style: 'background-color: black; border-width : 0.2rem; border-color: white; color:white;'
 	}}
 />
-<main class="main-content font-cascadia-code items-center">{@render children()}<Loader /></main>
+<main class="main-content font-cascadia-code">{@render children()}<Loader /></main>
 
 <style>
 	.main-content {
 		display: flex;
 		background-color: black;
 		width: 100%;
-		justify-content: center;
 		flex-direction: column;
 		min-height: 100vh;
 		color: white;
-		overflow: auto;
-		overflow-x: scroll;
-		overflow-y: auto;
 	}
 </style>

@@ -17,7 +17,7 @@
 	}
 </script>
 
-<button onclick={toggleMenu} class="image" style={css.outer}>
+<button onclick={toggleMenu} class="image">
 	<img class="h-full w-full" src={media.coverImageURL} alt={media.titles[0].value} />
 </button>
 
@@ -37,6 +37,16 @@
 <style>
 	.image {
 		transition: transform 0.1s ease-in-out;
+		width: 100%;
+		height: 100%;
+		display: block;
+		padding: 0;
+		border: none;
+		background: none;
+	}
+
+	.image :global(img) {
+		object-fit: cover;
 	}
 
 	.image:hover {

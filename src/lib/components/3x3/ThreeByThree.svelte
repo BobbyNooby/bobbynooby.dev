@@ -35,12 +35,24 @@
 	}
 </script>
 
-<div class="grid grid-cols-3 space-y-0 space-x-0">
+<div class="three-grid grid grid-cols-3">
 	{#each mediaList as entry, i}
 		{#if ready}
-			<div in:fly={getTransitionData(i)} style={entry.css.outer}>
+			<div class="grid-cell" in:fly={getTransitionData(i)}>
 				<MediaItem css={entry.css} media={entry} />
 			</div>
 		{/if}
 	{/each}
 </div>
+
+<style>
+	.three-grid {
+		width: min(90vw, 36rem);
+		padding: 1rem;
+	}
+
+	.grid-cell {
+		aspect-ratio: 2/3;
+		overflow: hidden;
+	}
+</style>

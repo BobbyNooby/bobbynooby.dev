@@ -9,7 +9,7 @@
 </script>
 
 <div class="box flex flex-row rounded-lg border border-white">
-	<div class="mr-8 flex flex-col">
+	<div class="mr-4 md:mr-8 flex flex-col">
 		<button onclick={() => openLink(media.url)}>
 			<div
 				class=" cover-art-container rounded-lg"
@@ -44,7 +44,7 @@
 		<!-- Titles -->
 		<div class="mb-10 space-y-2">
 			{#each media.titles as title, i}
-				<p class={i == 0 ? 'text-6xl' : ''} style="color: {title.color};">{title.value}</p>
+				<p class={i == 0 ? 'text-3xl md:text-6xl' : ''} style="color: {title.color};">{title.value}</p>
 			{/each}
 		</div>
 
@@ -55,7 +55,7 @@
 
 		<!-- BobStats -->
 		<div class=" mt-5 space-y-4">
-			<p class="text-5xl">BobStats™</p>
+			<p class="text-3xl md:text-5xl">BobStats™</p>
 			<p style="color: {getGreenRedColorFromScore(media.bobStats.score * 100)};">
 				Score : {media.bobStats.score * 10}
 			</p>
@@ -67,6 +67,9 @@
 <style>
 	.box {
 		width: 80rem;
+		max-width: 95vw;
+		max-height: 90vh;
+		overflow-y: auto;
 		background-color: black;
 		padding: 2rem;
 		z-index: 30;
@@ -75,11 +78,23 @@
 	.cover-art-container {
 		height: 22rem;
 		width: 16rem;
-
+		min-width: 16rem;
 		border-width: 0.3rem;
 	}
 
 	p {
 		font-family: 'Cascadia Code';
+	}
+
+	@media (max-width: 768px) {
+		.box {
+			flex-direction: column;
+			padding: 1rem;
+		}
+		.cover-art-container {
+			height: 16rem;
+			width: 12rem;
+			min-width: 12rem;
+		}
 	}
 </style>

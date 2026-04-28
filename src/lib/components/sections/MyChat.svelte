@@ -63,7 +63,7 @@
 		}
 	};
 
-	async function handleEnter(event: Event) {
+	async function handleSend(event: Event) {
 		event.preventDefault();
 
 		username = localStorage.getItem('username') || `Guest_${generateRandomFourDigitNumber()}`;
@@ -189,20 +189,25 @@
 	{/each}
 </div>
 
-<input
-	class=" font-cascadia-code w-full rounded-md border border-white bg-black p-1 text-white"
-	type="text"
-	placeholder="Message"
-	bind:value={message}
-	onkeydown={async (e) => {
-		if (e.key === 'Enter') {
-			await handleEnter(e);
-		}
-	}}
-/>
-<input
-	type="hidden"
-	name="messageData"
-	value={JSON.stringify({ name: username, message: message })}
-	required
-/>
+<form class="flex w-full flex-row gap-2" onsubmit={handleSend}>
+	<input
+		class=" font-cascadia-code min-w-0 flex-grow rounded-md border border-white bg-black p-1 text-base text-white"
+		type="text"
+		placeholder="Message"
+		enterkeyhint="send"
+		autocomplete="off"
+		bind:value={message}
+	/>
+	<button
+		type="submit"
+		class="font-cascadia-code shrink-0 rounded-md border border-white bg-black px-3 py-1 text-base text-white"
+	>
+		Send
+	</button>
+	<input
+		type="hidden"
+		name="messageData"
+		value={JSON.stringify({ name: username, message: message })}
+		required
+	/>
+</form>

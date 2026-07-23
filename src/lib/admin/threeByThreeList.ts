@@ -23,7 +23,7 @@ export function createThreeByThreeList(data: threeByThreeServerData[]) {
 					threeByThree.visible = !threeByThree.visible;
 				}
 			});
-			set(threeByThrees);
+			set(threeByThrees.slice());
 		},
 		swapOrder: (label: string, index1: number, index2: number) => {
 			if (index2 < 0) return;
@@ -34,16 +34,17 @@ export function createThreeByThreeList(data: threeByThreeServerData[]) {
 					const index2ItemOrder = threeByThree.data[index2].item_order;
 					threeByThree.data[index1].item_order = index2ItemOrder;
 					threeByThree.data[index2].item_order = index1ItemOrder;
+					threeByThree.data.sort((a, b) => a.item_order - b.item_order);
 					break;
 				}
 			}
-			set(threeByThrees);
+			set(threeByThrees.slice());
 		},
 		createNew: (label: string) => {
 			for (const threeByThree of threeByThrees) {
 				if (threeByThree.label === label) {
 					const latestEntry = threeByThree.data.length > 0
-						? threeByThree.data.sort((a, b) => a.item_order - b.item_order)[threeByThree.data.length - 1]
+						? threeByThree.data.reduce((max, e) => (e.item_order > max.item_order ? e : max))
 						: null;
 					const emptyEntry: threeByThreeEntry = {
 						id: '',
@@ -53,19 +54,21 @@ export function createThreeByThreeList(data: threeByThreeServerData[]) {
 						item_order: latestEntry ? latestEntry.item_order + 1 : 1
 					};
 					threeByThree.data.push(emptyEntry);
+					threeByThree.data.sort((a, b) => a.item_order - b.item_order);
 					break;
 				}
 			}
-			set(threeByThrees);
+			set(threeByThrees.slice());
 		},
 		deleteEntry: (label: string, index: number) => {
 			for (const threeByThree of threeByThrees) {
 				if (threeByThree.label === label) {
 					threeByThree.data.splice(index, 1);
+					threeByThree.data.sort((a, b) => a.item_order - b.item_order);
 					break;
 				}
 			}
-			set(threeByThrees);
+			set(threeByThrees.slice());
 		}
 	};
 }

@@ -1,9 +1,6 @@
 import type { Link } from '$lib/db/mongoTypes';
 import { writable } from 'svelte/store';
 
-function sortLinks(links: Link[]) {
-	return links.sort((a, b) => a.item_order - b.item_order);
-}
 export function createLinksTable(data: Link[]) {
 	const links = data.sort((a, b) => a.item_order - b.item_order);
 
@@ -14,7 +11,7 @@ export function createLinksTable(data: Link[]) {
 		set,
 		createNew: () => {
 			const latestLink = links.length > 0
-				? links.sort((a, b) => a.item_order - b.item_order)[links.length - 1]
+				? links.reduce((max, link) => (link.item_order > max.item_order ? link : max))
 				: null;
 
 			const emptyBlock: Link = {
@@ -25,8 +22,9 @@ export function createLinksTable(data: Link[]) {
 				item_order: latestLink ? latestLink.item_order + 1 : 1
 			};
 			links.push(emptyBlock);
+			links.sort((a, b) => a.item_order - b.item_order);
 
-			set(sortLinks(links));
+			set(links.slice());
 		},
 		swapOrder: (index1: number, index2: number) => {
 			if (index2 < 0 || index2 >= links.length) return;
@@ -35,12 +33,15 @@ export function createLinksTable(data: Link[]) {
 
 			links[index1].item_order = index2ItemOrder;
 			links[index2].item_order = index1ItemOrder;
+			links.sort((a, b) => a.item_order - b.item_order);
 
-			set(sortLinks(links));
+			set(links.slice());
 		},
 		deleteEntry: (index: number) => {
 			links.splice(index, 1);
-			set(sortLinks(links));
+			links.sort((a, b) => a.item_order - b.item_order);
+
+			set(links.slice());
 		}
 	};
 }

@@ -1,9 +1,6 @@
 import type { Project } from '$lib/db/mongoTypes';
 import { writable } from 'svelte/store';
 
-function sortProjects(projects: Project[]) {
-	return projects.sort((a, b) => a.item_order - b.item_order);
-}
 export function createProjectsTable(data: Project[]) {
 	const projects = data.sort((a, b) => a.item_order - b.item_order);
 
@@ -14,7 +11,7 @@ export function createProjectsTable(data: Project[]) {
 		set,
 		createNew: () => {
 			const latestProject = projects.length > 0
-				? projects.sort((a, b) => a.item_order - b.item_order)[projects.length - 1]
+				? projects.reduce((max, p) => (p.item_order > max.item_order ? p : max))
 				: null;
 
 			const emptyBlock: Project = {
@@ -25,8 +22,9 @@ export function createProjectsTable(data: Project[]) {
 				item_order: latestProject ? latestProject.item_order + 1 : 1
 			};
 			projects.push(emptyBlock);
+			projects.sort((a, b) => a.item_order - b.item_order);
 
-			set(sortProjects(projects));
+			set(projects.slice());
 		},
 		swapOrder: (index1: number, index2: number) => {
 			if (index2 < 0 || index2 >= projects.length) return;
@@ -35,12 +33,15 @@ export function createProjectsTable(data: Project[]) {
 
 			projects[index1].item_order = index2ItemOrder;
 			projects[index2].item_order = index1ItemOrder;
+			projects.sort((a, b) => a.item_order - b.item_order);
 
-			set(sortProjects(projects));
+			set(projects.slice());
 		},
 		deleteEntry: (index: number) => {
 			projects.splice(index, 1);
-			set(sortProjects(projects));
+			projects.sort((a, b) => a.item_order - b.item_order);
+
+			set(projects.slice());
 		}
 	};
 }

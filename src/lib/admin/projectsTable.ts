@@ -1,7 +1,18 @@
 import type { Project } from '$lib/db/mongoTypes';
 import { writable } from 'svelte/store';
 
+function dedupeUids<T extends { uid: number }>(items: T[]) {
+	const seen = new Set<number>();
+	items.forEach((item) => {
+		while (seen.has(item.uid)) {
+			item.uid += 1;
+		}
+		seen.add(item.uid);
+	});
+}
+
 export function createProjectsTable(data: Project[]) {
+	dedupeUids(data);
 	const projects = data.sort((a, b) => a.item_order - b.item_order);
 
 	const { subscribe, update, set } = writable(projects);
@@ -10,16 +21,19 @@ export function createProjectsTable(data: Project[]) {
 		subscribe,
 		set,
 		createNew: () => {
-			const latestProject = projects.length > 0
-				? projects.reduce((max, p) => (p.uid > max.uid ? p : max))
-				: null;
+			const maxUid = projects.length > 0
+				? projects.reduce((max, p) => Math.max(max, p.uid), 0)
+				: 0;
+			const maxItemOrder = projects.length > 0
+				? projects.reduce((max, p) => Math.max(max, p.item_order), 0)
+				: 0;
 
 			const emptyBlock: Project = {
-				uid: latestProject ? latestProject.uid + 1 : 1,
+				uid: maxUid + 1,
 				title: 'None',
 				description: 'None',
 				href: 'https://bobbynooby.dev',
-				item_order: latestProject ? latestProject.item_order + 1 : 1
+				item_order: maxItemOrder + 1
 			};
 			projects.push(emptyBlock);
 			projects.sort((a, b) => a.item_order - b.item_order);

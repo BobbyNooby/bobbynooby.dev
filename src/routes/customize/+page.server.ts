@@ -43,10 +43,20 @@ export const actions = {
 		}
 
 		for (const query of queryList) {
-			await db.collection(query.table).deleteMany({});
-			const result = await db.collection(query.table).insertMany(query.data, { ordered: false });
-			if (!result.acknowledged) {
-				return fail(500, { error: 'Failed to insert data' });
+			const collection = db.collection(query.table);
+			const oldData = await collection.find({}, { projection: { _id: 0 } }).toArray();
+			try {
+				await collection.deleteMany({});
+				const result = await collection.insertMany(query.data, { ordered: false });
+				if (!result.acknowledged) {
+					throw new Error('Insert not acknowledged');
+				}
+			} catch (err) {
+				if (oldData.length > 0) {
+					await collection.deleteMany({});
+					await collection.insertMany(oldData, { ordered: false });
+				}
+				return fail(500, { error: 'Failed to update data, changes rolled back' });
 			}
 		}
 	}

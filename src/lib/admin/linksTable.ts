@@ -13,28 +13,28 @@ export function createLinksTable(data: Link[]) {
 		subscribe,
 		set,
 		createNew: () => {
-			const latestLink = links.sort((a, b) => a.item_order - b.item_order)[links.length - 1];
+			const latestLink = links.length > 0
+				? links.sort((a, b) => a.item_order - b.item_order)[links.length - 1]
+				: null;
 
 			const emptyBlock: Link = {
-				uid: latestLink.uid + 1,
+				uid: latestLink ? latestLink.uid + 1 : 1,
 				label: 'None',
 				href: 'https://bobbynooby.dev',
 				color: '#FFFFFF',
-				item_order: latestLink.item_order + 1
+				item_order: latestLink ? latestLink.item_order + 1 : 1
 			};
-			console.log(emptyBlock);
 			links.push(emptyBlock);
 
 			set(sortLinks(links));
 		},
 		swapOrder: (index1: number, index2: number) => {
-			console.log(index1, index2);
+			if (index2 < 0 || index2 >= links.length) return;
 			const index1ItemOrder = links[index1].item_order;
 			const index2ItemOrder = links[index2].item_order;
 
 			links[index1].item_order = index2ItemOrder;
 			links[index2].item_order = index1ItemOrder;
-			console.log(links);
 
 			set(sortLinks(links));
 		},

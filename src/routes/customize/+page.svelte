@@ -25,7 +25,6 @@
 
 	const all3x3Data = createThreeByThreeList(data.all3x3Data);
 	let all3x3Visible = $state(false);
-	let allThreeData = $state(all3x3Data.getData());
 
 	let isDeleteMenuActive = $state(false);
 	let deleteMenuData: {} = $state({ none: 'None' });
@@ -95,14 +94,8 @@
 							value={JSON.stringify($projectsTable)}
 							required
 						/>
-						<input type="hidden" name="all3x3Data" value={JSON.stringify(allThreeData)} required />
-						<GenericButton
-							buttonType={'submit'}
-							text={'Update'}
-							inputFunction={() => {
-								allThreeData = all3x3Data.getData();
-							}}
-						/>
+						<input type="hidden" name="all3x3Data" value={JSON.stringify($all3x3Data)} required />
+						<GenericButton buttonType={'submit'} text={'Update'} />
 					</form>
 					<div>
 						<GenericButton text={'Home'} inputFunction={() => goto('/')} />
@@ -474,43 +467,116 @@
 												>
 											{/if}
 										</button>
+										{#if threeByThreeList.visible}
+											<button
+												aria-label="add"
+												onclick={() => all3x3Data.createNew(threeByThreeList.label)}
+											>
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													viewBox="0 0 24 24"
+													width="32"
+													height="32"
+													fill="currentColor"
+													><path
+														d="M12.4142 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H10.4142L12.4142 5ZM4 5V19H20V7H11.5858L9.58579 5H4ZM11 12V9H13V12H16V14H13V17H11V14H8V12H11Z"
+													></path></svg
+												>
+											</button>
+										{/if}
 									</div>
 									{#if threeByThreeList.visible}
-										{#each threeByThreeList.data as entry}
+										{#each threeByThreeList.data as entry, i}
 											<div
 												class="font-cascadia-code threebythree-entry my-4 flex flex-col space-y-2 rounded-md border border-white p-4"
 											>
-												<div class="flex flex-row space-x-2">
-													<p>Id</p>
-													<input
-														class=" edit-input w-full rounded"
-														bind:value={entry.id}
-														placeholder="Id"
-													/>
-												</div>
-												<div class="flex flex-row space-x-2">
-													<p>Label</p>
-													<input
-														class=" edit-input w-full rounded"
-														bind:value={entry.label}
-														placeholder="Label"
-													/>
-												</div>
-												<div class="flex flex-row space-x-2">
-													<p>Score</p>
-													<input
-														class=" edit-input w-full rounded"
-														bind:value={entry.bobscore}
-														placeholder="Score"
-													/>
-												</div>
-												<div class="flex flex-row space-x-2">
-													<p>Review</p>
-													<textarea
-														class=" edit-input h-32 w-full rounded"
-														bind:value={entry.review}
-														placeholder="Review"
-													></textarea>
+												<div class="flex w-full flex-row">
+													<div class="flex w-full flex-col space-y-2">
+														<div class="flex flex-row space-x-2">
+															<p>Id</p>
+															<input
+																class=" edit-input w-full rounded"
+																bind:value={entry.id}
+																placeholder="Id"
+															/>
+														</div>
+														<div class="flex flex-row space-x-2">
+															<p>Label</p>
+															<input
+																class=" edit-input w-full rounded"
+																bind:value={entry.label}
+																placeholder="Label"
+															/>
+														</div>
+														<div class="flex flex-row space-x-2">
+															<p>Score</p>
+															<input
+																class=" edit-input w-full rounded"
+																bind:value={entry.bobscore}
+																placeholder="Score"
+															/>
+														</div>
+														<div class="flex flex-row space-x-2">
+															<p>Review</p>
+															<textarea
+																class=" edit-input h-32 w-full rounded"
+																bind:value={entry.review}
+																placeholder="Review"
+															></textarea>
+														</div>
+													</div>
+													<div class="ml-2 flex w-min flex-col items-center justify-center">
+														<button
+															aria-label="up"
+															class="my-1"
+															onclick={() => all3x3Data.swapOrder(threeByThreeList.label, i, i - 1)}
+														>
+															<svg
+																xmlns="http://www.w3.org/2000/svg"
+																viewBox="0 0 24 24"
+																width="32"
+																height="32"
+																fill="currentColor"
+																><path
+																	d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM12 20C16.42 20 20 16.42 20 12C20 7.58 16.42 4 12 4C7.58 4 4 7.58 4 12C4 16.42 7.58 20 12 20ZM13 12V16H11V12H8L12 8L16 12H13Z"
+																></path></svg
+															></button
+														>
+														<button
+															aria-label="delete"
+															onclick={() =>
+																handleDelete(() => all3x3Data.deleteEntry(threeByThreeList.label, i), {
+																	id: entry.id,
+																	label: entry.label
+																})}
+															><svg
+																xmlns="http://www.w3.org/2000/svg"
+																viewBox="0 0 24 24"
+																width="32"
+																height="32"
+																fill="currentColor"
+																><path
+																	d="M7 4V2H17V4H22V6H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V6H2V4H7ZM6 6V20H18V6H6ZM9 9H11V17H9V9ZM13 9H15V17H13V9Z"
+																></path></svg
+															></button
+														>
+														<button
+															aria-label="down"
+															class="my-1"
+															onclick={() => all3x3Data.swapOrder(threeByThreeList.label, i, i + 1)}
+														>
+															<svg
+																xmlns="http://www.w3.org/2000/svg"
+																viewBox="0 0 24 24"
+																width="32"
+																height="32"
+																fill="currentColor"
+																><path
+																	d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM12 20C16.42 20 20 16.42 20 12C20 7.58 16.42 4 12 4C7.58 4 4 7.58 4 12C4 16.42 7.58 20 12 20ZM13 12H16L12 16L8 12H11V8H13V12Z"
+																></path></svg
+															></button
+														>
+													</div>
 												</div>
 											</div>
 										{/each}

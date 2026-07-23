@@ -13,22 +13,23 @@ export function createProjectsTable(data: Project[]) {
 		subscribe,
 		set,
 		createNew: () => {
-			const latestProject = projects.sort((a, b) => a.item_order - b.item_order)[
-				projects.length - 1
-			];
+			const latestProject = projects.length > 0
+				? projects.sort((a, b) => a.item_order - b.item_order)[projects.length - 1]
+				: null;
 
 			const emptyBlock: Project = {
-				uid: latestProject.uid + 1,
+				uid: latestProject ? latestProject.uid + 1 : 1,
 				title: 'None',
 				description: 'None',
 				href: 'https://bobbynooby.dev',
-				item_order: latestProject.item_order + 1
+				item_order: latestProject ? latestProject.item_order + 1 : 1
 			};
 			projects.push(emptyBlock);
 
 			set(sortProjects(projects));
 		},
 		swapOrder: (index1: number, index2: number) => {
+			if (index2 < 0 || index2 >= projects.length) return;
 			const index1ItemOrder = projects[index1].item_order;
 			const index2ItemOrder = projects[index2].item_order;
 

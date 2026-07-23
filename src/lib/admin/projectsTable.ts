@@ -11,7 +11,7 @@ export function createProjectsTable(data: Project[]) {
 		set,
 		createNew: () => {
 			const latestProject = projects.length > 0
-				? projects.reduce((max, p) => (p.item_order > max.item_order ? p : max))
+				? projects.reduce((max, p) => (p.uid > max.uid ? p : max))
 				: null;
 
 			const emptyBlock: Project = {

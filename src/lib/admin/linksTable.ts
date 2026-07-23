@@ -11,7 +11,7 @@ export function createLinksTable(data: Link[]) {
 		set,
 		createNew: () => {
 			const latestLink = links.length > 0
-				? links.reduce((max, link) => (link.item_order > max.item_order ? link : max))
+				? links.reduce((max, link) => (link.uid > max.uid ? link : max))
 				: null;
 
 			const emptyBlock: Link = {

@@ -37,9 +37,10 @@ const projectSchema = z.object({
 });
 
 // bobscore arrives as a string from the text input, hence the coercion.
+// id keeps whatever type the row was created with (legacy rows store numbers).
 const entrySchema = z.object({
 	uid: z.number().int(),
-	id: z.string().max(200),
+	id: z.union([z.string().max(200), z.number()]),
 	label: z.string().min(1).max(200),
 	review: z.string().max(10000),
 	bobscore: z.coerce.number()

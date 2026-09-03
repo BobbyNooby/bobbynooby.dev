@@ -4,7 +4,9 @@ export type TextObject = {
 };
 export type threeByThreeEntry = {
 	uid: number;
-	id: string;
+	// AniList media id. Stored as a number in Mongo for older rows, as a
+	// string for rows created through the admin UI — both work with the API.
+	id: string | number;
 	review: string;
 	label: string;
 	// Only meaningful server-side: reassigned from array index on save.

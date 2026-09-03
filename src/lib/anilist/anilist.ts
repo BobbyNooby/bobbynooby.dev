@@ -1,6 +1,6 @@
 import { errorAnime, errorManga, type Anime, type Manga, type MediaQuery } from './anilistTypes';
 
-export async function getMedia(mediaId: string): Promise<MediaQuery | null> {
+export async function getMedia(mediaId: string | number): Promise<MediaQuery | null> {
 	const query = `
     query ($id: Int) {
         Media(id:$id) {
@@ -68,7 +68,7 @@ export async function getMedia(mediaId: string): Promise<MediaQuery | null> {
 	}
 }
 
-export async function getManga(mangaId: string): Promise<Manga> {
+export async function getManga(mangaId: string | number): Promise<Manga> {
 	const manga = await getMedia(mangaId);
 
 	if (manga == null) {
@@ -78,7 +78,7 @@ export async function getManga(mangaId: string): Promise<Manga> {
 	}
 }
 
-export async function getAnime(animeId: string): Promise<Anime> {
+export async function getAnime(animeId: string | number): Promise<Anime> {
 	const anime = await getMedia(animeId);
 
 	if (anime == null) {

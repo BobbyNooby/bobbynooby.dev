@@ -40,9 +40,9 @@
 
 	// The delete is captured by uid (resolved inside the table on confirm), so
 	// reordering rows while the dialog is open cannot delete the wrong one.
-	let pendingDelete = $state<{ run: () => void; summary: string[] } | null>(null);
+	let pendingDelete = $state<{ run: () => void; summary: (string | number)[] } | null>(null);
 
-	function handleDelete(run: () => void, summary: string[]) {
+	function handleDelete(run: () => void, summary: (string | number)[]) {
 		pendingDelete = { run, summary };
 	}
 

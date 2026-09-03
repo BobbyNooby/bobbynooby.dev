@@ -1,53 +1,58 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import 'remixicon/fonts/remixicon.css';
-	import { createLinksTable } from '$lib/admin/linksTable';
 	import { flip } from 'svelte/animate';
 	import { cubicIn, cubicInOut, cubicOut } from 'svelte/easing';
 	import { fade, fly } from 'svelte/transition';
-	import { createProjectsTable } from '$lib/admin/projectsTable';
 	import GenericButton from '$lib/components/GenericButton.svelte';
 	import { page } from '$app/state';
 	import { SignIn, SignOut } from '@auth/sveltekit/components';
 	import { toast } from 'svelte-french-toast';
 	import { goto } from '$app/navigation';
 	import type { PageServerData } from './$types';
-	import { createThreeByThreeList } from '$lib/admin/threeByThreeList';
+	import { OrderedTable } from '$lib/admin/orderedTable.svelte';
+	import { ThreeByThreeCollection } from '$lib/admin/threeByThreeList.svelte';
 	import DiscordLoginBall from '$lib/components/DiscordLoginBall.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 
 	let { data }: { data: PageServerData } = $props();
 
-	const linksTable = createLinksTable(data.links);
+	const linksTable = new OrderedTable(data.links);
 	let linksReady = $state(false);
 
-	const projectsTable = createProjectsTable(data.projects);
+	const projectsTable = new OrderedTable(data.projects);
 	let projectsReady = $state(false);
 
-	const all3x3Data = createThreeByThreeList(data.all3x3Data);
+	const all3x3Data = new ThreeByThreeCollection(data.all3x3Data);
 	let all3x3Visible = $state(false);
 
-	let isDeleteMenuActive = $state(false);
-	let deleteMenuData: {} = $state({ none: 'None' });
-	let deleteFunction = () => {};
+	function addLink() {
+		linksTable.createNew({ label: 'None', href: 'https://bobbynooby.dev', color: '#FFFFFF' });
+	}
 
-	function handleDelete(inputFunction: () => any, data: any) {
-		isDeleteMenuActive = true;
-		deleteFunction = inputFunction;
-		deleteMenuData = data;
+	function addProject() {
+		projectsTable.createNew({
+			title: 'None',
+			description: 'None',
+			href: 'https://bobbynooby.dev'
+		});
+	}
+
+	// The delete is captured by uid (resolved inside the table on confirm), so
+	// reordering rows while the dialog is open cannot delete the wrong one.
+	let pendingDelete = $state<{ run: () => void; summary: string[] } | null>(null);
+
+	function handleDelete(run: () => void, summary: string[]) {
+		pendingDelete = { run, summary };
 	}
 
 	function doDelete() {
-		deleteFunction();
-		isDeleteMenuActive = false;
-		deleteFunction = () => {};
-		deleteMenuData = {};
+		pendingDelete?.run();
+		pendingDelete = null;
 	}
 
 	function cancelDelete() {
-		isDeleteMenuActive = false;
-		deleteFunction = () => {};
-		deleteMenuData = {};
+		pendingDelete = null;
 	}
 
 	function resizeTextArea(event: Event) {
@@ -88,14 +93,24 @@
 							};
 						}}
 					>
-						<input type="hidden" name="linksTable" value={JSON.stringify($linksTable)} required />
+						<input
+							type="hidden"
+							name="linksTable"
+							value={JSON.stringify(linksTable.items)}
+							required
+						/>
 						<input
 							type="hidden"
 							name="projectsTable"
-							value={JSON.stringify($projectsTable)}
+							value={JSON.stringify(projectsTable.items)}
 							required
 						/>
-						<input type="hidden" name="all3x3Data" value={JSON.stringify($all3x3Data)} required />
+						<input
+							type="hidden"
+							name="all3x3Data"
+							value={JSON.stringify(all3x3Data.groups)}
+							required
+						/>
 						<GenericButton buttonType={'submit'} text={'Update'} />
 					</form>
 					<div>
@@ -113,7 +128,7 @@
 							{/if}
 						</button>
 						{#if linksReady}
-							<button aria-label="add" onclick={() => linksTable.createNew()}>
+							<button aria-label="add" onclick={addLink}>
 								<Icon name="folder-add" />
 							</button>
 						{/if}
@@ -123,7 +138,7 @@
 							in:fly={{ y: 100, duration: 500, easing: cubicOut, delay: 100 }}
 							out:fly={{ y: 100, duration: 500, easing: cubicOut }}
 						>
-							{#each $linksTable as link, i (link.uid)}
+							{#each linksTable.items as link, i (link.uid)}
 								<div
 									animate:flip={{ duration: 200, easing: cubicOut }}
 									class="link-entry m-2 rounded-md border border-white p-3"
@@ -171,11 +186,10 @@
 											<button
 												aria-label="delete"
 												onclick={() =>
-													handleDelete(() => linksTable.deleteEntry(i), {
-														name: link.label,
-														href: link.href,
-														color: link.color
-													})}><Icon name="delete-bin" /></button
+													handleDelete(
+														() => linksTable.deleteByUid(link.uid),
+														[link.label, link.href, link.color]
+													)}><Icon name="delete-bin" /></button
 											>
 											<button
 												aria-label="down"
@@ -188,11 +202,7 @@
 									</div>
 								</div>
 							{/each}
-							<GenericButton
-								text={'+'}
-								inputFunction={() => linksTable.createNew()}
-								extraClasses={'text-xl'}
-							/>
+							<GenericButton text={'+'} inputFunction={addLink} extraClasses={'text-xl'} />
 						</div>
 					{/if}
 				</div>
@@ -207,7 +217,7 @@
 							{/if}
 						</button>
 						{#if projectsReady}
-							<button aria-label="add" onclick={() => projectsTable.createNew()}>
+							<button aria-label="add" onclick={addProject}>
 								<Icon name="folder-add" />
 							</button>
 						{/if}
@@ -217,7 +227,7 @@
 							in:fly={{ y: 100, duration: 500, easing: cubicOut, delay: 100 }}
 							out:fly={{ y: 100, duration: 500, easing: cubicOut }}
 						>
-							{#each $projectsTable as project, i (project.uid)}
+							{#each projectsTable.items as project, i (project.uid)}
 								<div
 									animate:flip={{ duration: 200, easing: cubicOut }}
 									class="projects-entry m-2 rounded-md border border-white p-3"
@@ -266,11 +276,10 @@
 											<button
 												aria-label="delete"
 												onclick={() =>
-													handleDelete(() => projectsTable.deleteEntry(i), {
-														name: project.title,
-														href: project.href,
-														description: project.description
-													})}><Icon name="delete-bin" /></button
+													handleDelete(
+														() => projectsTable.deleteByUid(project.uid),
+														[project.title, project.href, project.description]
+													)}><Icon name="delete-bin" /></button
 											>
 											<button
 												aria-label="down"
@@ -284,11 +293,7 @@
 								</div>
 							{/each}
 							<div class="m-2 rounded-md border border-white text-center">
-								<GenericButton
-									text={'+'}
-									inputFunction={() => projectsTable.createNew()}
-									extraClasses={'text-xl'}
-								/>
+								<GenericButton text={'+'} inputFunction={addProject} extraClasses={'text-xl'} />
 							</div>
 						</div>
 					{/if}
@@ -309,30 +314,27 @@
 							in:fly={{ y: 100, duration: 500, easing: cubicOut, delay: 100 }}
 							out:fly={{ y: 100, duration: 500, easing: cubicOut }}
 						>
-							{#each $all3x3Data as threeByThreeList, i (threeByThreeList)}
+							{#each all3x3Data.groups as list, i (list.label)}
 								<div animate:flip={{ duration: 200, easing: cubicOut }} class="m-2 p-3">
 									<div class="flex flex-row items-center">
 										<p class=" container-title-text font-cascadia-code">
-											/{threeByThreeList.label}
+											/{list.label}
 										</p>
-										<button onclick={() => all3x3Data.toggle(threeByThreeList.label)}>
-											{#if !threeByThreeList.visible}
+										<button onclick={() => all3x3Data.toggle(list.label)}>
+											{#if !list.visible}
 												<Icon name="add-box" />
 											{:else}
 												<Icon name="minus-box" />
 											{/if}
 										</button>
-										{#if threeByThreeList.visible}
-											<button
-												aria-label="add"
-												onclick={() => all3x3Data.createNew(threeByThreeList.label)}
-											>
+										{#if list.visible}
+											<button aria-label="add" onclick={() => all3x3Data.createNew(list.label)}>
 												<Icon name="folder-add" />
 											</button>
 										{/if}
 									</div>
-									{#if threeByThreeList.visible}
-										{#each threeByThreeList.data as entry, i}
+									{#if list.visible}
+										{#each list.entries.items as entry, i (entry.uid)}
 											<div
 												class="font-cascadia-code threebythree-entry my-4 flex flex-col space-y-2 rounded-md border border-white p-4"
 											>
@@ -375,7 +377,7 @@
 														<button
 															aria-label="up"
 															class="my-1"
-															onclick={() => all3x3Data.swapOrder(threeByThreeList.label, i, i - 1)}
+															onclick={() => all3x3Data.swapOrder(list.label, i, i - 1)}
 														>
 															<Icon name="arrow-up-circle" /></button
 														>
@@ -383,17 +385,14 @@
 															aria-label="delete"
 															onclick={() =>
 																handleDelete(
-																	() => all3x3Data.deleteEntry(threeByThreeList.label, i),
-																	{
-																		id: entry.id,
-																		label: entry.label
-																	}
+																	() => all3x3Data.deleteByUid(list.label, entry.uid),
+																	[entry.id, entry.label]
 																)}><Icon name="delete-bin" /></button
 														>
 														<button
 															aria-label="down"
 															class="my-1"
-															onclick={() => all3x3Data.swapOrder(threeByThreeList.label, i, i + 1)}
+															onclick={() => all3x3Data.swapOrder(list.label, i, i + 1)}
 														>
 															<Icon name="arrow-down-circle" /></button
 														>
@@ -410,7 +409,7 @@
 			</div>
 		</div>
 
-		{#if isDeleteMenuActive}
+		{#if pendingDelete}
 			<div
 				class="bg-opacity-80 fixed top-0 left-0 z-10 flex h-screen w-screen items-center justify-center bg-black text-white"
 				in:fade={{ duration: 200, easing: cubicInOut }}
@@ -418,7 +417,7 @@
 			>
 				<div class="font-cascadia-code z-20 flex flex-col text-center">
 					<p class="z-20 mb-10 text-3xl">Are you sure you want to delete</p>
-					{#each Object.values(deleteMenuData) as value}
+					{#each pendingDelete.summary as value}
 						<p class="my-2">{value}</p>
 					{/each}
 					<div class="my-5 mt-10 flex h-10 flex-row space-x-2">

@@ -3,7 +3,8 @@ export type Link = {
 	label: string;
 	href: string;
 	color: string;
-	item_order: number;
+	// Only meaningful server-side: reassigned from array index on save.
+	item_order?: number;
 };
 
 export type Project = {
@@ -11,5 +12,6 @@ export type Project = {
 	title: string;
 	description: string;
 	href: string;
-	item_order: number;
+	// Only meaningful server-side: reassigned from array index on save.
+	item_order?: number;
 };

@@ -3,10 +3,12 @@ export type TextObject = {
 	color: string;
 };
 export type threeByThreeEntry = {
+	uid: number;
 	id: string;
 	review: string;
 	label: string;
-	item_order: number;
+	// Only meaningful server-side: reassigned from array index on save.
+	item_order?: number;
 	bobscore: number;
 };
 

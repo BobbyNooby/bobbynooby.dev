@@ -1,9 +1,13 @@
+import { sequence } from '@sveltejs/kit/hooks';
 import { startMongoDB } from '$lib/db/mongo';
-
-export { handle } from './auth';
+import { resolvePermissions } from '$lib/utils/permissions';
+import { handle as authHandle } from './auth';
 
 startMongoDB().then(() => console.log('Connected to MongoDB'));
 
-// This feature has been deprecated due do implementation of a websocket server
-// The code is left here as a backup for one day if the websocket server is down
-// startDiscord().then(() => console.log('Connected to Discord'));
+export const handle = sequence(authHandle, async ({ event, resolve }) => {
+	const permissions = await resolvePermissions(await event.locals.auth());
+	event.locals.isAdmin = permissions.isAdmin;
+	event.locals.canShorten = permissions.canShorten;
+	return resolve(event);
+});

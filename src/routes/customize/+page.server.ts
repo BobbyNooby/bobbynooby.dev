@@ -1,22 +1,19 @@
 import { db, mongoClient } from '$lib/db/mongo';
 import { getAll3x3Data, getLinks, getProjects } from '$lib/db/mongoUtils.js';
-import { verifySession } from '$lib/utils/verifySession.js';
 import { fail, type Actions } from '@sveltejs/kit';
 import type { ClientSession } from 'mongodb';
 import { z } from 'zod';
 
-export const load = async ({ locals, fetch }) => {
-	let session = await locals.auth();
-	let validSession = await verifySession(session);
-	if (validSession != true) {
-		validSession = false;
+export const load = async ({ locals }) => {
+	// Never hand edit data to visitors that cannot use it.
+	if (!locals.isAdmin) {
+		return { links: [], projects: [], all3x3Data: [], isSessionValid: false };
 	}
 
-	const all3x3Data = await getAll3x3Data(fetch);
-
-	const links = await getLinks(fetch);
-	const projects = await getProjects(fetch);
-	return { links, projects, isSessionValid: validSession, all3x3Data };
+	const all3x3Data = await getAll3x3Data();
+	const links = await getLinks();
+	const projects = await getProjects();
+	return { links, projects, isSessionValid: true, all3x3Data };
 };
 
 const safeHref = /^(https?:\/\/|\/)/i;
@@ -111,9 +108,7 @@ async function replaceTable(
 
 export const actions = {
 	update: async (event) => {
-		const session = await event.locals.auth();
-		const validSession = await verifySession(session);
-		if (validSession != true) {
+		if (!event.locals.isAdmin) {
 			return fail(403, { message: 'You are not authorized to make changes.' });
 		}
 

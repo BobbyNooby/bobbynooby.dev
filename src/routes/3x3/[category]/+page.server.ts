@@ -13,7 +13,7 @@ export const load = async ({ params }: { params: RouteParams }) => {
 	// Get entries
 	let data = await db
 		.collection<threeByThreeEntry>(collectionName)
-		.find({}, { projection: { _id: 0 } })
+		.find({}, { projection: { _id: 0 }, sort: { item_order: 1 } })
 		.toArray();
 
 	for (const entry of data.splice(0, 9)) {

@@ -1,5 +1,4 @@
 import { createShortURL } from '$lib/shortURL/shortURL';
-import { verifyShortURLSession } from '$lib/utils/verifySession.js';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
@@ -35,23 +34,16 @@ function isValidURL(url: string): boolean {
 	}
 }
 export const load = async ({ locals }) => {
-	const session = await locals.auth();
-
-	const validSession = await verifyShortURLSession(session);
-
-	return { isSessionValid: validSession == true ? true : false };
+	return { isSessionValid: locals.canShorten };
 };
 
 export const actions = {
 	create: async (event) => {
 		// Verify session
-		const session = await event.locals.auth();
-		const validSession = await verifyShortURLSession(session);
-
-		if (validSession !== true) {
+		if (!event.locals.canShorten) {
 			return fail(403, {
 				error: true,
-				message: validSession
+				message: 'You are not authorized to use this url shortener'
 			});
 		}
 

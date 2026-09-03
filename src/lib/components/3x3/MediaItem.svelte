@@ -12,7 +12,8 @@
 	}
 
 	function handleBackgroundClick(event: Event) {
-		if (!event.target!.classList.contains('menubackground')) return;
+		const target = event.target;
+		if (!(target instanceof HTMLElement) || !target.classList.contains('menubackground')) return;
 		menuOpen = false;
 	}
 </script>

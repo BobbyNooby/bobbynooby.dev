@@ -86,7 +86,11 @@
 								}
 
 								if (result.type === 'failure') {
-									toast.error('Error updating data!', {
+									const message =
+										result.data && typeof result.data === 'object' && 'message' in result.data
+											? String(result.data.message)
+											: 'Error updating data!';
+									toast.error(message, {
 										style: "font-family : 'Cascadia Code', sans-serif;"
 									});
 								}

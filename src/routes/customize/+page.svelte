@@ -14,6 +14,7 @@
 	import type { PageServerData } from './$types';
 	import { createThreeByThreeList } from '$lib/admin/threeByThreeList';
 	import DiscordLoginBall from '$lib/components/DiscordLoginBall.svelte';
+	import Icon from '$lib/components/ui/Icon.svelte';
 
 	let { data }: { data: PageServerData } = $props();
 
@@ -106,41 +107,14 @@
 						<p class=" container-title-text font-cascadia-code">/Links</p>
 						<button onclick={() => (linksReady = !linksReady)}>
 							{#if !linksReady}
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 24 24"
-									width="32"
-									height="32"
-									fill="currentColor"
-									><path
-										d="M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM11 11V7H13V11H17V13H13V17H11V13H7V11H11Z"
-									></path></svg
-								>
+								<Icon name="add-box" />
 							{:else}
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 24 24"
-									width="32"
-									height="32"
-									fill="currentColor"
-									><path
-										d="M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM7 11H17V13H7V11Z"
-									></path></svg
-								>
+								<Icon name="minus-box" />
 							{/if}
 						</button>
 						{#if linksReady}
 							<button aria-label="add" onclick={() => linksTable.createNew()}>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 24 24"
-									width="32"
-									height="32"
-									fill="currentColor"
-									><path
-										d="M12.4142 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H10.4142L12.4142 5ZM4 5V19H20V7H11.5858L9.58579 5H4ZM11 12V9H13V12H16V14H13V17H11V14H8V12H11Z"
-									></path></svg
-								>
+								<Icon name="folder-add" />
 							</button>
 						{/if}
 					</div>
@@ -192,16 +166,7 @@
 												class="my-1"
 												onclick={() => linksTable.swapOrder(i, i - 1)}
 											>
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													viewBox="0 0 24 24"
-													width="32"
-													height="32"
-													fill="currentColor"
-													><path
-														d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM12 20C16.42 20 20 16.42 20 12C20 7.58 16.42 4 12 4C7.58 4 4 7.58 4 12C4 16.42 7.58 20 12 20ZM13 12V16H11V12H8L12 8L16 12H13Z"
-													></path></svg
-												></button
+												<Icon name="arrow-up-circle" /></button
 											>
 											<button
 												aria-label="delete"
@@ -210,33 +175,14 @@
 														name: link.label,
 														href: link.href,
 														color: link.color
-													})}
-												><svg
-													xmlns="http://www.w3.org/2000/svg"
-													viewBox="0 0 24 24"
-													width="32"
-													height="32"
-													fill="currentColor"
-													><path
-														d="M7 4V2H17V4H22V6H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V6H2V4H7ZM6 6V20H18V6H6ZM9 9H11V17H9V9ZM13 9H15V17H13V9Z"
-													></path></svg
-												></button
+													})}><Icon name="delete-bin" /></button
 											>
 											<button
 												aria-label="down"
 												class="my-1"
 												onclick={() => linksTable.swapOrder(i, i + 1)}
 											>
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													viewBox="0 0 24 24"
-													width="32"
-													height="32"
-													fill="currentColor"
-													><path
-														d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM12 20C16.42 20 20 16.42 20 12C20 7.58 16.42 4 12 4C7.58 4 4 7.58 4 12C4 16.42 7.58 20 12 20ZM13 12H16L12 16L8 12H11V8H13V12Z"
-													></path></svg
-												></button
+												<Icon name="arrow-down-circle" /></button
 											>
 										</div>
 									</div>
@@ -255,41 +201,14 @@
 						<p class=" container-title-text font-cascadia-code">/Projects</p>
 						<button onclick={() => (projectsReady = !projectsReady)}>
 							{#if !projectsReady}
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 24 24"
-									width="32"
-									height="32"
-									fill="currentColor"
-									><path
-										d="M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM11 11V7H13V11H17V13H13V17H11V13H7V11H11Z"
-									></path></svg
-								>
+								<Icon name="add-box" />
 							{:else}
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 24 24"
-									width="32"
-									height="32"
-									fill="currentColor"
-									><path
-										d="M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM7 11H17V13H7V11Z"
-									></path></svg
-								>
+								<Icon name="minus-box" />
 							{/if}
 						</button>
 						{#if projectsReady}
 							<button aria-label="add" onclick={() => projectsTable.createNew()}>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 24 24"
-									width="32"
-									height="32"
-									fill="currentColor"
-									><path
-										d="M12.4142 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H10.4142L12.4142 5ZM4 5V19H20V7H11.5858L9.58579 5H4ZM11 12V9H13V12H16V14H13V17H11V14H8V12H11Z"
-									></path></svg
-								>
+								<Icon name="folder-add" />
 							</button>
 						{/if}
 					</div>
@@ -342,16 +261,7 @@
 												class="mb-1"
 												onclick={() => projectsTable.swapOrder(i, i - 1)}
 											>
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													viewBox="0 0 24 24"
-													width="32"
-													height="32"
-													fill="currentColor"
-													><path
-														d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM12 20C16.42 20 20 16.42 20 12C20 7.58 16.42 4 12 4C7.58 4 4 7.58 4 12C4 16.42 7.58 20 12 20ZM13 12V16H11V12H8L12 8L16 12H13Z"
-													></path></svg
-												></button
+												<Icon name="arrow-up-circle" /></button
 											>
 											<button
 												aria-label="delete"
@@ -360,33 +270,14 @@
 														name: project.title,
 														href: project.href,
 														description: project.description
-													})}
-												><svg
-													xmlns="http://www.w3.org/2000/svg"
-													viewBox="0 0 24 24"
-													width="32"
-													height="32"
-													fill="currentColor"
-													><path
-														d="M7 4V2H17V4H22V6H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V6H2V4H7ZM6 6V20H18V6H6ZM9 9H11V17H9V9ZM13 9H15V17H13V9Z"
-													></path></svg
-												></button
+													})}><Icon name="delete-bin" /></button
 											>
 											<button
 												aria-label="down"
 												class="mt-1"
 												onclick={() => projectsTable.swapOrder(i, i + 1)}
 											>
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													viewBox="0 0 24 24"
-													width="32"
-													height="32"
-													fill="currentColor"
-													><path
-														d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM12 20C16.42 20 20 16.42 20 12C20 7.58 16.42 4 12 4C7.58 4 4 7.58 4 12C4 16.42 7.58 20 12 20ZM13 12H16L12 16L8 12H11V8H13V12Z"
-													></path></svg
-												></button
+												<Icon name="arrow-down-circle" /></button
 											>
 										</div>
 									</div>
@@ -407,27 +298,9 @@
 						<p class=" container-title-text font-cascadia-code">/3x3s</p>
 						<button onclick={() => (all3x3Visible = !all3x3Visible)}>
 							{#if !all3x3Visible}
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 24 24"
-									width="32"
-									height="32"
-									fill="currentColor"
-									><path
-										d="M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM11 11V7H13V11H17V13H13V17H11V13H7V11H11Z"
-									></path></svg
-								>
+								<Icon name="add-box" />
 							{:else}
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 24 24"
-									width="32"
-									height="32"
-									fill="currentColor"
-									><path
-										d="M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM7 11H17V13H7V11Z"
-									></path></svg
-								>
+								<Icon name="minus-box" />
 							{/if}
 						</button>
 					</div>
@@ -444,27 +317,9 @@
 										</p>
 										<button onclick={() => all3x3Data.toggle(threeByThreeList.label)}>
 											{#if !threeByThreeList.visible}
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													viewBox="0 0 24 24"
-													width="32"
-													height="32"
-													fill="currentColor"
-													><path
-														d="M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM11 11V7H13V11H17V13H13V17H11V13H7V11H11Z"
-													></path></svg
-												>
+												<Icon name="add-box" />
 											{:else}
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													viewBox="0 0 24 24"
-													width="32"
-													height="32"
-													fill="currentColor"
-													><path
-														d="M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM7 11H17V13H7V11Z"
-													></path></svg
-												>
+												<Icon name="minus-box" />
 											{/if}
 										</button>
 										{#if threeByThreeList.visible}
@@ -472,16 +327,7 @@
 												aria-label="add"
 												onclick={() => all3x3Data.createNew(threeByThreeList.label)}
 											>
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													viewBox="0 0 24 24"
-													width="32"
-													height="32"
-													fill="currentColor"
-													><path
-														d="M12.4142 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H10.4142L12.4142 5ZM4 5V19H20V7H11.5858L9.58579 5H4ZM11 12V9H13V12H16V14H13V17H11V14H8V12H11Z"
-													></path></svg
-												>
+												<Icon name="folder-add" />
 											</button>
 										{/if}
 									</div>
@@ -531,50 +377,25 @@
 															class="my-1"
 															onclick={() => all3x3Data.swapOrder(threeByThreeList.label, i, i - 1)}
 														>
-															<svg
-																xmlns="http://www.w3.org/2000/svg"
-																viewBox="0 0 24 24"
-																width="32"
-																height="32"
-																fill="currentColor"
-																><path
-																	d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM12 20C16.42 20 20 16.42 20 12C20 7.58 16.42 4 12 4C7.58 4 4 7.58 4 12C4 16.42 7.58 20 12 20ZM13 12V16H11V12H8L12 8L16 12H13Z"
-																></path></svg
-															></button
+															<Icon name="arrow-up-circle" /></button
 														>
 														<button
 															aria-label="delete"
 															onclick={() =>
-																handleDelete(() => all3x3Data.deleteEntry(threeByThreeList.label, i), {
-																	id: entry.id,
-																	label: entry.label
-																})}
-															><svg
-																xmlns="http://www.w3.org/2000/svg"
-																viewBox="0 0 24 24"
-																width="32"
-																height="32"
-																fill="currentColor"
-																><path
-																	d="M7 4V2H17V4H22V6H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V6H2V4H7ZM6 6V20H18V6H6ZM9 9H11V17H9V9ZM13 9H15V17H13V9Z"
-																></path></svg
-															></button
+																handleDelete(
+																	() => all3x3Data.deleteEntry(threeByThreeList.label, i),
+																	{
+																		id: entry.id,
+																		label: entry.label
+																	}
+																)}><Icon name="delete-bin" /></button
 														>
 														<button
 															aria-label="down"
 															class="my-1"
 															onclick={() => all3x3Data.swapOrder(threeByThreeList.label, i, i + 1)}
 														>
-															<svg
-																xmlns="http://www.w3.org/2000/svg"
-																viewBox="0 0 24 24"
-																width="32"
-																height="32"
-																fill="currentColor"
-																><path
-																	d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM12 20C16.42 20 20 16.42 20 12C20 7.58 16.42 4 12 4C7.58 4 4 7.58 4 12C4 16.42 7.58 20 12 20ZM13 12H16L12 16L8 12H11V8H13V12Z"
-																></path></svg
-															></button
+															<Icon name="arrow-down-circle" /></button
 														>
 													</div>
 												</div>

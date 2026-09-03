@@ -7,7 +7,7 @@ export type GeneralMedia = {
 	titles: TextObject[];
 	genres: string[];
 	description: string;
-	bobStats: { review: string; score: number };
+	bobStats: { review: string | undefined; score: number };
 	url: string;
 	css: { outer: string; inner: string };
 };

@@ -7,7 +7,8 @@ export type threeByThreeEntry = {
 	// AniList media id. Stored as a number in Mongo for older rows, as a
 	// string for rows created through the admin UI — both work with the API.
 	id: string | number;
-	review: string;
+	// Missing on most legacy rows.
+	review?: string;
 	label: string;
 	// Only meaningful server-side: reassigned from array index on save.
 	item_order?: number;

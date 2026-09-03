@@ -38,11 +38,12 @@ const projectSchema = z.object({
 
 // bobscore arrives as a string from the text input, hence the coercion.
 // id keeps whatever type the row was created with (legacy rows store numbers).
+// review is absent on most legacy rows, so it stays optional.
 const entrySchema = z.object({
 	uid: z.number().int(),
 	id: z.union([z.string().max(200), z.number()]),
 	label: z.string().min(1).max(200),
-	review: z.string().max(10000),
+	review: z.string().max(10000).optional(),
 	bobscore: z.coerce.number()
 });
 

@@ -40,7 +40,7 @@ type MediaIdentifiers = {
 	averageScore: number;
 	siteUrl: string;
 	bobStats: {
-		review: string;
+		review: string | undefined;
 		bobscore: number;
 	};
 };

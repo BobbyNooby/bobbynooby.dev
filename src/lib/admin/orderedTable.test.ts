@@ -168,4 +168,21 @@ describe('ThreeByThreeCollection', () => {
 		expect(collection.groups[0].entries.items.map((e) => e.id)).toEqual(['2']);
 		expect(collection.groups[1].entries.items).toHaveLength(1);
 	});
+
+	// Regression: the save payload used to serialize { label, entries: { items } },
+	// which the server rejected with "expected array, received undefined".
+	it('serializes to the server wire shape: { label, data } without visible', () => {
+		const collection = new ThreeByThreeCollection(makeServerData());
+		collection.toggle('Anime');
+		const json = JSON.parse(JSON.stringify(collection.groups));
+		expect(json).toEqual([
+			{
+				label: 'Anime',
+				data: [expect.objectContaining({ id: '1' }), expect.objectContaining({ id: '2' })]
+			},
+			{ label: 'Manga', data: [expect.objectContaining({ id: '9' })] }
+		]);
+		expect(json[0].visible).toBeUndefined();
+		expect(json[0].entries).toBeUndefined();
+	});
 });

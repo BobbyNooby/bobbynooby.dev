@@ -10,6 +10,14 @@ export class ThreeByThreeGroup {
 		this.label = data.label;
 		this.entries = new OrderedTable(data.data);
 	}
+
+	/**
+	 * Wire shape for the save payload: the server expects { label, data } per
+	 * list. Visible is client-only UI state and must not be sent.
+	 */
+	toJSON() {
+		return { label: this.label, data: this.entries.items };
+	}
 }
 
 export class ThreeByThreeCollection {

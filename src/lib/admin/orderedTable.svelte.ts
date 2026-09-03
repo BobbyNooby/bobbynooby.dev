@@ -50,4 +50,9 @@ export class OrderedTable<T extends WithUid> {
 			this.items.splice(index, 1);
 		}
 	}
+
+	/** Serialize as the plain rows array (used by the save payload). */
+	toJSON() {
+		return this.items;
+	}
 }

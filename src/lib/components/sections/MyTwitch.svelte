@@ -19,7 +19,7 @@
 		<div class="flex items-center gap-2">
 			<span class="live-dot"></span>
 			<p class="container-title-text text-red-500">/Twitch</p>
-			<p class="font-cascadia-code font-bold text-red-500">LIVE NOW</p>
+			<p class="font-cascadia-code font-bold text-[#9146ff]">LIVE NOW</p>
 		</div>
 		<iframe
 			src={`https://player.twitch.tv/?channel=bobbynooby&parent=${parent}&muted`}
@@ -56,7 +56,7 @@
 		width: 0.6rem;
 		height: 0.6rem;
 		border-radius: 50%;
-		background-color: #ff3b30;
+		background-color: #9146ff;
 		animation: pulse 1.5s ease-in-out infinite;
 	}
 

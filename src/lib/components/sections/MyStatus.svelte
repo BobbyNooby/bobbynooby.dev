@@ -30,9 +30,9 @@
 	<p style="text-indent: 2em;">/twitch</p>
 	<p style="text-indent: 4em;">
 		{#if twitch.status.live}
-			<span class="live-text">LIVE NOW</span>
+			<span class="live-text">live</span>
 		{:else}
-			<span class="offline-text">offline.sh</span>
+			<span class="offline-text">offline</span>
 		{/if}
 	</p>
 {/if}
@@ -44,23 +44,11 @@
 
 <style>
 	.live-text {
-		color: #ff3b30;
+		color: #9146ff;
 		font-weight: bold;
-		animation: pulse 1.5s ease-in-out infinite;
 	}
 
 	.offline-text {
 		color: #7a7a7a;
-		text-decoration: line-through;
-	}
-
-	@keyframes pulse {
-		0%,
-		100% {
-			opacity: 1;
-		}
-		50% {
-			opacity: 0.3;
-		}
 	}
 </style>

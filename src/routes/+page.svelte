@@ -8,6 +8,8 @@
 	import { onMount } from 'svelte';
 	import MyStatus from '$lib/components/sections/MyStatus.svelte';
 	import MySpotify from '$lib/components/sections/MySpotify.svelte';
+	import MyPlaylist from '$lib/components/sections/MyPlaylist.svelte';
+	import MyTwitch from '$lib/components/sections/MyTwitch.svelte';
 	import My3x3 from '$lib/components/sections/My3x3.svelte';
 	import MyChat from '$lib/components/sections/MyChat.svelte';
 
@@ -24,8 +26,9 @@
 		links: 3,
 		status: 4,
 		music: 5,
-		threeByThree: 6,
-		chat: 7
+		playlist: 6,
+		threeByThree: 8,
+		chat: 8
 	};
 
 	onMount(() => {
@@ -41,6 +44,8 @@
 		<div class="main-container">
 			<!-- Left Side  -->
 			<div class="left-column">
+				<!-- Big live player, only rendered while live -->
+				<MyTwitch />
 				<div
 					class="content-box"
 					transition:fade={{ delay: arrangement.info * interval, duration: duration }}
@@ -81,6 +86,12 @@
 					transition:fade={{ delay: arrangement.music * interval, duration: duration }}
 				>
 					<MySpotify />
+				</div>
+				<div
+					class="content-box"
+					transition:fade={{ delay: arrangement.playlist * interval, duration: duration }}
+				>
+					<MyPlaylist />
 				</div>
 				<div
 					class="content-box"

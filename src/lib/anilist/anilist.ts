@@ -1,43 +1,49 @@
 import { errorAnime, errorManga, type Anime, type Manga, type MediaQuery } from './anilistTypes';
 
+// Shared field list: used by the single-media query here and by the batched
+// aliased queries in mediaCache.ts.
+export const MEDIA_FIELDS = `
+    id
+    title {
+        romaji
+        english
+        native
+        userPreferred
+    }
+    type
+    format
+    status
+    startDate {
+        year
+        month
+        day
+    }
+    endDate {
+        year
+        month
+        day
+    }
+    chapters
+    volumes
+    episodes
+    duration
+    description
+    coverImage {
+        extraLarge
+        large
+        medium
+        color
+    }
+    genres
+    averageScore
+    siteUrl
+`;
+
 export async function getMedia(mediaId: string | number): Promise<MediaQuery | null> {
 	const query = `
     query ($id: Int) {
         Media(id:$id) {
-            id
-            title {
-                romaji
-                english
-                native
-                userPreferred
-            }
-            type
-            format
-            status
-            startDate {
-                year
-                month
-                day
-            }
-            endDate {
-                year
-                month
-                day
-            }
-            chapters
-            volumes
-            episodes
-            duration
-            description
-            coverImage {
-                extraLarge
-                large
-                medium
-                color
-            }
-            genres
-            averageScore
-            siteUrl
+            ${MEDIA_FIELDS}
         }
     }
     `;

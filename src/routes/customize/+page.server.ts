@@ -1,5 +1,6 @@
 import { db, mongoClient } from '$lib/db/mongo';
 import { getAll3x3Data, getLinks, getProjects } from '$lib/db/mongoUtils.js';
+import { warmMediaCache } from '$lib/media/mediaCache';
 import { fail, type Actions } from '@sveltejs/kit';
 import type { ClientSession } from 'mongodb';
 import { z } from 'zod';
@@ -174,6 +175,15 @@ export const actions = {
 		} catch (err) {
 			console.error('Failed to persist customize data:', err);
 			return fail(500, { message: 'Failed to save changes. Please try again.' });
+		}
+
+		// Pre-fetch AniList data for every 3x3 id so the public pages are
+		// served from the Mongo cache and never hit the rate-limited API.
+		// Best-effort: a failed warm self-heals on the next page view.
+		try {
+			await warmMediaCache(all3x3.flatMap((list) => list.data.map((entry) => entry.id)));
+		} catch (err) {
+			console.error('[mediaCache] post-save warm failed:', err);
 		}
 
 		return { ok: true };

@@ -1,6 +1,6 @@
-import { getManga, getAnime } from '$lib/anilist/anilist';
-import type { Anime, Manga } from '$lib/anilist/anilistTypes';
+import { errorAnime, errorManga, type Anime, type Manga } from '$lib/anilist/anilistTypes';
 import { type GeneralMedia } from './mediaTypes';
+import { getMediaCached } from './mediaCache';
 import { getGreenRedColorFromScore } from '$lib/utils/getGreenRedColorFromScore';
 import type { threeByThreeEntry } from '$lib/types';
 
@@ -8,19 +8,15 @@ export async function parseMedia(
 	entry: threeByThreeEntry,
 	category: string
 ): Promise<GeneralMedia | null> {
-	if (category == 'anime') {
-		let anime = await getAnime(entry.id);
-		anime['bobStats'] = { review: entry.review, bobscore: entry.bobscore };
-		const generalMediaEntry = parseAnilistMedia(anime as Anime & Manga);
-		return generalMediaEntry;
-	} else if (category == 'manga') {
-		let manga = await getManga(entry.id);
-		manga['bobStats'] = { review: entry.review, bobscore: entry.bobscore };
-		const generalMediaEntry = parseAnilistMedia(manga as Anime & Manga);
-		return generalMediaEntry;
-	} else {
-		return null;
+	// Served from the long-term Mongo cache; the live API is only hit on a
+	// cache miss, so the public 3x3 pages never touch AniList in steady state.
+	let media = await getMediaCached(entry.id);
+	if (media == null) {
+		media = (category === 'manga' ? errorManga : errorAnime) as Anime & Manga;
 	}
+	media['bobStats'] = { review: entry.review, bobscore: entry.bobscore };
+	const generalMediaEntry = parseAnilistMedia(media as Anime & Manga);
+	return generalMediaEntry;
 }
 
 const anilistStatusDetails: {

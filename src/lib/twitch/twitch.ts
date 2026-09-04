@@ -1,9 +1,8 @@
 import { env } from '$env/dynamic/private';
+import { TWITCH_CHANNEL } from './channel';
 
 const TOKEN_URL = 'https://id.twitch.tv/oauth2/token';
 const HELIX_STREAMS_URL = 'https://api.twitch.tv/helix/streams';
-// Override with TWITCH_CHANNEL in .env to test against another channel.
-const CHANNEL = env.TWITCH_CHANNEL || 'bobbynooby';
 const LIVE_CACHE_MS = 30_000;
 
 export type TwitchLiveResponse = {
@@ -68,7 +67,7 @@ export async function getTwitchLive(): Promise<TwitchLiveResponse> {
 	if (!clientId) {
 		return { configured: false, live: false };
 	}
-	const response = await fetch(`${HELIX_STREAMS_URL}?user_login=${CHANNEL}`, {
+	const response = await fetch(`${HELIX_STREAMS_URL}?user_login=${TWITCH_CHANNEL}`, {
 		headers: {
 			'Client-Id': clientId,
 			Authorization: `Bearer ${token}`

@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { startTwitchPolling, twitch } from '$lib/twitch/twitchLive.svelte';
+	import { TWITCH_CHANNEL } from '$lib/twitch/channel';
 
 	// The player requires ?parent= to match the embedding page's hostname.
 	let parent = $state('');
@@ -18,11 +19,11 @@
 	<div class="content-box" transition:fade={{ duration: 500 }}>
 		<div class="flex items-center gap-2">
 			<span class="live-dot"></span>
-			<p class="container-title-text text-red-500">/Twitch</p>
+			<p class="container-title-text text-[#9146ff]">/Twitch</p>
 			<p class="font-cascadia-code font-bold text-[#9146ff]">LIVE NOW</p>
 		</div>
 		<iframe
-			src={`https://player.twitch.tv/?channel=bobbynooby&parent=${parent}&muted`}
+			src={`https://player.twitch.tv/?channel=${TWITCH_CHANNEL}&parent=${parent}&muted`}
 			title="Twitch stream"
 			class="mt-2 w-full rounded-md"
 			style="aspect-ratio: 16 / 9; border: 0;"

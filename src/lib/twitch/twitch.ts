@@ -2,7 +2,8 @@ import { env } from '$env/dynamic/private';
 
 const TOKEN_URL = 'https://id.twitch.tv/oauth2/token';
 const HELIX_STREAMS_URL = 'https://api.twitch.tv/helix/streams';
-const CHANNEL = 'bobbynooby';
+// Override with TWITCH_CHANNEL in .env to test against another channel.
+const CHANNEL = env.TWITCH_CHANNEL || 'bobbynooby';
 const LIVE_CACHE_MS = 30_000;
 
 export type TwitchLiveResponse = {

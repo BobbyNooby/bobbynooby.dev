@@ -6,11 +6,11 @@
 
 <p class="container-title-text">/Projects</p>
 {#each projects as project}
-	<div class="my-4">
-		<p style="text-indent: 1em;" class="text-xl text-yellow-400">
+	<div class="my-2">
+		<p style="text-indent: 1em;" class="text-base text-yellow-400">
 			<a href={project.href} target="_blank">/{project.title}</a>
 		</p>
-		<p class="mx-2">
+		<p class="mx-2 text-sm">
 			{project.description}
 			<a
 				class="text-yellow-400"

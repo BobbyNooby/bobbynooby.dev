@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { PUBLIC_WEBSOCKET_BASE_URL } from '$env/static/public';
 	import type { discordStatuses } from '$lib/discord/discordTypes';
+	import { createLiveSocket } from '$lib/utils/liveSocket';
+	import { onDestroy } from 'svelte';
 
 	const colors: Record<discordStatuses, string> = {
 		online: '#23A55A',
@@ -11,14 +12,11 @@
 	};
 
 	let discordStatus: discordStatuses = $state('offline');
-	const ws = new WebSocket(`${PUBLIC_WEBSOCKET_BASE_URL}/discord`);
 
-	ws.onmessage = (event) => {
-		const { data } = event;
-		const { status } = JSON.parse(data);
-		console.log(status);
+	const socket = createLiveSocket<{ status: discordStatuses }>('/discord', ({ status }) => {
 		discordStatus = status;
-	};
+	});
+	onDestroy(() => socket.close());
 </script>
 
 <p class="font-cascadia-code text-white" style="color: {colors[discordStatus]};">

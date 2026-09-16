@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { PUBLIC_WEBSOCKET_BASE_URL } from '$env/static/public';
 	import type { ChatMessage, SentChatMessage } from '$lib/types';
+	import { createLiveSocket } from '$lib/utils/liveSocket';
 	import { playAudio } from '$lib/utils/playAudio';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	const starterMessages: ChatMessage[] = [
 		{
@@ -34,7 +34,7 @@
 		username = localStorage.getItem('username') || `Guest_${generateRandomFourDigitNumber()}`;
 		scrollToBottom();
 
-		window.addEventListener('focus', (e) => {
+		window.addEventListener('focus', () => {
 			scrollToBottom();
 		});
 	});
@@ -42,26 +42,43 @@
 	let message: string = $state('');
 	let lastMessageISent: { name: string; message: string } = $state({ name: '', message: '' });
 
-	const ws = new WebSocket(`${PUBLIC_WEBSOCKET_BASE_URL}/chat`);
+	// The backend sends either the history on connect or a single new message.
+	const ws = createLiveSocket<{ initialMessages: ChatMessage[] } | { message: ChatMessage }>(
+		'/chat',
+		(data) => {
+			if ('initialMessages' in data) {
+				messages = [...data.initialMessages, ...starterMessages];
+				scrollToBottom();
+				return;
+			}
 
-	ws.onmessage = (event) => {
-		const { data } = event;
-		const { message, initialMessages } = JSON.parse(data);
-		if (!initialMessages) {
-			messages = [...messages, message];
+			messages = [...messages, data.message];
 
-			if (!(lastMessageISent.name == message.name && lastMessageISent.message == message.message)) {
+			if (
+				!(
+					lastMessageISent.name == data.message.name &&
+					lastMessageISent.message == data.message.message
+				)
+			) {
 				playAudio('/imrcv.mp3');
 			} else {
 				playAudio('/imsend.mp3');
 			}
 
 			scrollToBottom();
-		} else if (initialMessages) {
-			messages = [...initialMessages, ...starterMessages];
-			scrollToBottom();
 		}
-	};
+	);
+
+	let localUserCount = $state(0);
+
+	const usersWs = createLiveSocket<{ userCount: number }>('/userCount', ({ userCount }) => {
+		localUserCount = userCount;
+	});
+
+	onDestroy(() => {
+		ws.close();
+		usersWs.close();
+	});
 
 	async function handleSend(event: Event) {
 		event.preventDefault();
@@ -146,16 +163,6 @@
 			}
 		];
 	}
-
-	let localUserCount = $state(0);
-
-	const usersWs = new WebSocket(`${PUBLIC_WEBSOCKET_BASE_URL}/userCount`);
-
-	usersWs.onmessage = (event) => {
-		const { data } = event;
-		const { userCount } = JSON.parse(data);
-		localUserCount = userCount;
-	};
 </script>
 
 <p class="container-title-text">/Chat</p>

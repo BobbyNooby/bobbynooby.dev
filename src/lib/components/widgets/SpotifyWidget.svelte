@@ -1,27 +1,25 @@
 <script lang="ts">
-	import { PUBLIC_WEBSOCKET_BASE_URL } from '$env/static/public';
-	import { errorLastPlayedSong, errorSong } from '$lib/spotify/spotifyUtils';
+	import { errorLastPlayedSong } from '$lib/spotify/spotifyUtils';
+	import type { SpotifyLastPlayedData } from '$lib/spotify/spotifyTypes';
+	import { createLiveSocket } from '$lib/utils/liveSocket';
 	import { secondsToTimeString } from '$lib/utils/secondsToTimeString';
+	import { onDestroy } from 'svelte';
 	import ScrollingText from '../ui/ScrollingText.svelte';
 
 	let songData = $state(errorLastPlayedSong);
 
-	const ws = new WebSocket(`${PUBLIC_WEBSOCKET_BASE_URL}/spotify`);
-
-	ws.onmessage = (event) => {
-		const { data } = event;
-		const { song } = JSON.parse(data);
-
+	const socket = createLiveSocket<{ song: SpotifyLastPlayedData }>('/spotify', ({ song }) => {
 		songData = song;
-	};
+	});
+	onDestroy(() => socket.close());
 
-	let timeSinceLastSong = $derived(
-		Math.round(
-			Math.abs(
-				new Date(new Date().toISOString()).getTime() - new Date(songData.playedAt).getTime()
-			) / 1000
-		)
-	);
+	// The fallback error song carries no playedAt, so guard against NaN.
+	let timeSinceLastSong = $derived.by(() => {
+		if (!songData.playedAt) return 0;
+		const played = new Date(songData.playedAt).getTime();
+		if (Number.isNaN(played)) return 0;
+		return Math.round(Math.abs(Date.now() - played) / 1000);
+	});
 
 	function gotoURL(url: string) {
 		window.open(url, '_blank');

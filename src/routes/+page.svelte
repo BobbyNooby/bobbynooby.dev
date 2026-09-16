@@ -36,6 +36,15 @@
 	});
 </script>
 
+{#if !ready}
+	<!-- Server-rendered boot screen: without it first paint is pure black
+		because the page itself is client-only until hydration. -->
+	<div class="boot-screen">
+		<img class="boot-logo" src="/spinninglogo.gif" alt="" />
+		<p>{'> loading'}</p>
+	</div>
+{/if}
+
 {#if ready}
 	<div class="main-screen flex flex-col">
 		<div class="mb-5 self-center" transition:fade={{ delay: 0, duration: duration }}>
@@ -105,6 +114,25 @@
 {/if}
 
 <style>
+	.boot-screen {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		align-items: center;
+		justify-content: center;
+		background-color: black;
+	}
+
+	.boot-logo {
+		width: 8rem;
+		aspect-ratio: 1;
+	}
+
 	.main-container {
 		display: flex;
 		flex-direction: row;

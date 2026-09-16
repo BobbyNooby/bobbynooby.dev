@@ -5,8 +5,7 @@ export const errorSong: SpotifySongData = {
 	title: 'Error, song not found. Data shown below is a plug for my song!',
 	artist: 'BobbyNooby',
 	album: 'Credits Song For My Breakdown',
-	albumImageUrl:
-		'https://via.placeholder.com/150https://i.scdn.co/image/ab67616d0000b2730e4888261e7b8c069eff0eb7',
+	albumImageUrl: 'https://i.scdn.co/image/ab67616d0000b2730e4888261e7b8c069eff0eb7',
 	songUrl: 'https://open.spotify.com/album/1Wd1mI2VMP9YHf3Zcp1qhG'
 };
 
@@ -18,7 +17,7 @@ export const errorLastPlayedSong: SpotifyLastPlayedData = {
 export async function getCurrentSongData(
 	fetch: typeof globalThis.fetch = globalThis.fetch
 ): Promise<SpotifySongData> {
-	const { data, error }: { data: SpotifySongData; error: any } = await fetch(
+	const { data, error }: { data: SpotifySongData; error: unknown } = await fetch(
 		'/api/spotify/now_playing',
 		{
 			method: 'GET'
@@ -34,7 +33,7 @@ export async function getCurrentSongData(
 export async function getLastPlayedSongData(
 	fetch: typeof globalThis.fetch = globalThis.fetch
 ): Promise<SpotifyLastPlayedData> {
-	const { data, error }: { data: SpotifyLastPlayedData; error: any } = await fetch(
+	const { data, error }: { data: SpotifyLastPlayedData; error: unknown } = await fetch(
 		'/api/spotify/last_played',
 		{
 			method: 'GET'

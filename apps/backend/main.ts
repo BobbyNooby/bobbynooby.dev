@@ -1,4 +1,5 @@
-import dotenv from "dotenv";
+import "./env";
+import { fileURLToPath } from "node:url";
 import express from "express";
 import { consoleBob, convertReq } from "./utils";
 import { WebSocket, WebSocketServer } from "ws";
@@ -10,8 +11,6 @@ import { SimpleChat } from "./modules/chat";
 import { createTokenBucket, pickForwardedIp } from "@bobbynooby/shared";
 import { ExpressAuth, getSession } from "@auth/express";
 import { authConfig } from "./auth";
-
-dotenv.config();
 
 const IS_PRODUCTION = process.env.IS_PRODUCTION === "true";
 

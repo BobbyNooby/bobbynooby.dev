@@ -11,7 +11,7 @@ const NEW_PROJECT = {
 };
 
 const url = fs
-	.readFileSync(new URL('../.env', import.meta.url), 'utf8')
+	.readFileSync(new URL('../../.env', import.meta.url), 'utf8')
 	.match(/MONGO_ADMIN_URL=(.*)/)[1]
 	.trim();
 const client = new MongoClient(url);

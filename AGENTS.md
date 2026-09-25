@@ -101,20 +101,23 @@ files with real credentials are required for dev (`apps/web/.env`,
 
 ## Environment variables
 
-Per-app `.env` files are present locally and **must never be committed or echoed**.
+A single root `.env` (git-ignored, **never commit or echo it**) feeds both apps in
+development: `apps/web/.env` is a relative symlink to it (`ln -s ../../.env
+apps/web/.env` after cloning — SvelteKit and Vite only read env from the project dir;
+SvelteKit ignores Vite's `envDir` for `$env/static/*`), the backend's `env.ts` loads it
+via `dotenv` and is imported first in `main.ts` (backend modules fail fast on missing
+keys at import time), the one-off scripts read `../../.env` directly, and
+`docker-compose.yml` passes it to both containers (`env_file`, optional). In production
+the Coolify resource-level env supersedes it.
 
-`apps/web/.env` keys: `AUTH_SECRET`, `IS_PRODUCTION`, `MONGO_ADMIN_URL`,
-`DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`, `DISCORD_BOT_TOKEN`,
-`DISCORD_GUILD_ID`, `DISCORD_USER_ID`, `DISCORD_CHATLOG_CHANNEL`,
-`SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_CLIENT_REFRESH_TOKEN`,
-`TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`, `PUBLIC_WEBSOCKET_BASE_URL`
-
-`apps/backend/.env` keys: `AUTH_SECRET` (same value as web — shared session),
-`WSS_PORT`, `IS_PRODUCTION`, `MONGO_ATLAS_URL`, `MONGO_VPS_URL`,
+Root `.env` keys: `AUTH_SECRET` (one shared value — the Discord session cookie is
+shared between web and backend), `IS_PRODUCTION` (keep `false` for dev), `WSS_PORT`
+(3001), `MONGO_ADMIN_URL`, `MONGO_ATLAS_URL`, `MONGO_VPS_URL`,
 `PRODUCTION_CHAT_COLLECTION`, `DEV_CHAT_COLLECTION`, `DISCORD_CLIENT_ID`,
 `DISCORD_CLIENT_SECRET`, `DISCORD_BOT_TOKEN`, `DISCORD_GUILD_ID`, `DISCORD_USER_ID`,
 `DISCORD_CHATLOG_CHANNEL`, `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`,
-`SPOTIFY_CLIENT_REFRESH_TOKEN`
+`SPOTIFY_CLIENT_REFRESH_TOKEN`, `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`,
+`PUBLIC_WEBSOCKET_BASE_URL`
 
 ## Style
 

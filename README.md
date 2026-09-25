@@ -19,9 +19,12 @@ A Bun-workspaces monorepo:
 ```bash
 bun install
 
-# per-app env files with real credentials (never committed):
-#   apps/web/.env      — Mongo, Discord OAuth, Spotify, Twitch, PUBLIC_WEBSOCKET_BASE_URL
-#   apps/backend/.env  — Mongo (Atlas + VPS), same AUTH_SECRET as web, WSS_PORT=3001
+# one root env file with real credentials (never committed):
+#   .env               — Mongo, Discord OAuth, Spotify, Twitch, WSS_PORT,
+#                        PUBLIC_WEBSOCKET_BASE_URL
+# after creating it, link it into the web app (SvelteKit reads env
+# from the project dir only):
+#   ln -s ../../.env apps/web/.env
 
 bun run dev:web      # http://localhost:5173
 bun run dev:backend  # ws://localhost:3001

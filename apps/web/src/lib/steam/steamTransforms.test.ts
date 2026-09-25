@@ -26,7 +26,10 @@ describe('mapOwnedGames', () => {
 	});
 
 	it('maps minutes to floored hours and keeps lastPlayed', () => {
-		const [g] = mapOwnedGames([raw({ playtime_forever: 1964 * 60 + 30, rtime_last_played: 100 })], 5);
+		const [g] = mapOwnedGames(
+			[raw({ playtime_forever: 1964 * 60 + 30, rtime_last_played: 100 })],
+			5
+		);
 		expect(g.hours).toBe(1964);
 		expect(g.lastPlayed).toBe(100);
 		expect(g.capsule).toContain('/steam/apps/1/library_600x900.jpg');
@@ -77,7 +80,9 @@ describe('mapAppDetails', () => {
 
 describe('mapAchievements', () => {
 	it('counts unlocked achievements', () => {
-		const body = { playerstats: { achievements: [{ achieved: 1 }, { achieved: 0 }, { achieved: 1 }] } };
+		const body = {
+			playerstats: { achievements: [{ achieved: 1 }, { achieved: 0 }, { achieved: 1 }] }
+		};
 		expect(mapAchievements(body)).toEqual({ unlocked: 2, total: 3 });
 	});
 

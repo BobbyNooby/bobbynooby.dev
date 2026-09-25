@@ -39,11 +39,13 @@ export async function getSteamGames(topN = 16): Promise<SteamGameSummary[]> {
 	}
 	try {
 		const games = await fetchOwnedGames();
-		await db.collection(LIST_COLLECTION).updateOne(
-			{ key: 'games' },
-			{ $set: { key: 'games', fetchedAt: new Date(), games } },
-			{ upsert: true }
-		);
+		await db
+			.collection(LIST_COLLECTION)
+			.updateOne(
+				{ key: 'games' },
+				{ $set: { key: 'games', fetchedAt: new Date(), games } },
+				{ upsert: true }
+			);
 		return mapOwnedGames(games, topN);
 	} catch (err) {
 		console.error('[steam] owned games fetch failed:', err);
@@ -83,11 +85,9 @@ export async function getSteamGameDetails(appid: number): Promise<SteamGameDetai
 			...mapAppDetails(appid, rawDetails),
 			achievements: mapAchievements(rawAchievements)
 		};
-		await db.collection(DETAILS_COLLECTION).updateOne(
-			{ appid },
-			{ $set: { appid, fetchedAt: new Date(), details } },
-			{ upsert: true }
-		);
+		await db
+			.collection(DETAILS_COLLECTION)
+			.updateOne({ appid }, { $set: { appid, fetchedAt: new Date(), details } }, { upsert: true });
 		return details;
 	} catch (err) {
 		console.error(`[steam] details fetch failed for ${appid}:`, err);

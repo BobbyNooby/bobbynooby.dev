@@ -54,7 +54,11 @@ export function mapAppDetails(appid: number, body: unknown): SteamGameDetails {
 				? (data.release_date as { date: string }).date
 				: null,
 		genres: genres
-			.map((g) => (typeof (g as { description?: unknown })?.description === 'string' ? (g as { description: string }).description : ''))
+			.map((g) =>
+				typeof (g as { description?: unknown })?.description === 'string'
+					? (g as { description: string }).description
+					: ''
+			)
 			.filter(Boolean),
 		achievements: { unlocked: 0, total: 0 }
 	};

@@ -1,14 +1,6 @@
-export type DiscordStatuses = "online" | "idle" | "dnd" | "offline" | "unknown";
-
-export type ChatMessage = {
-  created_at: string;
-  name: string;
-  message: string;
-  rank: string;
-};
-
-export type RecievedChatMessage = {
-  name: string;
-  message: string;
-  sessionId: string;
-};
+export { chatIntakeSchema } from "@bobbynooby/shared";
+export type {
+  ChatMessage,
+  ReceivedChatMessage as RecievedChatMessage,
+  DiscordStatus as DiscordStatuses,
+} from "@bobbynooby/shared";

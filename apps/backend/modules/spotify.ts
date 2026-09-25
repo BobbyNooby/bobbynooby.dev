@@ -2,6 +2,10 @@ import WebSocket from "ws";
 import { Db } from "mongodb";
 import { MongoDBClient } from "./mongodb";
 import { consoleBob } from "../utils";
+import {
+  SpotifyLastPlayedData,
+  SpotifySongData,
+} from "@bobbynooby/shared";
 
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 if (!SPOTIFY_CLIENT_ID) {
@@ -19,17 +23,6 @@ if (!SPOTIFY_CLIENT_REFRESH_TOKEN) {
   consoleBob("SPOTIFY_CLIENT_REFRESH_TOKEN is not set");
   process.exit(1);
 }
-
-export type SpotifySongData = {
-  isPlaying: boolean;
-  title: string;
-  artist: string;
-  album: string;
-  albumImageUrl: string;
-  songUrl: string;
-};
-
-export type SpotifyLastPlayedData = SpotifySongData & { playedAt: string };
 
 export const errorSong: SpotifySongData = {
   isPlaying: false,

@@ -5,7 +5,8 @@ import { errorSong } from '$lib/spotify/spotifyUtils';
 import { corsHeaders } from '$lib/utils/corsHeaders';
 import { json } from '@sveltejs/kit';
 
-export async function GET(): Promise<Response> {
+export async function GET({ request }: { request: Request }): Promise<Response> {
+	const cors = corsHeaders(request.headers.get('origin'));
 	// Getting Current Song Logic
 	const access_token = await getSpotifyToken();
 
@@ -17,10 +18,7 @@ export async function GET(): Promise<Response> {
 
 	if (res.status === 204 || res.status > 400) {
 		console.log(res.status);
-		return json(
-			{ data: errorSong },
-			{ status: 429, headers: corsHeaders, statusText: res.statusText }
-		);
+		return json({ data: errorSong }, { status: 429, headers: cors, statusText: res.statusText });
 	}
 
 	const song = await res.json();
@@ -57,10 +55,10 @@ export async function GET(): Promise<Response> {
 		await db.collection('recently_played').insertOne(lastPlayedSong);
 	} else {
 		if (recentlyPlayed.songUrl === body.songUrl)
-			return json({ data: body }, { status: 200, headers: corsHeaders });
+			return json({ data: body }, { status: 200, headers: cors });
 		await db.collection('recently_played').deleteMany({});
 		await db.collection('recently_played').insertOne(lastPlayedSong);
 	}
 
-	return json({ data: body }, { status: 200, headers: corsHeaders });
+	return json({ data: body }, { status: 200, headers: cors });
 }

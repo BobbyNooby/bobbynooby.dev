@@ -1,4 +1,4 @@
-import { db, mongoClient } from '$lib/db/mongo';
+import { db, getMongoClient } from '$lib/db/mongo';
 import { getAll3x3Data, getLinks, getProjects } from '$lib/db/mongoUtils.js';
 import { warmMediaCache } from '$lib/media/mediaCache';
 import { fail, type Actions } from '@sveltejs/kit';
@@ -155,7 +155,7 @@ export const actions = {
 		];
 
 		try {
-			const mongoSession = mongoClient.startSession();
+			const mongoSession = getMongoClient().startSession();
 			try {
 				await mongoSession.withTransaction(async () => {
 					for (const update of updates) {

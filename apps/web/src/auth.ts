@@ -1,12 +1,12 @@
 import { SvelteKitAuth } from '@auth/sveltekit';
 import Discord from '@auth/sveltekit/providers/discord';
-import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, IS_PRODUCTION } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
 	providers: [
 		Discord({
-			clientId: DISCORD_CLIENT_ID,
-			clientSecret: DISCORD_CLIENT_SECRET,
+			clientId: env.DISCORD_CLIENT_ID ?? '',
+			clientSecret: env.DISCORD_CLIENT_SECRET ?? '',
 			authorization: 'https://discord.com/api/oauth2/authorize?scope=identify'
 		})
 	],
@@ -24,7 +24,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 		}
 	},
 	cookies:
-		IS_PRODUCTION == 'true'
+		env.IS_PRODUCTION == 'true'
 			? {
 					sessionToken: {
 						name: 'sessionToken',

@@ -1,13 +1,14 @@
-FROM oven/bun:1 AS base
+FROM oven/bun:1
+
 WORKDIR /app
 
-# Install dependencies
-COPY package.json bun.lock ./
+COPY package.json bun.lock* ./
+COPY apps/backend/package.json apps/backend/
+COPY apps/backend apps/backend/
 RUN bun install --frozen-lockfile --production
-
-# Copy source
-COPY . .
 
 EXPOSE 3001
 
-CMD ["bun", "run", "main.ts"]
+ENV NODE_ENV=production
+
+CMD ["bun", "apps/backend/main.ts"]

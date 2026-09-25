@@ -4,7 +4,11 @@ import { startMongoDB } from '$lib/db/mongo';
 import { resolvePermissions } from '$lib/utils/permissions';
 import { handle as authHandle } from './auth';
 
-startMongoDB().then(() => console.log('Connected to MongoDB'));
+// Deferred so builds (SvelteKit's post-build analyse imports this module)
+// succeed without a reachable MongoDB; connects on the first request.
+let connecting: Promise<unknown> | undefined;
+const connectOnce = () =>
+	(connecting ??= startMongoDB().then(() => console.log('Connected to MongoDB')));
 
 export const handle = sequence(authHandle, async ({ event, resolve }) => {
 	if (dev) {
@@ -16,6 +20,7 @@ export const handle = sequence(authHandle, async ({ event, resolve }) => {
 		return resolve(event);
 	}
 
+	await connectOnce();
 	const permissions = await resolvePermissions(await event.locals.auth());
 	event.locals.isAdmin = permissions.isAdmin;
 	event.locals.canShorten = permissions.canShorten;

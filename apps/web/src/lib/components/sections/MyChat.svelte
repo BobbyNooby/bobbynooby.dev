@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ChatMessage, SentChatMessage } from '$lib/types';
+	import { chatColorForRank } from '$lib/chat/chatColors';
 	import { createLiveSocket } from '$lib/utils/liveSocket';
 	import { playAudio } from '$lib/utils/playAudio';
 	import { onDestroy, onMount } from 'svelte';
@@ -7,13 +8,13 @@
 	const starterMessages: ChatMessage[] = [
 		{
 			message: 'Welcome to the chat! Use /username to change your username.',
-			rank: 'owner',
+			rank: 'system',
 			created_at: new Date().toISOString(),
 			name: 'bobbynooby.dev'
 		},
 		{
 			message: 'If the name is green, its me! If not, its someone else.',
-			rank: 'owner',
+			rank: 'system',
 			created_at: new Date().toISOString(),
 			name: 'bobbynooby.dev'
 		}
@@ -158,7 +159,7 @@
 			{
 				name: 'bobbynooby.dev',
 				message: message,
-				rank: 'owner',
+				rank: 'system',
 				created_at: new Date().toISOString()
 			}
 		];
@@ -178,7 +179,7 @@
 		<div class="flex w-full flex-row justify-between">
 			<div class="min-w-min flex-shrink-0">
 				<p>
-					<span style="color : {message.rank == 'owner' ? '#00FF00' : '#CECECE'}">
+					<span style="color : {chatColorForRank(message.rank)}">
 						{`<${message.name}>`}
 					</span>
 					:{' '}

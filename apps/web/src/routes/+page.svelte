@@ -24,13 +24,13 @@
 	const arrangement = {
 		info: 1,
 		projects: 2,
+		games: 3,
 		links: 3,
 		status: 4,
 		music: 5,
 		playlist: 6,
 		threeByThree: 8,
-		chat: 8,
-		games: 9
+		chat: 8
 	};
 
 	onMount(() => {
@@ -57,7 +57,6 @@
 			<div class="left-column">
 				<!-- Big live player, only rendered while live -->
 				<MyTwitch />
-				<MyGames />
 				<div
 					class="content-box"
 					transition:fade={{ delay: arrangement.info * interval, duration: duration }}
@@ -70,6 +69,15 @@
 				>
 					<MyProjects projects={data.projects} />
 				</div>
+
+				{#if data.gamesEnabled}
+					<div
+						class="content-box"
+						transition:fade={{ delay: arrangement.games * interval, duration: duration }}
+					>
+						<MyGames />
+					</div>
+				{/if}
 
 				<div
 					class="content-box"

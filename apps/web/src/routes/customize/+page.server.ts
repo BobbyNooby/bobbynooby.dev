@@ -1,5 +1,6 @@
 import { db, getMongoClient } from '$lib/db/mongo';
 import { getAll3x3Data, getKnown3x3Routes, getLinks, getProjects } from '$lib/db/mongoUtils.js';
+import { getGamesEnabled, setGamesEnabled } from '$lib/db/siteConfig';
 import { warmMediaCache } from '$lib/media/mediaCache';
 import { dropSteamCache, getAllSteamGames, getSteamCacheMeta } from '$lib/steam/steamCache';
 import type { SteamGameSummary } from '$lib/steam/steamTypes';
@@ -15,6 +16,7 @@ export const load = async ({ locals }) => {
 			projects: [],
 			all3x3Data: [],
 			steam: { games: [], lastRefresh: null },
+			steamEnabled: true,
 			isSessionValid: false
 		};
 	}
@@ -22,6 +24,7 @@ export const load = async ({ locals }) => {
 	const all3x3Data = await getAll3x3Data();
 	const links = await getLinks();
 	const projects = await getProjects();
+	const steamEnabled = await getGamesEnabled().catch(() => true);
 	let steam: { games: SteamGameSummary[]; lastRefresh: string | null } = {
 		games: [],
 		lastRefresh: null
@@ -32,7 +35,7 @@ export const load = async ({ locals }) => {
 	} catch (err) {
 		console.error('[steam] cache read failed for customize:', err);
 	}
-	return { links, projects, isSessionValid: true, all3x3Data, steam };
+	return { links, projects, isSessionValid: true, all3x3Data, steam, steamEnabled };
 };
 
 const safeHref = /^(https?:\/\/|\/)/i;
@@ -215,6 +218,21 @@ export const actions = {
 		} catch (err) {
 			console.error('[steam] cache refresh failed:', err);
 			return fail(500, { message: 'Steam cache refresh failed.' });
+		}
+	},
+
+	toggleGames: async (event) => {
+		if (!event.locals.isAdmin) {
+			return fail(403, { message: 'You are not authorized to make changes.' });
+		}
+		const formData = await event.request.formData();
+		const enabled = formData.get('enabled') === 'true';
+		try {
+			await setGamesEnabled(enabled);
+			return { success: true, enabled };
+		} catch (err) {
+			console.error('[steam] toggle failed:', err);
+			return fail(500, { message: 'Could not update the games section.' });
 		}
 	}
 } satisfies Actions;

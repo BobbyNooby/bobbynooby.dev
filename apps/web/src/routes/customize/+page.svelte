@@ -451,6 +451,17 @@
 								Refresh cache
 							</button>
 						</form>
+						<form method="POST" action="?/toggleGames" use:enhance>
+							<input type="hidden" name="enabled" value={data.steamEnabled ? 'false' : 'true'} />
+							<button
+								class="mt-2 rounded-md border px-3 py-1 text-sm {data.steamEnabled
+									? 'border-white/40'
+									: 'border-[#00FF00]/60 text-[#00FF00]'}"
+								type="submit"
+							>
+								{data.steamEnabled ? 'Disable games section' : 'Enable games section'}
+							</button>
+						</form>
 					</div>
 				{/if}
 			</div>

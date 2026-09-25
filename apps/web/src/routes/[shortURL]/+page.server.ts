@@ -1,4 +1,3 @@
-import { goto } from '$app/navigation';
 import { getLongURL } from '$lib/shortURL/shortURL.js';
 
 export async function load({ params }) {

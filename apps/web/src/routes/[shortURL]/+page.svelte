@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { PageServerData } from './$types';
-	import { goto } from '$app/navigation';
 
 	let { data }: { data: PageServerData } = $props();
 

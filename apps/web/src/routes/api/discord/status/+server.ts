@@ -10,7 +10,7 @@ export async function GET() {
 		const user: GuildMember = await server.members.fetch(DISCORD_USER_ID);
 		// console.log('Discord Status Retrieved: ', user.presence?.status);
 		return json(
-			{ data: user.presence?.status, success: true || 'unknown' },
+			{ data: user.presence?.status, success: true },
 			{ status: 200, headers: corsHeaders }
 		);
 	} catch (error) {

@@ -12,13 +12,13 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 	],
 	trustHost: true,
 	callbacks: {
-		async jwt({ token, account, profile }) {
+		async jwt({ token, profile }) {
 			if (profile) {
 				token.id = profile.id;
 			}
 			return token;
 		},
-		async session({ session, token, user }) {
+		async session({ session, token }) {
 			session.user.id = token.id as string;
 			return session;
 		}
@@ -30,8 +30,8 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 						name: 'sessionToken',
 						options: {
 							httpOnly: true,
-							sameSite: 'none', 
-							secure: true, 
+							sameSite: 'none',
+							secure: true,
 							path: '/',
 							domain: '.bobbynooby.dev'
 						}

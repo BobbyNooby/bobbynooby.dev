@@ -1,3 +1,8 @@
+# Generated / build output
+.svelte-kit/
+build/
+node_modules/
+
 # Package Managers
 package-lock.json
 pnpm-lock.yaml

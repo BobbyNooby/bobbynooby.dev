@@ -2,11 +2,11 @@
 	import { enhance } from '$app/forms';
 	import 'remixicon/fonts/remixicon.css';
 	import { flip } from 'svelte/animate';
-	import { cubicIn, cubicInOut, cubicOut } from 'svelte/easing';
+	import { cubicInOut, cubicOut } from 'svelte/easing';
 	import { fade, fly } from 'svelte/transition';
 	import GenericButton from '$lib/components/GenericButton.svelte';
 	import { page } from '$app/state';
-	import { SignIn, SignOut } from '@auth/sveltekit/components';
+	import { SignOut } from '@auth/sveltekit/components';
 	import { toast } from 'svelte-french-toast';
 	import { goto } from '$app/navigation';
 	import type { PageServerData } from './$types';
@@ -317,7 +317,7 @@
 						in:fly={{ y: 100, duration: 500, easing: cubicOut, delay: 100 }}
 						out:fly={{ y: 100, duration: 500, easing: cubicOut }}
 					>
-						{#each all3x3Data.groups as list, i (list.label)}
+						{#each all3x3Data.groups as list (list.label)}
 							<div animate:flip={{ duration: 200, easing: cubicOut }} class="m-2 p-3">
 								<div class="flex flex-row items-center">
 									<p class=" container-title-text font-cascadia-code">

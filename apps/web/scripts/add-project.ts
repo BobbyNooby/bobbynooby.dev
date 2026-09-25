@@ -10,13 +10,15 @@ const NEW_PROJECT = {
 	href: 'https://github.com/BobbyNooby/BetterEventQuestsPageWilds'
 };
 
-const url = fs.readFileSync(new URL('../.env', import.meta.url), 'utf8').match(/MONGO_ADMIN_URL=(.*)/)[1].trim();
+const url = fs
+	.readFileSync(new URL('../.env', import.meta.url), 'utf8')
+	.match(/MONGO_ADMIN_URL=(.*)/)[1]
+	.trim();
 const client = new MongoClient(url);
 await client.connect();
 
 const projects = client.db().collection('projects');
 
-const existing = await projects.findOne({ title: NEW_PROJECT.title });
 const maxOrder = await projects
 	.find({}, { projection: { item_order: 1 }, sort: { item_order: -1 }, limit: 1 })
 	.toArray();
@@ -35,12 +37,12 @@ const result = await projects.updateOne(
 );
 
 console.log(
-	result.upsertedId ? `inserted as item_order ${nextOrder}, uid ${nextUid}` : 'already exists — no change'
+	result.upsertedId
+		? `inserted as item_order ${nextOrder}, uid ${nextUid}`
+		: 'already exists — no change'
 );
 
-const all = await projects
-	.find({}, { projection: { _id: 0 }, sort: { item_order: 1 } })
-	.toArray();
+const all = await projects.find({}, { projection: { _id: 0 }, sort: { item_order: 1 } }).toArray();
 console.log(`collection now has ${all.length} projects; last:`, JSON.stringify(all.at(-1)));
 
 await client.close();

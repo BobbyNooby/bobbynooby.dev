@@ -9,7 +9,7 @@
 </script>
 
 <div class="box flex flex-row rounded-lg border border-white">
-	<div class="mr-4 md:mr-8 flex flex-col">
+	<div class="mr-4 flex flex-col md:mr-8">
 		<button onclick={() => openLink(media.url)}>
 			<div
 				class=" cover-art-container rounded-lg"
@@ -44,7 +44,9 @@
 		<!-- Titles -->
 		<div class="mb-10 space-y-2">
 			{#each media.titles as title, i}
-				<p class={i == 0 ? 'text-3xl md:text-6xl' : ''} style="color: {title.color};">{title.value}</p>
+				<p class={i == 0 ? 'text-3xl md:text-6xl' : ''} style="color: {title.color};">
+					{title.value}
+				</p>
 			{/each}
 		</div>
 

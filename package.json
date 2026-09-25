@@ -1,0 +1,15 @@
+{
+	"name": "bobbynooby-monorepo",
+	"private": true,
+	"type": "module",
+	"workspaces": ["apps/*", "packages/*"],
+	"scripts": {
+		"dev:web": "bun run --cwd apps/web dev",
+		"dev:backend": "bun run --cwd apps/backend dev",
+		"build": "bun run --cwd apps/web build",
+		"check": "bun run --cwd apps/web check",
+		"lint": "bun run --cwd apps/web lint",
+		"test": "bun run --cwd apps/web test",
+		"format": "bun run --cwd apps/web format"
+	}
+}

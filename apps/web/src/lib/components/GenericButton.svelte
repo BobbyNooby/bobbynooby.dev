@@ -7,7 +7,7 @@
 		fontClass = 'font-cascadia-code'
 	}: {
 		text?: string;
-		inputFunction?: () => any;
+		inputFunction?: () => void;
 		buttonType?: 'submit' | 'reset' | 'button';
 		extraClasses?: string;
 		fontClass?: string;

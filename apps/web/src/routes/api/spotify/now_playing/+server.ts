@@ -46,7 +46,7 @@ export async function GET(): Promise<Response> {
 		.findOne({})) as SpotifyLastPlayedData | null;
 	const currentDateTime = new Date().toISOString();
 
-	let lastPlayedSong: SpotifyLastPlayedData = {
+	const lastPlayedSong: SpotifyLastPlayedData = {
 		...body,
 		playedAt: currentDateTime
 	};

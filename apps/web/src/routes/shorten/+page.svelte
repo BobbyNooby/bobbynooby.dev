@@ -14,7 +14,6 @@
 	let longURL = $state('');
 	let responseString = $state('');
 	let responseURL = $state('');
-	let longURLFormData = $state('');
 
 	function updateResponseString(
 		shortURL: string | null,
@@ -43,7 +42,7 @@
 						style: "font-family: 'Cascadia Code', sans-serif;"
 					});
 				})
-				.catch((err) => {
+				.catch(() => {
 					toast.error('Failed to copy', {
 						style: "font-family: 'Cascadia Code', sans-serif;"
 					});
@@ -109,7 +108,6 @@
 					/>
 					<button
 						type="submit"
-						onclick={() => (longURLFormData = JSON.stringify(longURL))}
 						class="ml-2 border-l border-white bg-white px-4 text-black transition-transform duration-500"
 					>
 						Submit

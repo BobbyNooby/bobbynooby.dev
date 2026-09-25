@@ -2,7 +2,10 @@
 import fs from 'node:fs';
 import { MongoClient } from 'mongodb';
 
-const url = fs.readFileSync(new URL('../.env', import.meta.url), 'utf8').match(/MONGO_ADMIN_URL=(.*)/)[1].trim();
+const url = fs
+	.readFileSync(new URL('../.env', import.meta.url), 'utf8')
+	.match(/MONGO_ADMIN_URL=(.*)/)[1]
+	.trim();
 const client = new MongoClient(url);
 await client.connect();
 

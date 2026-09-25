@@ -1,6 +1,8 @@
 import { db, getMongoClient } from '$lib/db/mongo';
 import { getAll3x3Data, getKnown3x3Routes, getLinks, getProjects } from '$lib/db/mongoUtils.js';
 import { warmMediaCache } from '$lib/media/mediaCache';
+import { dropSteamCache, getAllSteamGames, getSteamCacheMeta } from '$lib/steam/steamCache';
+import type { SteamGameSummary } from '$lib/steam/steamTypes';
 import { fail, type Actions } from '@sveltejs/kit';
 import type { ClientSession } from 'mongodb';
 import { z } from 'zod';
@@ -8,13 +10,29 @@ import { z } from 'zod';
 export const load = async ({ locals }) => {
 	// Never hand edit data to visitors that cannot use it.
 	if (!locals.isAdmin) {
-		return { links: [], projects: [], all3x3Data: [], isSessionValid: false };
+		return {
+			links: [],
+			projects: [],
+			all3x3Data: [],
+			steam: { games: [], lastRefresh: null },
+			isSessionValid: false
+		};
 	}
 
 	const all3x3Data = await getAll3x3Data();
 	const links = await getLinks();
 	const projects = await getProjects();
-	return { links, projects, isSessionValid: true, all3x3Data };
+	let steam: { games: SteamGameSummary[]; lastRefresh: string | null } = {
+		games: [],
+		lastRefresh: null
+	};
+	try {
+		const [games, meta] = await Promise.all([getAllSteamGames(), getSteamCacheMeta()]);
+		steam = { games, lastRefresh: meta.fetchedAt };
+	} catch (err) {
+		console.error('[steam] cache read failed for customize:', err);
+	}
+	return { links, projects, isSessionValid: true, all3x3Data, steam };
 };
 
 const safeHref = /^(https?:\/\/|\/)/i;
@@ -184,5 +202,19 @@ export const actions = {
 		}
 
 		return { ok: true };
+	},
+
+	refreshSteam: async (event) => {
+		if (!event.locals.isAdmin) {
+			return fail(403, { message: 'You are not authorized to make changes.' });
+		}
+		try {
+			await dropSteamCache();
+			await getAllSteamGames();
+			return { success: true };
+		} catch (err) {
+			console.error('[steam] cache refresh failed:', err);
+			return fail(500, { message: 'Steam cache refresh failed.' });
+		}
 	}
 } satisfies Actions;

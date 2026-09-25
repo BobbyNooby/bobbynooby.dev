@@ -99,3 +99,11 @@ export async function dropSteamCache(): Promise<void> {
 	await db.collection(LIST_COLLECTION).deleteMany({});
 	await db.collection(DETAILS_COLLECTION).deleteMany({});
 }
+
+export async function getSteamCacheMeta(): Promise<{ fetchedAt: string | null }> {
+	if (!steamConfigured()) return { fetchedAt: null };
+	const cached = await db
+		.collection<{ fetchedAt: Date }>(LIST_COLLECTION)
+		.findOne({ key: 'games' });
+	return { fetchedAt: cached?.fetchedAt?.toISOString() ?? null };
+}

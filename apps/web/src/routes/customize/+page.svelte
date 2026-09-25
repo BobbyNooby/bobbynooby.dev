@@ -26,6 +26,8 @@
 	const all3x3Data = new ThreeByThreeCollection(data.all3x3Data);
 	let all3x3Visible = $state(false);
 
+	let steamReady = $state(false);
+
 	function addLink() {
 		linksTable.createNew({ label: 'None', href: 'https://bobbynooby.dev', color: '#FFFFFF' });
 	}
@@ -409,6 +411,49 @@
 					</div>
 				{/if}
 			</div>
+			<div class="steam-root">
+				<div class="flex flex-row items-center">
+					<p class=" container-title-text font-cascadia-code">/Steam</p>
+					<button onclick={() => (steamReady = !steamReady)}>
+						{#if !steamReady}
+							<Icon name="add-box" />
+						{:else}
+							<Icon name="minus-box" />
+						{/if}
+					</button>
+				</div>
+				{#if steamReady}
+					<div
+						in:fly={{ y: 100, duration: 500, easing: cubicOut, delay: 100 }}
+						out:fly={{ y: 100, duration: 500, easing: cubicOut }}
+					>
+						<p class="text-sm text-gray-400">
+							{data.steam.games.length} games cached
+							{#if data.steam.lastRefresh}
+								· refreshed {new Date(data.steam.lastRefresh).toLocaleString('en-US')}
+							{:else}
+								· never refreshed
+							{/if}
+						</p>
+						<ul class="mt-2 max-h-64 overflow-y-auto text-sm">
+							{#each data.steam.games as game (game.appid)}
+								<li class="flex justify-between border-b border-white/10 py-1">
+									<span>{game.name}</span>
+									<span class="text-gray-400">{game.hours.toLocaleString('en-US')}h</span>
+								</li>
+							{/each}
+						</ul>
+						<form method="POST" action="?/refreshSteam" use:enhance>
+							<button
+								class="mt-2 rounded-md border border-white/40 px-3 py-1 text-sm"
+								type="submit"
+							>
+								Refresh cache
+							</button>
+						</form>
+					</div>
+				{/if}
+			</div>
 		</div>
 	</div>
 
@@ -470,6 +515,11 @@
 	}
 
 	.all3x3-root {
+		width: auto;
+		margin-bottom: 1rem;
+	}
+
+	.steam-root {
 		width: auto;
 		margin-bottom: 1rem;
 	}

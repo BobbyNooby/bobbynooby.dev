@@ -1,1 +1,1 @@
-export type discordStatuses = 'online' | 'idle' | 'dnd' | 'offline' | 'unknown';
+export type { DiscordStatus as discordStatuses } from '@bobbynooby/shared';

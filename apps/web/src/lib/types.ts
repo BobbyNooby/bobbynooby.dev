@@ -25,14 +25,5 @@ export type ShortURL = {
 	longURL: string;
 };
 
-export type ChatMessage = {
-	created_at: string;
-	name: string;
-	message: string;
-	rank: string;
-};
-
-export type SentChatMessage = {
-	name: string;
-	message: string;
-};
+export type { ChatMessage } from '@bobbynooby/shared';
+export type { ReceivedChatMessage as SentChatMessage } from '@bobbynooby/shared';

@@ -45,6 +45,7 @@ The live widgets are powered by `apps/backend`:
 
 ```bash
 bun install            # from the repo root (single lockfile, hoisted node_modules)
+bun run dev            # both dev servers (bun --filter; output prefixed per workspace)
 bun run dev:web        # vite dev server (localhost:5173)
 bun run dev:backend    # backend server (port 3001)
 bun run build          # web production build (adapter-node -> apps/web/build/)

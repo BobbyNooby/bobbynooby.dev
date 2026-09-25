@@ -26,6 +26,7 @@ bun install
 # from the project dir only):
 #   ln -s ../../.env apps/web/.env
 
+bun run dev          # both servers at once (prefixed per workspace)
 bun run dev:web      # http://localhost:5173
 bun run dev:backend  # ws://localhost:3001
 ```

@@ -21,7 +21,21 @@ const apiBuckets = new Map<
 	{ bucket: ReturnType<typeof createTokenBucket>; seen: number }
 >();
 
+// Baseline CSP: allows inline scripts/styles (SvelteKit hydration), remote
+// images/media, websocket connections, and Spotify embeds only.
+const csp = [
+	"default-src 'self'",
+	"script-src 'self' 'unsafe-inline'",
+	"style-src 'self' 'unsafe-inline'",
+	"img-src 'self' https:",
+	"media-src 'self' https:",
+	"connect-src 'self' wss:",
+	'frame-src https://open.spotify.com'
+].join('; ');
+
 export const handle = sequence(authHandle, async ({ event, resolve }) => {
+	event.setHeaders({ 'Content-Security-Policy': csp });
+
 	if (dev) {
 		// Dev-only bypass: the OAuth round-trip is unreliable on the local dev
 		// server (cross-site cookies). `dev` is baked in at build time, so this

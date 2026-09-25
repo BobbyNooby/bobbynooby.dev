@@ -166,6 +166,10 @@
 		}
 	}
 	@media (prefers-reduced-motion: reduce) {
+		/* No animation: the viewport becomes a plain scrollable row instead. */
+		.carousel-viewport {
+			overflow-x: auto;
+		}
 		.carousel-track {
 			display: flex;
 			gap: 8px;

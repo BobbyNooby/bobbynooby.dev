@@ -1,5 +1,6 @@
 import { Db } from "mongodb";
 import WebSocket from "ws";
+import { chatIntakeSchema } from "@bobbynooby/shared";
 import { MongoDBClient } from "./mongodb";
 import { ChatMessage, RecievedChatMessage } from "../types";
 import { DiscordBot } from "./discord";
@@ -35,8 +36,11 @@ if (IS_PRODUCTION == "true") {
   process.exit(1);
 }
 
+export type ChatIdentity = { id: string; name?: string };
+
 export class SimpleChat {
   users: Set<WebSocket>;
+  identities: WeakMap<WebSocket, ChatIdentity>;
   mongoClient: MongoDBClient;
   discordBot: DiscordBot;
   db: Db;
@@ -44,13 +48,14 @@ export class SimpleChat {
   constructor(mongoDbClient: MongoDBClient, discordBot: DiscordBot) {
     {
       this.users = new Set<WebSocket>();
+      this.identities = new WeakMap<WebSocket, ChatIdentity>();
       this.db = mongoDbClient.dbVPS;
       this.mongoClient = mongoDbClient;
       this.discordBot = discordBot;
     }
   }
 
-  async onRecieve(message: string, sessionId: string) {
+  async onRecieve(message: string, sessionId: string, ws?: WebSocket) {
     // JSON.parse is guarded: an invalid frame must never throw out of the
     // message handler (an unhandled rejection takes the whole server down).
     let parsedMessage: RecievedChatMessage;
@@ -61,27 +66,20 @@ export class SimpleChat {
       return;
     }
 
-    const requiredKeys = ["name", "message"];
-
-    for (const key of requiredKeys) {
-      if (Object.hasOwn(parsedMessage, key) === false) {
-        this.consoleBob(`Invalid Message : ${message.slice(0, 100)}`);
-        return;
-      }
-    }
-
-    if (
-      typeof parsedMessage.name !== "string" ||
-      typeof parsedMessage.message !== "string"
-    ) {
-      this.consoleBob(`Invalid types : ${message.slice(0, 100)}`);
+    const parsed = chatIntakeSchema.safeParse(parsedMessage);
+    if (parsed.success == false) {
+      this.consoleBob(`Invalid Message : ${message.slice(0, 100)}`);
       return;
     }
 
+    // Authed users speak under their Discord name; only guests may pick one.
+    const identity = ws ? this.identities.get(ws) : undefined;
+    const name = identity?.name ?? parsed.data.name;
+
     const messageObject: ChatMessage = {
-      name: parsedMessage.name.slice(0, 50),
+      name: name.slice(0, 50),
       created_at: new Date().toISOString(),
-      message: parsedMessage.message.slice(0, 10_000),
+      message: parsed.data.message.slice(0, 10_000),
       rank:
         (await this.mongoClient.isAdmin(sessionId)) == true ? "owner" : "guest",
     };
@@ -90,15 +88,18 @@ export class SimpleChat {
       .collection(CHAT_COLLECTION || "chat-prod")
       .insertOne(messageObject);
     await this.discordBot.sendDiscordMessage(
-      parsedMessage.name,
-      parsedMessage.message,
+      messageObject.name,
+      messageObject.message,
       messageObject.rank
     );
     this.broadcast({ message: messageObject });
   }
 
-  async addWebSocket(ws: WebSocket) {
+  async addWebSocket(ws: WebSocket, identity?: ChatIdentity) {
     this.users.add(ws);
+    if (identity) {
+      this.identities.set(ws, identity);
+    }
 
     const pastMessages: ChatMessage[] = [...(await this.getLastMessages())];
 

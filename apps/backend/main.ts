@@ -7,6 +7,7 @@ import { UserCount } from "./modules/userCount";
 import { SpotifyClient } from "./modules/spotify";
 import { MongoDBClient } from "./modules/mongodb";
 import { SimpleChat } from "./modules/chat";
+import { createTokenBucket } from "@bobbynooby/shared";
 import { ExpressAuth, getSession } from "@auth/express";
 import { authConfig } from "./auth";
 
@@ -38,6 +39,14 @@ const spotifyClient = new SpotifyClient(mongoDbClient);
 await spotifyClient.initialize();
 
 const chat = new SimpleChat(mongoDbClient, discordBot);
+
+// Per-identity chat rate limiting: 5 messages instantly, then one every 2s.
+// Authed users are keyed by session id, guests by socket address; entries
+// idle for over 5 minutes are evicted on each connect to bound the map.
+const chatBuckets = new Map<
+  string,
+  { bucket: ReturnType<typeof createTokenBucket>; seen: number }
+>();
 
 // Every live socket, regardless of subroute. One interval pings them all:
 // browsers answer pings automatically, and a socket that misses its pong is
@@ -88,6 +97,23 @@ wss.on("connection", async (ws, req) => {
 
   const sessionId = session?.user?.id || "skibiditoiletmoment";
 
+  const bucketKey = session?.user?.id || req.socket.remoteAddress || "unknown";
+  const nowMs = Date.now();
+  for (const [key, chatEntry] of chatBuckets) {
+    if (nowMs - chatEntry.seen > 5 * 60_000) {
+      chatBuckets.delete(key);
+    }
+  }
+  let chatEntry = chatBuckets.get(bucketKey);
+  if (chatEntry == undefined) {
+    chatEntry = {
+      bucket: createTokenBucket({ capacity: 5, refillPerSecond: 0.5 }),
+      seen: nowMs,
+    };
+    chatBuckets.set(bucketKey, chatEntry);
+  }
+  chatEntry.seen = nowMs;
+
   if (subroute === "/discord") {
     await discordBot.addWebSocket(ws);
 
@@ -116,11 +142,18 @@ wss.on("connection", async (ws, req) => {
   }
 
   if (subroute === "/chat") {
-    await chat.addWebSocket(ws);
+    await chat.addWebSocket(ws, {
+      id: sessionId,
+      name: session?.user?.name ?? undefined,
+    });
 
     ws.on("message", async (message) => {
       try {
-        await chat.onRecieve(String(message), sessionId);
+        if (chatEntry.bucket.tryTake() == false) {
+          consoleBob(`Chat rate limited: ${bucketKey}`);
+          return;
+        }
+        await chat.onRecieve(String(message), sessionId, ws);
       } catch (e) {
         consoleBob(`Chat error: ${e}`);
       }

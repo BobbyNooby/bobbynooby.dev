@@ -1,5 +1,5 @@
 import { db, getMongoClient } from '$lib/db/mongo';
-import { getAll3x3Data, getLinks, getProjects } from '$lib/db/mongoUtils.js';
+import { getAll3x3Data, getKnown3x3Routes, getLinks, getProjects } from '$lib/db/mongoUtils.js';
 import { warmMediaCache } from '$lib/media/mediaCache';
 import { fail, type Actions } from '@sveltejs/kit';
 import type { ClientSession } from 'mongodb';
@@ -135,10 +135,7 @@ export const actions = {
 
 		// Only write to 3x3 collections that already exist in the routes doc,
 		// so a mangled label can never mint an arbitrary new collection.
-		const routeDoc = await db
-			.collection<{ routes: string[] }>('3x3_dynamic_routes')
-			.findOne({}, { projection: { _id: 0, routes: 1 } });
-		const knownRoutes = new Set((routeDoc?.routes ?? []).map((route) => route.toLowerCase()));
+		const knownRoutes = await getKnown3x3Routes();
 		for (const list of all3x3) {
 			if (!knownRoutes.has(list.label.toLowerCase())) {
 				return fail(400, { message: `Unknown 3x3 list: ${list.label}` });

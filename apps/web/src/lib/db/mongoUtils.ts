@@ -16,6 +16,13 @@ export async function getProjects(): Promise<Project[]> {
 		.toArray();
 }
 
+export async function getKnown3x3Routes(): Promise<Set<string>> {
+	const routeDoc = await db
+		.collection<{ routes: string[] }>('3x3_dynamic_routes')
+		.findOne({}, { projection: { _id: 0, routes: 1 } });
+	return new Set((routeDoc?.routes ?? []).map((route) => route.toLowerCase()));
+}
+
 export async function getAll3x3Data(): Promise<threeByThreeServerData[]> {
 	const routeDoc = await db
 		.collection<{ routes: string[] }>('3x3_dynamic_routes')

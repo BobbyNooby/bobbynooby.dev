@@ -1,3 +1,5 @@
+import { randomInt } from 'node:crypto';
+
 import { db } from '$lib/db/mongo';
 
 export async function createShortURL(longURL: string) {
@@ -25,13 +27,12 @@ export async function getLongURL(shortURL: string) {
 	return { success: false, error: 'Short URL not found' };
 }
 
-function generateShortURL(length: number = 5) {
+export function generateShortURL(length: number = 5, rng: () => number = () => randomInt(0, 62)) {
 	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 	let shortURL = '';
 
 	for (let i = 0; i < length; i++) {
-		const randomIndex = Math.floor(Math.random() * characters.length);
-		shortURL += characters.charAt(randomIndex);
+		shortURL += characters.charAt(rng());
 	}
 
 	return shortURL;

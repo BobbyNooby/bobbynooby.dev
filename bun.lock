@@ -4,6 +4,9 @@
   "workspaces": {
     "": {
       "name": "bobbynooby-monorepo",
+      "devDependencies": {
+        "vitest": "3",
+      },
     },
     "apps/backend": {
       "name": "@bobbynooby/backend",

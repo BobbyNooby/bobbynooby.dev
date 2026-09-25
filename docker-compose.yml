@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      args:
+        - PUBLIC_WEBSOCKET_BASE_URL=${PUBLIC_WEBSOCKET_BASE_URL:-}
     ports:
       - '3000:3000'
     env_file:

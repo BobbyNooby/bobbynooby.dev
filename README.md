@@ -41,4 +41,7 @@ docker compose up --build   # full stack: web on 3000, backend on 3001
 
 One `docker-compose.yml` builds both images; Coolify deploys them as a single compose
 resource so web (3000) and backend (3001) always ship together. Env vars are set at the
-Coolify resource level. See `AGENTS.md` for architecture details.
+Coolify resource level — except `PUBLIC_WEBSOCKET_BASE_URL`, which must also be passed
+as a **build arg** (it is baked into the client bundle at build time), and
+`IS_PRODUCTION=true` for production (flows through the compose file). See `AGENTS.md`
+for architecture details.

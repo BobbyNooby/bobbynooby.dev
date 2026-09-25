@@ -11,8 +11,9 @@ It is a **Bun-workspaces monorepo** with three workspaces:
 
 - **`apps/web`** — the SvelteKit site (formerly this repo's root; legacy GitHub repo:
   `BobbyNooby/bobbynooby.dev`)
-- **`apps/backend`** — Bun + Express + `ws` WebSocket server, port 3001 (subtree of the
-  former `BobbyNooby/bobbynooby.dev.backend` repo, git history preserved)
+- **`apps/backend`** — Bun + Express + `ws` WebSocket server, port 3001 (squashed
+  subtree of the former `BobbyNooby/bobbynooby.dev.backend` repo — its history
+  collapsed to one merge commit; the original repo remains as archive)
 - **`packages/shared`** — payload types + zod schemas shared by both apps. **Rule: pure
   types/zod only — no `$env`, no Svelte runes, no DB imports.**
 
@@ -72,8 +73,9 @@ files with real credentials are required for dev (`apps/web/.env`,
   - `/customize` — admin-only editor for links/projects/3x3 (guarded in
     `+page.server.ts` via `locals.isAdmin`)
   - `/api/*` — JSON endpoints: `discord/status`, `spotify/now_playing`,
-    `spotify/last_played`, `twitch/live`, `links`, `projects` (CORS-restricted to site
-    origins, rate-limited, error responses redacted)
+    `spotify/last_played`, `twitch/live`, `links`, `projects` (the three discord/spotify
+    routes send CORS headers restricted to site origins; all `/api/*` GETs are
+    rate-limited per client IP in production; `discord/status` redacts internal errors)
   - `/signin`, `/signout` — Auth.js entry points
 - **Auth & permissions:** `hooks.server.ts` resolves the session once per request into
   `locals.isAdmin` / `locals.canShorten` (typed in `apps/web/src/app.d.ts`) by looking
@@ -147,6 +149,11 @@ One `docker-compose.yml` at the repo root builds both images (`oven/bun:1`) and 
 with **Coolify as a single compose resource** — the web app serves on 3000, the backend
 on 3001, so both sides always deploy together (no version skew). Dockerfiles COPY from
 the repo root (including `packages/shared`) and build from there. Env vars are set at
-the Coolify resource level and land in the containers' env. `svelte.config.js` uses
+the Coolify resource level and land in the containers' env — **except
+`PUBLIC_WEBSOCKET_BASE_URL`, which must also be present at build time** (a Coolify
+build arg): it is baked into the client bundle via `$env/static/public` and setting it
+only at runtime leaves the widgets pointing at an empty host. `IS_PRODUCTION` flows
+through the compose file (`${IS_PRODUCTION:-false}`), so set it `true` at the resource
+level for production. `svelte.config.js` uses
 `@sveltejs/adapter-node` (the `adapter-vercel` dep is installed but unused — don't
 switch adapters without good reason).

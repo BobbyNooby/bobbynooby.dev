@@ -1,5 +1,6 @@
 import { errorAnime, errorManga, type Anime, type Manga } from '$lib/anilist/anilistTypes';
 import { type GeneralMedia } from './mediaTypes';
+import { sanitizeAnilistHtml } from './sanitize';
 import { getMediaCached } from './mediaCache';
 import { getGreenRedColorFromScore } from '$lib/utils/getGreenRedColorFromScore';
 import type { threeByThreeEntry } from '$lib/types';
@@ -50,7 +51,7 @@ function parseAnilistMedia(media: Anime & Manga): GeneralMedia {
 			score: media.bobStats.bobscore
 		},
 		coverImageURL: media.coverImage.extraLarge,
-		description: media.description,
+		description: sanitizeAnilistHtml(media.description ?? ''),
 		genres: media.genres,
 		url: media.siteUrl,
 		titles: [

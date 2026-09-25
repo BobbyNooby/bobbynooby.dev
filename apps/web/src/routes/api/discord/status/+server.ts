@@ -12,7 +12,7 @@ export async function GET({ request }: { request: Request }) {
 		// console.log('Discord Status Retrieved: ', user.presence?.status);
 		return json({ data: user.presence?.status, success: true }, { status: 200, headers: cors });
 	} catch (error) {
-		console.log('Error: ', error);
-		return json({ error: error, success: false }, { status: 500, headers: cors });
+		console.error('[discord] status check failed:', error);
+		return json({ success: false, error: 'internal' }, { status: 500, headers: cors });
 	}
 }

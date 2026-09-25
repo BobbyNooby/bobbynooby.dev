@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export { createTokenBucket, type TokenBucket } from './tokenBucket';
+export { pickForwardedIp } from './forwardedIp';
 
 export type DiscordStatus = 'online' | 'idle' | 'dnd' | 'offline' | 'unknown';
 

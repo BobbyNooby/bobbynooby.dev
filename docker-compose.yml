@@ -9,7 +9,7 @@ services:
       - path: apps/web/.env
         required: false
     environment:
-      - IS_PRODUCTION=false
+      - IS_PRODUCTION=${IS_PRODUCTION:-false}
 
   backend:
     build:
@@ -21,4 +21,4 @@ services:
       - path: apps/backend/.env
         required: false
     environment:
-      - IS_PRODUCTION=false
+      - IS_PRODUCTION=${IS_PRODUCTION:-false}

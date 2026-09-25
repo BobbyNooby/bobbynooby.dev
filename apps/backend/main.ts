@@ -7,7 +7,7 @@ import { UserCount } from "./modules/userCount";
 import { SpotifyClient } from "./modules/spotify";
 import { MongoDBClient } from "./modules/mongodb";
 import { SimpleChat } from "./modules/chat";
-import { createTokenBucket } from "@bobbynooby/shared";
+import { createTokenBucket, pickForwardedIp } from "@bobbynooby/shared";
 import { ExpressAuth, getSession } from "@auth/express";
 import { authConfig } from "./auth";
 
@@ -97,7 +97,9 @@ wss.on("connection", async (ws, req) => {
 
   const sessionId = session?.user?.id || "skibiditoiletmoment";
 
-  const bucketKey = session?.user?.id || req.socket.remoteAddress || "unknown";
+  const bucketKey =
+    session?.user?.id ||
+    pickForwardedIp(req.headers["x-forwarded-for"]?.toString(), req.socket.remoteAddress || "unknown");
   const nowMs = Date.now();
   for (const [key, chatEntry] of chatBuckets) {
     if (nowMs - chatEntry.seen > 5 * 60_000) {

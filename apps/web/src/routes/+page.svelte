@@ -12,6 +12,7 @@
 	import MyTwitch from '$lib/components/sections/MyTwitch.svelte';
 	import My3x3 from '$lib/components/sections/My3x3.svelte';
 	import MyChat from '$lib/components/sections/MyChat.svelte';
+	import MyGames from '$lib/components/sections/MyGames.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -28,7 +29,8 @@
 		music: 5,
 		playlist: 6,
 		threeByThree: 8,
-		chat: 8
+		chat: 8,
+		games: 9
 	};
 
 	onMount(() => {
@@ -55,6 +57,7 @@
 			<div class="left-column">
 				<!-- Big live player, only rendered while live -->
 				<MyTwitch />
+				<MyGames />
 				<div
 					class="content-box"
 					transition:fade={{ delay: arrangement.info * interval, duration: duration }}

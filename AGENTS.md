@@ -73,9 +73,11 @@ files with real credentials are required for dev (`apps/web/.env`,
   - `/customize` — admin-only editor for links/projects/3x3 (guarded in
     `+page.server.ts` via `locals.isAdmin`)
   - `/api/*` — JSON endpoints: `discord/status`, `spotify/now_playing`,
-    `spotify/last_played`, `twitch/live`, `links`, `projects` (the three discord/spotify
-    routes send CORS headers restricted to site origins; all `/api/*` GETs are
-    rate-limited per client IP in production; `discord/status` redacts internal errors)
+    `spotify/last_played`, `twitch/live`, `steam/games`, `steam/game/[appid]`, `links`,
+    `projects` (the three discord/spotify routes send CORS headers restricted to site
+    origins; all `/api/*` GETs are rate-limited per client IP in production;
+    `discord/status` redacts internal errors; the steam routes are Mongo-cached with
+    6h/24h TTLs and stale-serve, no CORS — first-party only)
   - `/signin`, `/signout` — Auth.js entry points
 - **Auth & permissions:** `hooks.server.ts` resolves the session once per request into
   `locals.isAdmin` / `locals.canShorten` (typed in `apps/web/src/app.d.ts`) by looking
@@ -117,7 +119,8 @@ shared between web and backend), `IS_PRODUCTION` (keep `false` for dev), `WSS_PO
 `DISCORD_CLIENT_SECRET`, `DISCORD_BOT_TOKEN`, `DISCORD_GUILD_ID`, `DISCORD_USER_ID`,
 `DISCORD_CHATLOG_CHANNEL`, `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`,
 `SPOTIFY_CLIENT_REFRESH_TOKEN`, `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`,
-`PUBLIC_WEBSOCKET_BASE_URL`
+`STEAM_API_KEY`, `STEAM_USER_ID` (steamid64; the steam features degrade to
+`configured:false` without them), `PUBLIC_WEBSOCKET_BASE_URL`
 
 ## Style
 

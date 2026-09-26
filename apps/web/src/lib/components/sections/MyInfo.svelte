@@ -11,10 +11,7 @@
 		on:click={() => playAudio(`${staticFilesUrl}/honk.mp3`)}
 		class="honk-button mx-5 flex aspect-square h-24 items-center justify-center border border-white"
 	>
-		<img
-			src="https://raw.githubusercontent.com/BobbyNooby/bobbynooby.dev/master/static/logowhitetransparent.png"
-			alt="logo"
-		/>
+		<img src="/logowhitetransparent.png" alt="logo" />
 	</button>
 	<div>
 		<p>

@@ -48,8 +48,8 @@
 		'/chat',
 		(data) => {
 			if ('initialMessages' in data) {
-				// The backend sends history newest-first; render oldest at the top.
-				messages = [...starterMessages, ...data.initialMessages.slice().reverse()];
+				// The backend already sends history oldest-first; live messages append below.
+				messages = [...starterMessages, ...data.initialMessages];
 				scrollToBottom();
 				return;
 			}

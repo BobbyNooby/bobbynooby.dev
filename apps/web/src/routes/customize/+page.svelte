@@ -435,31 +435,36 @@
 								· never refreshed
 							{/if}
 						</p>
-						<ul class="mt-2 max-h-64 overflow-y-auto text-sm">
-							{#each data.steam.games as game (game.appid)}
-								<li class="flex justify-between border-b border-white/10 py-1">
-									<span>{game.name}</span>
-									<span class="text-gray-400">{game.hours.toLocaleString('en-US')}h</span>
-								</li>
-							{/each}
-						</ul>
+						<p class="mt-1 text-xs text-gray-500">
+							Click a game to hide it from /Games — zero-hour games never show.
+						</p>
+						<form method="POST" action="?/toggleGame" use:enhance>
+							<ul class="mt-2 max-h-64 overflow-y-auto text-sm">
+								{#each data.steam.games as game (game.appid)}
+									<li class="border-b border-white/10">
+										<button
+											type="submit"
+											name="appid"
+											value={game.appid}
+											class="flex w-full justify-between py-1 text-left {data.steamHidden.includes(
+												game.appid
+											)
+												? 'text-gray-600 line-through'
+												: ''}"
+										>
+											<span>{game.name}</span>
+											<span class="text-gray-400">{game.hours.toLocaleString('en-US')}h</span>
+										</button>
+									</li>
+								{/each}
+							</ul>
+						</form>
 						<form method="POST" action="?/refreshSteam" use:enhance>
 							<button
 								class="mt-2 rounded-md border border-white/40 px-3 py-1 text-sm"
 								type="submit"
 							>
 								Refresh cache
-							</button>
-						</form>
-						<form method="POST" action="?/toggleGames" use:enhance>
-							<input type="hidden" name="enabled" value={data.steamEnabled ? 'false' : 'true'} />
-							<button
-								class="mt-2 rounded-md border px-3 py-1 text-sm {data.steamEnabled
-									? 'border-white/40'
-									: 'border-[#00FF00]/60 text-[#00FF00]'}"
-								type="submit"
-							>
-								{data.steamEnabled ? 'Disable games section' : 'Enable games section'}
 							</button>
 						</form>
 					</div>

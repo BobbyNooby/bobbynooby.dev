@@ -1,6 +1,6 @@
 import { db, getMongoClient } from '$lib/db/mongo';
 import { getAll3x3Data, getKnown3x3Routes, getLinks, getProjects } from '$lib/db/mongoUtils.js';
-import { getGamesEnabled, setGamesEnabled } from '$lib/db/siteConfig';
+import { getHiddenAppids, setHiddenAppids } from '$lib/db/siteConfig';
 import { warmMediaCache } from '$lib/media/mediaCache';
 import { dropSteamCache, getAllSteamGames, getSteamCacheMeta } from '$lib/steam/steamCache';
 import type { SteamGameSummary } from '$lib/steam/steamTypes';
@@ -16,7 +16,7 @@ export const load = async ({ locals }) => {
 			projects: [],
 			all3x3Data: [],
 			steam: { games: [], lastRefresh: null },
-			steamEnabled: true,
+			steamHidden: [],
 			isSessionValid: false
 		};
 	}
@@ -24,7 +24,7 @@ export const load = async ({ locals }) => {
 	const all3x3Data = await getAll3x3Data();
 	const links = await getLinks();
 	const projects = await getProjects();
-	const steamEnabled = await getGamesEnabled().catch(() => true);
+	const steamHidden = await getHiddenAppids().catch(() => new Set<number>());
 	let steam: { games: SteamGameSummary[]; lastRefresh: string | null } = {
 		games: [],
 		lastRefresh: null
@@ -35,7 +35,14 @@ export const load = async ({ locals }) => {
 	} catch (err) {
 		console.error('[steam] cache read failed for customize:', err);
 	}
-	return { links, projects, isSessionValid: true, all3x3Data, steam, steamEnabled };
+	return {
+		links,
+		projects,
+		isSessionValid: true,
+		all3x3Data,
+		steam,
+		steamHidden: [...steamHidden]
+	};
 };
 
 const safeHref = /^(https?:\/\/|\/)/i;
@@ -221,18 +228,27 @@ export const actions = {
 		}
 	},
 
-	toggleGames: async (event) => {
+	toggleGame: async (event) => {
 		if (!event.locals.isAdmin) {
 			return fail(403, { message: 'You are not authorized to make changes.' });
 		}
 		const formData = await event.request.formData();
-		const enabled = formData.get('enabled') === 'true';
+		const appid = Number(formData.get('appid'));
+		if (!Number.isInteger(appid)) {
+			return fail(400, { message: 'Invalid game.' });
+		}
 		try {
-			await setGamesEnabled(enabled);
-			return { success: true, enabled };
+			const hidden = await getHiddenAppids();
+			if (hidden.has(appid)) {
+				hidden.delete(appid);
+			} else {
+				hidden.add(appid);
+			}
+			await setHiddenAppids([...hidden]);
+			return { success: true };
 		} catch (err) {
 			console.error('[steam] toggle failed:', err);
-			return fail(500, { message: 'Could not update the games section.' });
+			return fail(500, { message: 'Could not update the hidden games.' });
 		}
 	}
 } satisfies Actions;

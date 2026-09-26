@@ -70,14 +70,12 @@
 					<MyProjects projects={data.projects} />
 				</div>
 
-				{#if data.gamesEnabled}
-					<div
-						class="content-box"
-						transition:fade={{ delay: arrangement.games * interval, duration: duration }}
-					>
-						<MyGames />
-					</div>
-				{/if}
+				<div
+					class="content-box"
+					transition:fade={{ delay: arrangement.games * interval, duration: duration }}
+				>
+					<MyGames />
+				</div>
 
 				<div
 					class="content-box"

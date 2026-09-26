@@ -1,5 +1,6 @@
 import { env } from '$env/dynamic/private';
 import { db } from '$lib/db/mongo';
+import { getHiddenAppids } from '$lib/db/siteConfig';
 import { mapAchievements, mapAppDetails, mapOwnedGames } from './steamTransforms';
 import type { OwnedGameRaw, SteamGameDetails, SteamGameSummary } from './steamTypes';
 
@@ -31,11 +32,11 @@ async function fetchOwnedGames(): Promise<OwnedGameRaw[]> {
 	return body.response?.games ?? [];
 }
 
-export async function getSteamGames(topN = 16): Promise<SteamGameSummary[]> {
+async function readGamesList(): Promise<SteamGameSummary[]> {
 	const cached =
 		(await db.collection<GamesCacheDoc>(LIST_COLLECTION).findOne({ key: 'games' })) ?? undefined;
 	if (cached && !isStale(cached.fetchedAt, LIST_TTL_MS)) {
-		return mapOwnedGames(cached.games, topN);
+		return mapOwnedGames(cached.games, Number.MAX_SAFE_INTEGER);
 	}
 	try {
 		const games = await fetchOwnedGames();
@@ -46,15 +47,21 @@ export async function getSteamGames(topN = 16): Promise<SteamGameSummary[]> {
 				{ $set: { key: 'games', fetchedAt: new Date(), games } },
 				{ upsert: true }
 			);
-		return mapOwnedGames(games, topN);
+		return mapOwnedGames(games, Number.MAX_SAFE_INTEGER);
 	} catch (err) {
 		console.error('[steam] owned games fetch failed:', err);
-		return mapOwnedGames(cached?.games, topN);
+		return mapOwnedGames(cached?.games, Number.MAX_SAFE_INTEGER);
 	}
 }
 
+export async function getSteamGames(topN = 16): Promise<SteamGameSummary[]> {
+	const all = await readGamesList();
+	const hidden = await getHiddenAppids();
+	return all.filter((game) => game.hours > 0 && !hidden.has(game.appid)).slice(0, topN);
+}
+
 export async function getAllSteamGames(): Promise<SteamGameSummary[]> {
-	return getSteamGames(Number.MAX_SAFE_INTEGER);
+	return readGamesList();
 }
 
 async function fetchAppDetails(appid: number): Promise<unknown> {

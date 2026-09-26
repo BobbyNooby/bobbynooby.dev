@@ -10,12 +10,18 @@ vi.mock('$env/dynamic/private', () => ({
 	env: { STEAM_API_KEY: 'k', STEAM_USER_ID: 's' }
 }));
 
-const { getSteamGames, getSteamGameDetails, isStale, LIST_TTL_MS } = await import('./steamCache');
+const getHiddenAppids = vi.fn(async () => new Set<number>());
+vi.mock('$lib/db/siteConfig', () => ({ getHiddenAppids }));
+
+const { getSteamGames, getAllSteamGames, getSteamGameDetails, isStale, LIST_TTL_MS } = await import(
+	'./steamCache'
+);
 
 afterEach(() => {
 	findOne.mockReset();
 	updateOne.mockReset();
 	deleteMany.mockReset();
+	getHiddenAppids.mockClear();
 	vi.unstubAllGlobals();
 });
 
@@ -76,6 +82,37 @@ describe('getSteamGames', () => {
 			expect.objectContaining({ $set: expect.objectContaining({ key: 'games' }) }),
 			expect.objectContaining({ upsert: true })
 		);
+	});
+
+	it('excludes hidden games and zero-hour games before slicing', async () => {
+		getHiddenAppids.mockResolvedValue(new Set([2]));
+		findOne.mockResolvedValue({
+			key: 'games',
+			fetchedAt: new Date(),
+			games: [
+				{ appid: 1, name: 'Visible', img_icon_url: 'a', playtime_forever: 120 },
+				{ appid: 2, name: 'Hidden', img_icon_url: 'a', playtime_forever: 999 },
+				{ appid: 3, name: 'NeverPlayed', img_icon_url: 'a', playtime_forever: 0 }
+			]
+		});
+		await expect(getSteamGames(16)).resolves.toEqual([
+			expect.objectContaining({ appid: 1, name: 'Visible' })
+		]);
+	});
+
+	it('getAllSteamGames returns everything, including hidden and zero-hour games', async () => {
+		getHiddenAppids.mockResolvedValue(new Set([2]));
+		findOne.mockResolvedValue({
+			key: 'games',
+			fetchedAt: new Date(),
+			games: [
+				{ appid: 1, name: 'Visible', img_icon_url: 'a', playtime_forever: 120 },
+				{ appid: 2, name: 'Hidden', img_icon_url: 'a', playtime_forever: 999 },
+				{ appid: 3, name: 'NeverPlayed', img_icon_url: 'a', playtime_forever: 0 }
+			]
+		});
+		const all = await getAllSteamGames();
+		expect(all.map((g) => g.appid)).toEqual([2, 1, 3]);
 	});
 });
 

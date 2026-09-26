@@ -9,24 +9,29 @@ vi.mock('$lib/db/mongo', () => ({
 	}
 }));
 
-const { getGamesEnabled, setGamesEnabled } = await import('$lib/db/siteConfig');
+const { getHiddenAppids, setHiddenAppids } = await import('$lib/db/siteConfig');
 
 describe('siteConfig', () => {
-	it('defaults to enabled when no config doc exists', async () => {
+	it('defaults to an empty hidden set when no config doc exists', async () => {
 		findOne.mockResolvedValueOnce(null);
-		await expect(getGamesEnabled()).resolves.toBe(true);
+		await expect(getHiddenAppids()).resolves.toEqual(new Set());
 	});
 
-	it('returns the stored flag', async () => {
-		findOne.mockResolvedValueOnce({ key: 'games', gamesEnabled: false });
-		await expect(getGamesEnabled()).resolves.toBe(false);
+	it('returns the stored appids as a set', async () => {
+		findOne.mockResolvedValueOnce({ key: 'games', hiddenAppids: [730, 570] });
+		await expect(getHiddenAppids()).resolves.toEqual(new Set([730, 570]));
 	});
 
-	it('upserts the flag under the fixed key', async () => {
-		await setGamesEnabled(false);
+	it('tolerates a legacy doc without hiddenAppids', async () => {
+		findOne.mockResolvedValueOnce({ key: 'games' });
+		await expect(getHiddenAppids()).resolves.toEqual(new Set());
+	});
+
+	it('upserts the hidden list under the fixed key', async () => {
+		await setHiddenAppids([730]);
 		expect(updateOne).toHaveBeenCalledWith(
 			{ key: 'games' },
-			{ $set: { key: 'games', gamesEnabled: false } },
+			{ $set: { key: 'games', hiddenAppids: [730] } },
 			{ upsert: true }
 		);
 	});

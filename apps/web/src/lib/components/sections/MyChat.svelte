@@ -3,6 +3,7 @@
 	import { chatColorForRank } from '$lib/chat/chatColors';
 	import { createLiveSocket } from '$lib/utils/liveSocket';
 	import { playAudio } from '$lib/utils/playAudio';
+	import { CHAT_MAX_MESSAGE_LENGTH } from '@bobbynooby/shared';
 	import { onDestroy, onMount } from 'svelte';
 
 	const starterMessages: ChatMessage[] = [
@@ -206,6 +207,7 @@
 		placeholder="Message"
 		enterkeyhint="send"
 		autocomplete="off"
+		maxlength={CHAT_MAX_MESSAGE_LENGTH}
 		bind:value={message}
 	/>
 	<button

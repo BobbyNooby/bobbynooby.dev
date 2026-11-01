@@ -79,7 +79,7 @@ export class SimpleChat {
     const messageObject: ChatMessage = {
       name: name.slice(0, 50),
       created_at: new Date().toISOString(),
-      message: parsed.data.message.slice(0, 10_000),
+      message: parsed.data.message,
       rank:
         (await this.mongoClient.isAdmin(sessionId)) == true ? "owner" : "guest",
     };

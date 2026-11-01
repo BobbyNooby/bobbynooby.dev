@@ -32,9 +32,13 @@ export type UserCountPayload = {
 	userCount: number;
 };
 
+// Leaves room for the name prefix inside Discord's 2000-character limit, and
+// keeps a full 500-message history near 1MB per connection.
+export const CHAT_MAX_MESSAGE_LENGTH = 1900;
+
 export const chatIntakeSchema = z.object({
 	name: z.string().min(1).max(50),
-	message: z.string().min(1).max(10_000)
+	message: z.string().min(1).max(CHAT_MAX_MESSAGE_LENGTH)
 });
 
 export type ChatIntake = z.infer<typeof chatIntakeSchema>;

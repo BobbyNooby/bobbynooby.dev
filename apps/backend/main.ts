@@ -87,7 +87,6 @@ wss.on("connection", async (ws, req) => {
   ws.on("close", () => allSockets.delete(ws));
 
   const subroute = req.url;
-  consoleBob(req.headers);
   const session = await getSession(convertReq(req, app), authConfig);
 
   consoleBob(

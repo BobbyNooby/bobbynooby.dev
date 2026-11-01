@@ -132,6 +132,10 @@ export class DiscordBot {
     const parsedName = rank == "owner" ? `👑**${name}**` : name;
     const parsedMessage = message;
     const sentMessage = `${parsedName} : ${parsedMessage}`;
-    await this.chatChannel.send(sentMessage);
+    // Chat text is public input, so it must never ping anyone in the log channel.
+    await this.chatChannel.send({
+      content: sentMessage,
+      allowedMentions: { parse: [] },
+    });
   }
 }

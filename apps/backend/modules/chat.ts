@@ -87,11 +87,16 @@ export class SimpleChat {
     await this.db
       .collection(CHAT_COLLECTION || "chat-prod")
       .insertOne(messageObject);
-    await this.discordBot.sendDiscordMessage(
-      messageObject.name,
-      messageObject.message,
-      messageObject.rank
-    );
+    // The Discord mirror is best-effort; an outage must not hide a saved message.
+    try {
+      await this.discordBot.sendDiscordMessage(
+        messageObject.name,
+        messageObject.message,
+        messageObject.rank
+      );
+    } catch (e) {
+      this.consoleBob(`Discord mirror failed : ${e}`);
+    }
     this.broadcast({ message: messageObject });
   }
 

@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export { createTokenBucket, type TokenBucket } from './tokenBucket';
 export { pickForwardedIp } from './forwardedIp';
+export { createConnectionLimiter, type ConnectionLimiter } from './connectionLimiter';
 
 export type DiscordStatus = 'online' | 'idle' | 'dnd' | 'offline' | 'unknown';
 

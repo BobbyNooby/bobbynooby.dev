@@ -9,7 +9,11 @@ import { UserCount } from "./modules/userCount";
 import { SpotifyClient } from "./modules/spotify";
 import { MongoDBClient } from "./modules/mongodb";
 import { SimpleChat } from "./modules/chat";
-import { createTokenBucket, pickForwardedIp } from "@bobbynooby/shared";
+import {
+  createConnectionLimiter,
+  createTokenBucket,
+  pickForwardedIp,
+} from "@bobbynooby/shared";
 import { ExpressAuth, getSession } from "@auth/express";
 import { authConfig } from "./auth";
 
@@ -24,6 +28,9 @@ const server = app.listen(port, () => {
   consoleBob("Server started");
   consoleBob(`Listening on port ${port}`);
 });
+
+// A page opens four sockets, so this allows about eight tabs per address.
+const connectionLimiter = createConnectionLimiter(32);
 
 // 16KB caps incoming frames (frontend already caps chat messages at 10KB).
 const wss = new WebSocketServer({ server, maxPayload: 16 * 1024 });
@@ -82,10 +89,23 @@ async function handleConnection(ws: WebSocket, req: IncomingMessage) {
     return;
   }
 
+  const clientIp = pickForwardedIp(
+    req.headers["x-forwarded-for"]?.toString(),
+    req.socket.remoteAddress || "unknown",
+  );
+  if (!connectionLimiter.tryAcquire(clientIp)) {
+    consoleBob(`Websocket rejected: too many connections from ${clientIp}`);
+    ws.close(1013, "Too many connections");
+    return;
+  }
+
   allSockets.add(ws);
   isAlive.set(ws, true);
   ws.on("pong", () => isAlive.set(ws, true));
-  ws.on("close", () => allSockets.delete(ws));
+  ws.on("close", () => {
+    allSockets.delete(ws);
+    connectionLimiter.release(clientIp);
+  });
 
   const subroute = req.url;
   const session = await getSession(convertReq(req, app), authConfig);
@@ -96,9 +116,7 @@ async function handleConnection(ws: WebSocket, req: IncomingMessage) {
 
   const sessionId = session?.user?.id || "skibiditoiletmoment";
 
-  const bucketKey =
-    session?.user?.id ||
-    pickForwardedIp(req.headers["x-forwarded-for"]?.toString(), req.socket.remoteAddress || "unknown");
+  const bucketKey = session?.user?.id || clientIp;
   const nowMs = Date.now();
   for (const [key, chatEntry] of chatBuckets) {
     if (nowMs - chatEntry.seen > 5 * 60_000) {

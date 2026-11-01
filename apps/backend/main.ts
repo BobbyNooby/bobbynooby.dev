@@ -1,5 +1,6 @@
 import "./env";
 import { fileURLToPath } from "node:url";
+import type { IncomingMessage } from "node:http";
 import express from "express";
 import { consoleBob, convertReq } from "./utils";
 import { WebSocket, WebSocketServer } from "ws";
@@ -71,7 +72,7 @@ if (!IS_PRODUCTION) {
   allowedOrigins.push("http://localhost:5173", "http://127.0.0.1:5173");
 }
 
-wss.on("connection", async (ws, req) => {
+async function handleConnection(ws: WebSocket, req: IncomingMessage) {
   // Browsers always send Origin; absent means a non-browser client (curl,
   // health checks), which we let through.
   const origin = req.headers.origin;
@@ -164,6 +165,15 @@ wss.on("connection", async (ws, req) => {
       consoleBob("WebSocket connection to /chat closed");
     });
   }
+}
+
+wss.on("connection", (ws, req) => {
+  ws.on("error", (e) => consoleBob(`Websocket error: ${e}`));
+  // An unhandled rejection here would take the whole server down.
+  handleConnection(ws, req).catch((e) => {
+    consoleBob(`Websocket connection failed: ${e}`);
+    ws.close(1011, "Internal error");
+  });
 });
 
 wss.on("close", () => {

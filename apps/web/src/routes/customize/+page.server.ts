@@ -1,3 +1,4 @@
+import { parsePayload } from '$lib/admin/parsePayload';
 import { db, getMongoClient } from '$lib/db/mongo';
 import { getAll3x3Data, getKnown3x3Routes, getLinks, getProjects } from '$lib/db/mongoUtils.js';
 import { getHiddenAppids, setHiddenAppids } from '$lib/db/siteConfig';
@@ -80,28 +81,6 @@ const listSchema = z.object({
 	label: z.string().max(100).regex(safeListLabel),
 	data: z.array(entrySchema)
 });
-
-function parsePayload<T>(
-	schema: z.ZodType<T[]>,
-	raw: FormDataEntryValue | null,
-	name: string
-): T[] {
-	if (typeof raw !== 'string' || raw.length === 0) {
-		return [];
-	}
-	let value: unknown;
-	try {
-		value = JSON.parse(raw);
-	} catch {
-		throw new Error(`Malformed JSON in ${name}`);
-	}
-	const parsed = schema.safeParse(value);
-	if (!parsed.success) {
-		const issue = parsed.error.issues[0];
-		throw new Error(`Invalid ${name}: ${issue.path.join('.')} ${issue.message}`);
-	}
-	return parsed.data;
-}
 
 function assertUniqueUids(docs: { uid: number }[], name: string) {
 	const seen = new Set<number>();

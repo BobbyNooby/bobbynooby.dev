@@ -29,11 +29,13 @@ const server = app.listen(port, () => {
   consoleBob(`Listening on port ${port}`);
 });
 
+const MAX_FRAME_LENGTH = 16 * 1024;
 // A page opens four sockets, so this allows about eight tabs per address.
 const connectionLimiter = createConnectionLimiter(32);
 
-// 16KB caps incoming frames (frontend already caps chat messages at 10KB).
-const wss = new WebSocketServer({ server, maxPayload: 16 * 1024 });
+// Bun's ws implementation does not enforce maxPayload, so the chat handler
+// repeats this check.
+const wss = new WebSocketServer({ server, maxPayload: MAX_FRAME_LENGTH });
 const mongoDbClient = new MongoDBClient();
 await mongoDbClient.initialize();
 
@@ -172,7 +174,12 @@ async function handleConnection(ws: WebSocket, req: IncomingMessage) {
           consoleBob(`Chat rate limited: ${bucketKey}`);
           return;
         }
-        await chat.onRecieve(String(message), sessionId, ws);
+        const text = String(message);
+        if (text.length > MAX_FRAME_LENGTH) {
+          ws.close(1009, "Message too large");
+          return;
+        }
+        await chat.onRecieve(text, sessionId, ws);
       } catch (e) {
         consoleBob(`Chat error: ${e}`);
       }

@@ -1,3 +1,4 @@
+import { CHAT_MAX_MESSAGE_LENGTH, chatIntakeSchema } from '@bobbynooby/shared';
 import { ACH, type AchievementStore, type AchKey } from './achievements';
 import { bar } from './format';
 import { buildFs, pathOf, resolve, treeText } from './fs';
@@ -301,6 +302,17 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		}
 		if (c === 'say') {
 			if (!arg) return print('say: what do you want to say?', '#ef4444');
+			// Same schema the backend enforces, so the shell never claims a message
+			// was sent when the server would drop it.
+			const check = chatIntakeSchema.safeParse({ name: st.user, message: arg });
+			if (!check.success) {
+				return print(
+					check.error.issues.some((i) => i.path[0] === 'message')
+						? 'say: messages can be at most ' + CHAT_MAX_MESSAGE_LENGTH + ' characters'
+						: 'say: your name does not fit in /Chat. try username <name>',
+					'#ef4444'
+				);
+			}
 			ctx.sendChat(st.user, arg);
 			print('(sent to /Chat)', '#9ca3af');
 			return unlock('say');

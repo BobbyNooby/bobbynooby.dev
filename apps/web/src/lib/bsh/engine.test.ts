@@ -1,3 +1,4 @@
+import { CHAT_MAX_MESSAGE_LENGTH } from '@bobbynooby/shared';
 import { describe, expect, it } from 'vitest';
 import { ACH } from './achievements';
 import { bar } from './format';
@@ -53,5 +54,14 @@ describe('createShell', () => {
 	it('restores trust and achievements from the store', () => {
 		const mem = memoryStorage({ 'bsh:honks': '10', 'bsh:ach': '["honk","trusted"]' });
 		expect(textOf(runOn(fixture, ['ls .secrets'], mem))).toContain('games.txt');
+	});
+
+	it('refuses a say message the chat schema would reject', () => {
+		const out = textOf(runOn(fixture, ['say ' + 'a'.repeat(CHAT_MAX_MESSAGE_LENGTH + 1)]));
+		expect(out).toContain(
+			'say: messages can be at most ' + CHAT_MAX_MESSAGE_LENGTH + ' characters'
+		);
+		expect(out).not.toContain('shows up in /Chat');
+		expect(out).not.toContain('(sent to /Chat)');
 	});
 });

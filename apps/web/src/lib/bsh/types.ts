@@ -76,6 +76,25 @@ export type DirNode = {
 };
 export type FsNode = FileNode | DirNode;
 
+// The only way the shell touches the page.
+export type ShellCtx = {
+	print(line: Line): void;
+	clear(): void;
+	focus(pane: PaneKey): void;
+	showCat(category: string): void;
+	openWindow(win: Win): void;
+	openLink(href: string): void;
+	sendChat(user: string, msg: string): void;
+	rename(user: string): void;
+	toast(text: string): void;
+	honked(count: number): void;
+	onPrompt(reason: 'cd' | 'mode'): void;
+	later(fn: () => void, ms: number): void;
+	animate(frames: string[], ms: number): void;
+	startSnake(): void;
+	live(): LiveStatus;
+};
+
 export type MountFile = Omit<FileNode, 'type' | 'pane' | 'gridCat'>;
 export type Mount = {
 	path: string;

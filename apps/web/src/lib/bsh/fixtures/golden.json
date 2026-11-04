@@ -1,0 +1,4351 @@
+{
+	"samples": [
+		{
+			"id": "Look around",
+			"cmds": ["ls", "cd projects", "ls", "cat agamoto.txt"],
+			"runTab": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "ls",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "about_me.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/about_me.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "projects/",
+						"c": "#60a5fa",
+						"run": "cd ~/projects"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "links/",
+						"c": "#60a5fa",
+						"run": "cd ~/links"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "games/",
+						"c": "#60a5fa",
+						"run": "cd ~/games"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "3x3/",
+						"c": "#60a5fa",
+						"run": "cd ~/3x3"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "music/",
+						"c": "#60a5fa",
+						"run": "cd ~/music"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "status/",
+						"c": "#60a5fa",
+						"run": "cd ~/status"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "chat/",
+						"c": "#60a5fa",
+						"run": "cd ~/chat"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "blog/",
+						"c": "#60a5fa",
+						"run": "cd ~/blog"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cd projects",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "↳ focuses /Projects",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~/projects$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "ls",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "arcane-odyssey-tools.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/projects/arcane-odyssey-tools.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "agamoto.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/projects/agamoto.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "create-stelle.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/projects/create-stelle.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "openmarket.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/projects/openmarket.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "you-only-live-twice.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/projects/you-only-live-twice.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "mc-name-spoofer.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/projects/mc-name-spoofer.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "discord-message-scraper.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/projects/discord-message-scraper.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "github-stats-card.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/projects/github-stats-card.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "honestea.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/projects/honestea.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "better-event-quests.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/projects/better-event-quests.txt"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~/projects$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat agamoto.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "agamoto",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "nmap + CVE context + LLM attack recommendations, in one CLI."
+					}
+				],
+				[
+					{
+						"t": "link  "
+					},
+					{
+						"t": "https://github.com/BobbyNooby/agamoto",
+						"href": "https://github.com/BobbyNooby/agamoto"
+					}
+				]
+			]
+		},
+		{
+			"id": "Open a link",
+			"cmds": ["cd ~/links", "\tcat gi", "open twitch.txt"],
+			"runTab": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cd ~/links",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "↳ focuses /Links",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~/links$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat gi",
+						"c": "#f5f5f5"
+					},
+					{
+						"t": "   ⇥ Tab",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~/links$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat github.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "/GitHub",
+						"c": "#79A3AF"
+					},
+					{
+						"t": "  →  "
+					},
+					{
+						"t": "https://github.com/bobbynooby",
+						"href": "https://github.com/bobbynooby"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~/links$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "open twitch.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "opening "
+					},
+					{
+						"t": "https://www.twitch.tv/bobbynooby",
+						"href": "https://www.twitch.tv/bobbynooby"
+					}
+				],
+				[
+					{
+						"t": "↳ opens twitch.tv/bobbynooby in a new tab",
+						"fx": true
+					}
+				]
+			]
+		},
+		{
+			"id": "Games and 3x3",
+			"cmds": ["cat games/monster-hunter-wilds.txt", "cd ~/3x3/manga", "cat chainsawman.txt"],
+			"runTab": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat games/monster-hunter-wilds.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "Monster Hunter Wilds",
+						"c": "#1b9be8"
+					}
+				],
+				[
+					{
+						"t": "hours         "
+					},
+					{
+						"t": "217h",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "last played   Oct 27, 2026"
+					}
+				],
+				[
+					{
+						"t": "released      27 Feb, 2025"
+					}
+				],
+				[
+					{
+						"t": "genres        [ACTION] [ADVENTURE] [RPG]"
+					}
+				],
+				[
+					{
+						"t": "achievements  "
+					},
+					{
+						"t": "[████████████████░░]",
+						"c": "#00ff00"
+					},
+					{
+						"t": " 45/50"
+					}
+				],
+				[
+					{
+						"t": "↳ focuses /Games",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "↳ opens the Monster Hunter Wilds window",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Window Shopper  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cd ~/3x3/manga",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "↳ focuses /3x3",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "↳ grid switches to manga",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~/3x3/manga$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat chainsawman.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "Chainsawman",
+						"c": "#f1c90d"
+					}
+				],
+				[
+					{
+						"t": "title     Chainsaw Man"
+					}
+				],
+				[
+					{
+						"t": "grid      /3x3/manga #3"
+					}
+				],
+				[
+					{
+						"t": "review    This manga is fucking insane. Fujimoto is an absollute beast at creating double page panels. First part was a solid meal despite feeling slightly rushed. Second part consisted of climax after climax so far and i cant wait to see more",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "anilist   "
+					},
+					{
+						"t": "https://anilist.co/manga/105778",
+						"href": "https://anilist.co/manga/105778"
+					}
+				],
+				[
+					{
+						"t": "↳ opens the Chainsaw Man window",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Curator  [███░░░░░░░░░░░░░░░░░] 3/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "The tree",
+			"cmds": ["tree 3x3", "ls -a"],
+			"runTab": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "tree 3x3",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "~/3x3",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": "├── anime/",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": "│   ├── gto.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "│   ├── mononoke-hime.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "│   ├── garden-of-words.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "│   ├── chuunibyou.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "│   ├── nichijou.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "│   ├── azumanga.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "│   ├── steins-gate.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "│   ├── one-piece.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "│   └── mushoku-tensei.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "└── manga/",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": "    ├── beastars.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "    ├── gto.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "    ├── chainsawman.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "    ├── kaguya-sama-love-is-war.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "    ├── lovely-complex.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "    ├── cigarette-and-cherry.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "    ├── domestic-girlfriend.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "    ├── yotsubaaa.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "    └── azumanga-daioh.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Explorer  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "ls -a",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "about_me.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/about_me.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "projects/",
+						"c": "#60a5fa",
+						"run": "cd ~/projects"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "links/",
+						"c": "#60a5fa",
+						"run": "cd ~/links"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "games/",
+						"c": "#60a5fa",
+						"run": "cd ~/games"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "3x3/",
+						"c": "#60a5fa",
+						"run": "cd ~/3x3"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "music/",
+						"c": "#60a5fa",
+						"run": "cd ~/music"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "status/",
+						"c": "#60a5fa",
+						"run": "cd ~/status"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "chat/",
+						"c": "#60a5fa",
+						"run": "cd ~/chat"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "blog/",
+						"c": "#60a5fa",
+						"run": "cd ~/blog"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": ".secrets/",
+						"c": "#60a5fa",
+						"run": "cd ~/.secrets"
+					}
+				]
+			]
+		},
+		{
+			"id": "Talk",
+			"cmds": ["username bob", "say hello from the shell", "whoami"],
+			"runTab": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "username bob",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "Username changed to bob",
+						"c": "#FDE047"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: New Identity  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				],
+				[
+					{
+						"t": "bob@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "say hello from the shell",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "↳ shows up in /Chat as <bob> hello from the shell",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "(sent to /Chat)",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Said Something  [███░░░░░░░░░░░░░░░░░] 3/20",
+						"c": "#00ff00"
+					}
+				],
+				[
+					{
+						"t": "bob@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "whoami",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "bob (you)"
+					}
+				]
+			]
+		},
+		{
+			"id": "Easter eggs",
+			"cmds": ["sudo rm -rf /", "cd .secrets", "exit", "honk"],
+			"runTab": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "sudo rm -rf /",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "removing ~/projects ...",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "removing ~/links ...",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "removing ~/3x3 ...",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "removing the cat ...",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "the cat refuses.",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "just kidding. everything is still here.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Sudo Make Me A Sandwich  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cd .secrets",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "bsh: permission denied. the cat is watching.",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Nosy  [███░░░░░░░░░░░░░░░░░] 3/20",
+						"c": "#00ff00"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "exit",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "there is no exit. only honk.",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "honk",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "HONK!",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: First Honk  [████░░░░░░░░░░░░░░░░] 4/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		}
+	],
+	"outputs": [
+		{
+			"id": "ls [-a] [dir] · a folder (default: where you are)",
+			"cmds": ["ls"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "ls",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "about_me.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/about_me.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "projects/",
+						"c": "#60a5fa",
+						"run": "cd ~/projects"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "links/",
+						"c": "#60a5fa",
+						"run": "cd ~/links"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "games/",
+						"c": "#60a5fa",
+						"run": "cd ~/games"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "3x3/",
+						"c": "#60a5fa",
+						"run": "cd ~/3x3"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "music/",
+						"c": "#60a5fa",
+						"run": "cd ~/music"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "status/",
+						"c": "#60a5fa",
+						"run": "cd ~/status"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "chat/",
+						"c": "#60a5fa",
+						"run": "cd ~/chat"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "blog/",
+						"c": "#60a5fa",
+						"run": "cd ~/blog"
+					}
+				]
+			]
+		},
+		{
+			"id": "ls [-a] [dir] · with -a: hidden folders too",
+			"cmds": ["ls -a"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "ls -a",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "about_me.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/about_me.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "projects/",
+						"c": "#60a5fa",
+						"run": "cd ~/projects"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "links/",
+						"c": "#60a5fa",
+						"run": "cd ~/links"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "games/",
+						"c": "#60a5fa",
+						"run": "cd ~/games"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "3x3/",
+						"c": "#60a5fa",
+						"run": "cd ~/3x3"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "music/",
+						"c": "#60a5fa",
+						"run": "cd ~/music"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "status/",
+						"c": "#60a5fa",
+						"run": "cd ~/status"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "chat/",
+						"c": "#60a5fa",
+						"run": "cd ~/chat"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "blog/",
+						"c": "#60a5fa",
+						"run": "cd ~/blog"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": ".secrets/",
+						"c": "#60a5fa",
+						"run": "cd ~/.secrets"
+					}
+				]
+			]
+		},
+		{
+			"id": "ls [-a] [dir] · an empty folder",
+			"cmds": ["ls blog"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "ls blog",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "(empty)",
+						"c": "#9ca3af"
+					}
+				]
+			]
+		},
+		{
+			"id": "ls [-a] [dir] · a file",
+			"cmds": ["ls about_me.txt"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "ls about_me.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "about_me.txt"
+					}
+				]
+			]
+		},
+		{
+			"id": "ls [-a] [dir] · .secrets",
+			"cmds": ["ls .secrets"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "ls .secrets",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "ls: permission denied. the cat does not trust you yet.",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Nosy  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "ls [-a] [dir] · .secrets, once the cat trusts you",
+			"cmds": ["ls .secrets"],
+			"pre": ["honk", "honk", "honk", "honk", "honk", "honk", "honk", "honk", "honk", "honk"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "ls .secrets",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "games.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/.secrets/games.txt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "credits.txt",
+						"c": "#f5f5f5",
+						"run": "cat ~/.secrets/credits.txt"
+					}
+				]
+			]
+		},
+		{
+			"id": "ls [-a] [dir] · nothing there",
+			"cmds": ["ls nope"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "ls nope",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "ls: no such file or folder: nope",
+						"c": "#ef4444"
+					}
+				]
+			]
+		},
+		{
+			"id": "cd <dir> · a section folder",
+			"cmds": ["cd projects"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cd projects",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "↳ now in ~/projects",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "↳ focuses /Projects",
+						"fx": true
+					}
+				]
+			]
+		},
+		{
+			"id": "cd <dir> · a 3x3 category",
+			"cmds": ["cd 3x3/manga"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cd 3x3/manga",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "↳ now in ~/3x3/manga",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "↳ focuses /3x3",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "↳ grid switches to manga",
+						"fx": true
+					}
+				]
+			]
+		},
+		{
+			"id": "cd <dir> · .. goes up one",
+			"cmds": ["cd .."],
+			"pre": ["cd 3x3/anime"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~/3x3/anime$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cd ..",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "↳ now in ~/3x3",
+						"fx": true
+					}
+				]
+			]
+		},
+		{
+			"id": "cd <dir> · nothing or ~ goes home",
+			"cmds": ["cd"],
+			"pre": ["cd games"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~/games$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cd",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "↳ now in ~",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "↳ focuses /About_Me",
+						"fx": true
+					}
+				]
+			]
+		},
+		{
+			"id": "cd <dir> · a file",
+			"cmds": ["cd about_me.txt"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cd about_me.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "cd: not a folder: about_me.txt (try cat)",
+						"c": "#ef4444"
+					}
+				]
+			]
+		},
+		{
+			"id": "cd <dir> · .secrets",
+			"cmds": ["cd .secrets"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cd .secrets",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "bsh: permission denied. the cat is watching.",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Nosy  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "cd <dir> · nothing there",
+			"cmds": ["cd nope"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cd nope",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "cd: no such folder: nope",
+						"c": "#ef4444"
+					}
+				]
+			]
+		},
+		{
+			"id": "cat <file> · a project or link",
+			"cmds": ["cat projects/agamoto.txt"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat projects/agamoto.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "agamoto",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "nmap + CVE context + LLM attack recommendations, in one CLI."
+					}
+				],
+				[
+					{
+						"t": "link  "
+					},
+					{
+						"t": "https://github.com/BobbyNooby/agamoto",
+						"href": "https://github.com/BobbyNooby/agamoto"
+					}
+				],
+				[
+					{
+						"t": "↳ focuses /Projects",
+						"fx": true
+					}
+				]
+			]
+		},
+		{
+			"id": "cat <file> · a game",
+			"cmds": ["cat games/elden-ring.txt"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat games/elden-ring.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "ELDEN RING",
+						"c": "#1b9be8"
+					}
+				],
+				[
+					{
+						"t": "hours         "
+					},
+					{
+						"t": "150h",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "last played   Jun 11, 2026"
+					}
+				],
+				[
+					{
+						"t": "released      24 Feb, 2022"
+					}
+				],
+				[
+					{
+						"t": "genres        [ACTION] [RPG]"
+					}
+				],
+				[
+					{
+						"t": "achievements  "
+					},
+					{
+						"t": "[███████████████░░░]",
+						"c": "#00ff00"
+					},
+					{
+						"t": " 35/42"
+					}
+				],
+				[
+					{
+						"t": "↳ focuses /Games",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "↳ opens the ELDEN RING window",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Window Shopper  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "cat <file> · a 3x3 entry",
+			"cmds": ["cat 3x3/manga/yotsubaaa.txt"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat 3x3/manga/yotsubaaa.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "Yotsubaaa",
+						"c": "#e4a135"
+					}
+				],
+				[
+					{
+						"t": "title     Yotsuba&!"
+					}
+				],
+				[
+					{
+						"t": "grid      /3x3/manga #8"
+					}
+				],
+				[
+					{
+						"t": "review    Hehe funny yotbers :3",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "anilist   "
+					},
+					{
+						"t": "https://anilist.co/manga/30104",
+						"href": "https://anilist.co/manga/30104"
+					}
+				],
+				[
+					{
+						"t": "↳ focuses /3x3",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "↳ grid switches to manga",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "↳ opens the Yotsuba&! window",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Curator  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "cat <file> · a live status file",
+			"cmds": ["cat status/discord.txt"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat status/discord.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "online.sh",
+						"c": "#23A55A"
+					}
+				],
+				[
+					{
+						"t": "↳ focuses /Status",
+						"fx": true
+					}
+				]
+			]
+		},
+		{
+			"id": "cat <file> · a folder",
+			"cmds": ["cat projects"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat projects",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "cat: projects is a folder (try ls or cd)",
+						"c": "#ef4444"
+					}
+				]
+			]
+		},
+		{
+			"id": "cat <file> · anything in .secrets",
+			"cmds": ["cat .secrets/games.txt"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat .secrets/games.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "cat: permission denied. the cat does not trust you yet.",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Nosy  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "cat <file> · …once the cat trusts you",
+			"cmds": ["cat .secrets/credits.txt"],
+			"pre": ["honk", "honk", "honk", "honk", "honk", "honk", "honk", "honk", "honk", "honk"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat .secrets/credits.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "built by bobby. inspired by "
+					},
+					{
+						"t": "dimden.dev",
+						"href": "https://dimden.dev"
+					},
+					{
+						"t": ". shell: bsh 0.1."
+					}
+				]
+			]
+		},
+		{
+			"id": "cat <file> · nothing there",
+			"cmds": ["cat nope.txt"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat nope.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "cat: no such file: nope.txt",
+						"c": "#ef4444"
+					}
+				]
+			]
+		},
+		{
+			"id": "cat <file> · no file given",
+			"cmds": ["cat"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "cat: which file?",
+						"c": "#ef4444"
+					}
+				]
+			]
+		},
+		{
+			"id": "open <file> · a link or project",
+			"cmds": ["open links/ko-fi.txt"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "open links/ko-fi.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "opening "
+					},
+					{
+						"t": "https://ko-fi.com/bobbynooby",
+						"href": "https://ko-fi.com/bobbynooby"
+					}
+				],
+				[
+					{
+						"t": "↳ opens ko-fi.com/bobbynooby in a new tab",
+						"fx": true
+					}
+				]
+			]
+		},
+		{
+			"id": "open <file> · a game or 3x3 entry",
+			"cmds": ["open games/terraria.txt"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "open games/terraria.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "↳ focuses /Games",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "↳ opens the Terraria window",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Window Shopper  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "open <file> · a file with nothing to open",
+			"cmds": ["open status/time.txt"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "open status/time.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "open: nothing to open in status/time.txt (try cat)",
+						"c": "#9ca3af"
+					}
+				]
+			]
+		},
+		{
+			"id": "open <file> · a folder",
+			"cmds": ["open links"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "open links",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "open: links is a folder (try ls or cd)",
+						"c": "#ef4444"
+					}
+				]
+			]
+		},
+		{
+			"id": "tree [dir] · a folder",
+			"cmds": ["tree music"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "tree music",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "~/music",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": "├── last_played.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "└── playlist.txt",
+						"c": "#d1d5db"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Explorer  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "tree [dir] · not a folder",
+			"cmds": ["tree about_me.txt"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "tree about_me.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "tree: not a folder: about_me.txt",
+						"c": "#ef4444"
+					}
+				]
+			]
+		},
+		{
+			"id": "Tab (keyboard) · one match: completes it",
+			"cmds": ["\tcat ~/links/gi"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat ~/links/gi",
+						"c": "#f5f5f5"
+					},
+					{
+						"t": "   ⇥ Tab",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "↳ completes to: cat ~/links/github.txt",
+						"fx": true
+					}
+				]
+			]
+		},
+		{
+			"id": "Tab (keyboard) · several matches: lists them",
+			"cmds": ["\tcat ~/links/s"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat ~/links/s",
+						"c": "#f5f5f5"
+					},
+					{
+						"t": "   ⇥ Tab",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "spotify.txt  soundcloud.txt",
+						"c": "#9ca3af"
+					}
+				]
+			]
+		},
+		{
+			"id": "Tab (keyboard) · no match",
+			"cmds": ["\tcat ~/links/zz"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat ~/links/zz",
+						"c": "#f5f5f5"
+					},
+					{
+						"t": "   ⇥ Tab",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "↳ no match, nothing happens",
+						"fx": true
+					}
+				]
+			]
+		},
+		{
+			"id": "say · username · say with a message",
+			"cmds": ["say hi from bsh"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "say hi from bsh",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "↳ shows up in /Chat as <Guest_4821> hi from bsh",
+						"fx": true
+					}
+				],
+				[
+					{
+						"t": "(sent to /Chat)",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Said Something  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "say · username · say with nothing",
+			"cmds": ["say"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "say",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "say: what do you want to say?",
+						"c": "#ef4444"
+					}
+				]
+			]
+		},
+		{
+			"id": "say · username · username with a name",
+			"cmds": ["username bob"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "username bob",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "Username changed to bob",
+						"c": "#FDE047"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: New Identity  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "say · username · /username works too, like the chat box",
+			"cmds": ["/username bob"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "/username bob",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "Username changed to bob",
+						"c": "#FDE047"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: New Identity  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "say · username · username with nothing",
+			"cmds": ["username"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "username",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "usage: username <name>   (the slash is only needed in the chat box)",
+						"c": "#ef4444"
+					}
+				]
+			]
+		},
+		{
+			"id": "help · man · help",
+			"cmds": ["help"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "help",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "ls  cd  pwd  tree  cat  open  say  username  whoami  neofetch  honk  achievements  history  clear  man <cmd>"
+					}
+				],
+				[
+					{
+						"t": "there are more commands than this. the cat knows.",
+						"c": "#6b6b6b"
+					}
+				]
+			]
+		},
+		{
+			"id": "help · man · man for a known command",
+			"cmds": ["man cat"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "man cat",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "cat <file>",
+						"c": "#facc15"
+					},
+					{
+						"t": "  Print a file with its link. Games and 3x3 entries also open their window."
+					}
+				]
+			]
+		},
+		{
+			"id": "help · man · man for anything else (hidden ones too)",
+			"cmds": ["man snake"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "man snake",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "man: no entry for snake",
+						"c": "#ef4444"
+					}
+				]
+			]
+		},
+		{
+			"id": "achievements · a fresh visitor: hidden ones are ???",
+			"cmds": ["achievements"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "achievements",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "achievements 1/20  [█░░░░░░░░░░░░░░░░░░░]",
+						"c": "#00ff00"
+					}
+				],
+				[
+					{
+						"t": "[x] ",
+						"c": "#00ff00"
+					},
+					{
+						"t": "First Visit",
+						"c": "#00ff00"
+					},
+					{
+						"t": "  Open the site.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "First Honk",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Honk the cat (the logo, or the honk command).",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "Said Something",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Post to /Chat with say.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "New Identity",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Change your name with username.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "Explorer",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Run tree.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "Window Shopper",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Open a game window.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "Curator",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Open a 3x3 window.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "Nosy",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Try to get into .secrets/.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "Sudo Make Me A Sandwich",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Try sudo.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "Front Row",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Be here when bobby goes live.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				]
+			]
+		},
+		{
+			"id": "achievements · after finding a few",
+			"cmds": ["achievements"],
+			"pre": ["honk", "tree", "sudo ls"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "achievements",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "achievements 4/20  [████░░░░░░░░░░░░░░░░]",
+						"c": "#00ff00"
+					}
+				],
+				[
+					{
+						"t": "[x] ",
+						"c": "#00ff00"
+					},
+					{
+						"t": "First Visit",
+						"c": "#00ff00"
+					},
+					{
+						"t": "  Open the site.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[x] ",
+						"c": "#00ff00"
+					},
+					{
+						"t": "First Honk",
+						"c": "#00ff00"
+					},
+					{
+						"t": "  Honk the cat (the logo, or the honk command).",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "Said Something",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Post to /Chat with say.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "New Identity",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Change your name with username.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[x] ",
+						"c": "#00ff00"
+					},
+					{
+						"t": "Explorer",
+						"c": "#00ff00"
+					},
+					{
+						"t": "  Run tree.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "Window Shopper",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Open a game window.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "Curator",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Open a 3x3 window.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "Nosy",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Try to get into .secrets/.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[x] ",
+						"c": "#00ff00"
+					},
+					{
+						"t": "Sudo Make Me A Sandwich",
+						"c": "#00ff00"
+					},
+					{
+						"t": "  Try sudo.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "Front Row",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  Be here when bobby goes live.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[ ] ",
+						"c": "#6b6b6b"
+					},
+					{
+						"t": "???",
+						"c": "#d1d5db"
+					},
+					{
+						"t": "  hidden. keep poking around.",
+						"c": "#9ca3af"
+					}
+				]
+			]
+		},
+		{
+			"id": "everything else · pwd",
+			"cmds": ["pwd"],
+			"pre": ["cd games"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~/games$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "pwd",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "~/games"
+					}
+				]
+			]
+		},
+		{
+			"id": "everything else · whoami",
+			"cmds": ["whoami"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "whoami",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "Guest_4821 (you)"
+					}
+				]
+			]
+		},
+		{
+			"id": "everything else · history",
+			"cmds": ["history"],
+			"pre": ["ls", "cd projects"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~/projects$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "history",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "  1  ls",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "  2  cd projects",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "  3  history",
+						"c": "#9ca3af"
+					}
+				]
+			]
+		},
+		{
+			"id": "everything else · neofetch",
+			"cmds": ["neofetch"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "neofetch",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "OS      bobbyOS (SvelteKit 2 + Svelte 5)"
+					}
+				],
+				[
+					{
+						"t": "Host    bob - i7 12700k"
+					}
+				],
+				[
+					{
+						"t": "Memory  8 GiB (32 GiB soon, trust)"
+					}
+				],
+				[
+					{
+						"t": "Shell   bsh 0.1 · Langs JS / TS / English"
+					}
+				]
+			]
+		},
+		{
+			"id": "everything else · honk",
+			"cmds": ["honk"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "honk",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "HONK!",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: First Honk  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "everything else · honk, the 10th time",
+			"cmds": ["honk"],
+			"pre": ["honk", "honk", "honk", "honk", "honk", "honk", "honk", "honk", "honk"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "honk",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "HONK!",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "the cat trusts you now. ",
+						"c": "#f472b6"
+					},
+					{
+						"t": ".secrets/",
+						"c": "#60a5fa",
+						"run": "ls ~/.secrets"
+					},
+					{
+						"t": " is open.",
+						"c": "#f472b6"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Trusted  [███░░░░░░░░░░░░░░░░░] 3/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "everything else · clear",
+			"cmds": ["clear"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "↳ the screen clears",
+						"fx": true
+					}
+				]
+			]
+		},
+		{
+			"id": "everything else · an unknown command",
+			"cmds": ["emacs"],
+			"showCd": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "emacs",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "bsh: command not found: emacs. try help",
+						"c": "#ef4444"
+					}
+				]
+			]
+		}
+	],
+	"eggs": [
+		{
+			"id": "Snake",
+			"cmds": ["snake"],
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "snake",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "+--------------------------+\n|                          |\n|                          |\n|                 *        |\n|                          |\n|      ooo@                |\n|                          |\n|                          |\n|                          |\n+--------------------------+",
+						"c": "#4ade80"
+					}
+				],
+				[
+					{
+						"t": "score 0   arrows or WASD · q quits (plays live in the frames)",
+						"c": "#9ca3af"
+					}
+				]
+			]
+		},
+		{
+			"id": "Honkalos hunt",
+			"cmds": ["hunt", "a", "d", "a", "p", "a", "a", "a", "a"],
+			"untilDone": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "hunt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "A wild "
+					},
+					{
+						"t": "Honkalos",
+						"c": "#facc15"
+					},
+					{
+						"t": " lands on /Games. It is a goose that learned to fly angrier."
+					}
+				],
+				[
+					{
+						"t": "you [██████████] 20/20",
+						"c": "#4ade80"
+					},
+					{
+						"t": "   honkalos [██████████] 30/30",
+						"c": "#ef4444"
+					},
+					{
+						"t": "   potions 2",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "[a]ttack  [d]odge  [p]otion  [r]un",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "hunt> ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "a",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "you hit Honkalos for 7."
+					}
+				],
+				[
+					{
+						"t": "Honkalos honks at you for 3.",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "you [█████████░] 17/20",
+						"c": "#4ade80"
+					},
+					{
+						"t": "   honkalos [████████░░] 23/30",
+						"c": "#ef4444"
+					},
+					{
+						"t": "   potions 2",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "hunt> ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "d",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "you roll out of the way."
+					}
+				],
+				[
+					{
+						"t": "Honkalos swings and misses.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "you [█████████░] 17/20",
+						"c": "#4ade80"
+					},
+					{
+						"t": "   honkalos [████████░░] 23/30",
+						"c": "#ef4444"
+					},
+					{
+						"t": "   potions 2",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "hunt> ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "a",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "you hit Honkalos for 8."
+					}
+				],
+				[
+					{
+						"t": "Honkalos honks at you for 5.",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "you [██████░░░░] 12/20",
+						"c": "#4ade80"
+					},
+					{
+						"t": "   honkalos [█████░░░░░] 15/30",
+						"c": "#ef4444"
+					},
+					{
+						"t": "   potions 2",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "hunt> ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "p",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "you drink a potion (+8) and do the little flex."
+					}
+				],
+				[
+					{
+						"t": "Honkalos honks at you for 3.",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "you [█████████░] 17/20",
+						"c": "#4ade80"
+					},
+					{
+						"t": "   honkalos [█████░░░░░] 15/30",
+						"c": "#ef4444"
+					},
+					{
+						"t": "   potions 1",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "hunt> ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "a",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "you hit Honkalos for 4."
+					}
+				],
+				[
+					{
+						"t": "Honkalos honks at you for 6.",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "you [██████░░░░] 11/20",
+						"c": "#4ade80"
+					},
+					{
+						"t": "   honkalos [████░░░░░░] 11/30",
+						"c": "#ef4444"
+					},
+					{
+						"t": "   potions 1",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "hunt> ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "a",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "you hit Honkalos for 5."
+					}
+				],
+				[
+					{
+						"t": "Honkalos honks at you for 4.",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "you [████░░░░░░] 7/20",
+						"c": "#4ade80"
+					},
+					{
+						"t": "   honkalos [██░░░░░░░░] 6/30",
+						"c": "#ef4444"
+					},
+					{
+						"t": "   potions 1",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "hunt> ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "a",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "you hit Honkalos for 5."
+					}
+				],
+				[
+					{
+						"t": "Honkalos honks at you for 6.",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "you [█░░░░░░░░░] 1/20",
+						"c": "#4ade80"
+					},
+					{
+						"t": "   honkalos [░░░░░░░░░░] 1/30",
+						"c": "#ef4444"
+					},
+					{
+						"t": "   potions 1",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "hunt> ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "a",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "you hit Honkalos for 5."
+					}
+				],
+				[
+					{
+						"t": "Honkalos is down! You carve 1x Honk Plate.",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Honkalos Slayer  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "Bobby trivia",
+			"cmds": ["trivia", "c", "a", "b"],
+			"untilDone": true,
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "trivia",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "bobby trivia. answer a, b, c or d.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "Q1/3  ",
+						"c": "#facc15"
+					},
+					{
+						"t": "Which game has bobby put the most hours into?"
+					}
+				],
+				[
+					{
+						"t": "   a)  TEKKEN 8"
+					}
+				],
+				[
+					{
+						"t": "   b)  MONSTER HUNTER RISE"
+					}
+				],
+				[
+					{
+						"t": "   c)  Counter-Strike 2"
+					}
+				],
+				[
+					{
+						"t": "   d)  ELDEN RING"
+					}
+				],
+				[
+					{
+						"t": "answer> ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "c",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "correct!",
+						"c": "#4ade80"
+					}
+				],
+				[
+					{
+						"t": "Q2/3  ",
+						"c": "#facc15"
+					},
+					{
+						"t": "\"Saata Aandagi\" is bobby's review of which manga?"
+					}
+				],
+				[
+					{
+						"t": "   a)  Azumanga Daioh"
+					}
+				],
+				[
+					{
+						"t": "   b)  Kaguya-sama Love is War"
+					}
+				],
+				[
+					{
+						"t": "   c)  Beastars"
+					}
+				],
+				[
+					{
+						"t": "   d)  Cigarette and Cherry"
+					}
+				],
+				[
+					{
+						"t": "answer> ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "a",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "correct!",
+						"c": "#4ade80"
+					}
+				],
+				[
+					{
+						"t": "Q3/3  ",
+						"c": "#facc15"
+					},
+					{
+						"t": "How many hours has bobby played Monster Hunter Wilds?"
+					}
+				],
+				[
+					{
+						"t": "   a)  5h"
+					}
+				],
+				[
+					{
+						"t": "   b)  217h"
+					}
+				],
+				[
+					{
+						"t": "   c)  65h"
+					}
+				],
+				[
+					{
+						"t": "   d)  150h"
+					}
+				],
+				[
+					{
+						"t": "answer> ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "b",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "correct!",
+						"c": "#4ade80"
+					}
+				],
+				[
+					{
+						"t": "score 3/3. you know your bobby.",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Know Your Bobby  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "3x3 gacha",
+			"cmds": ["gacha", "gacha"],
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "gacha",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "┌──────────────────────────┐",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": "│ ★★  SR                   │",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": "│ Kaguya-sama Love is War  │",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": "│ manga · #4               │",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": "└──────────────────────────┘",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "gacha",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "┌────────────────────┐",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "│ ★★★  SSR           │",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "│ Chainsawman        │",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "│ manga · #3         │",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "└────────────────────┘",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "\"This manga is fucking insane. Fujimoto is an absollute beast at creating double page pan…\"",
+						"c": "#d1d5db"
+					}
+				]
+			]
+		},
+		{
+			"id": "fortune",
+			"cmds": ["fortune", "fortune"],
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "fortune",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "\"Like a wise gigg UK once said. This manga is a dumpster fire that i cant stop looking at. While the premise of this manga is absolutely morally, socially, ethically outta pocket, i cant help  but constantly turn to the next page looking to see what happens next in this rollercoaster ride of bullshit, emotions, and romance(?)\"",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "   — bobby on Domestic Girlfriend",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "fortune",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "\"Diddy Tensei\"",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "   — bobby on Mushoku Tensei III: Isekai Ittara Honki Dasu Part 2",
+						"c": "#9ca3af"
+					}
+				]
+			]
+		},
+		{
+			"id": "catsay",
+			"cmds": ["catsay what if the whole site was a terminal"],
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "catsay what if the whole site was a terminal",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": " ______________________________"
+					}
+				],
+				[
+					{
+						"t": "/ what if the whole site was a \\"
+					}
+				],
+				[
+					{
+						"t": "\\ terminal                     /"
+					}
+				],
+				[
+					{
+						"t": " ------------------------------"
+					}
+				],
+				[
+					{
+						"t": "        \\    /\\     /\\",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "         \\  /  \\___/  \\",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "           (  @     @  )",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "            \\   vVv   /",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "             '-------'",
+						"c": "#f5f5f5"
+					}
+				]
+			]
+		},
+		{
+			"id": "Scan the site",
+			"cmds": ["nmap"],
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "nmap",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "agamoto-lite 0.0.1 · a joke, not a scan",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "report for bobbynooby.dev"
+					}
+				],
+				[
+					{
+						"t": "PORT       STATE   SERVICE",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "80/tcp     open    http    → sends you to 443"
+					}
+				],
+				[
+					{
+						"t": "443/tcp    open    https   → you are here"
+					}
+				],
+				[
+					{
+						"t": "1337/tcp   honk    goose"
+					}
+				],
+				[
+					{
+						"t": "CVE context: none. it is a personal website.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "LLM recommendation: say hi in /Chat instead.",
+						"c": "#4ade80"
+					}
+				],
+				[
+					{
+						"t": "the real tool: "
+					},
+					{
+						"t": "https://github.com/BobbyNooby/agamoto",
+						"href": "https://github.com/BobbyNooby/agamoto"
+					}
+				]
+			]
+		},
+		{
+			"id": "vim",
+			"cmds": ["vim", "exit", "help", ":q"],
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "vim",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "~",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": "~",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": "~        VIM - Vi IMproved (bsh edition)",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": "~        type  :q  and press Enter to exit",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": "~",
+						"c": "#60a5fa"
+					}
+				],
+				[
+					{
+						"t": ": ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "exit",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "Type  :q  and press Enter to exit Vim",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": ": ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "help",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "Type  :q  and press Enter to exit Vim",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": ": ",
+						"c": "#4ade80"
+					},
+					{
+						"t": ":q",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "you escaped vim. most people never do.",
+						"c": "#4ade80"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Vim Survivor  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "sudo, escalating",
+			"cmds": ["sudo ls", "sudo ls", "sudo ls", "sudo honk"],
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "sudo ls",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "guest is not in the sudoers file. This incident will be reported to bobby.",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Sudo Make Me A Sandwich  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "sudo ls",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "still no.",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "sudo ls",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "bobby has been notified. he will do nothing about it.",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "sudo honk",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "(running honk as root. the one thing root can do.)",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "HONK!",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: First Honk  [███░░░░░░░░░░░░░░░░░] 3/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "rm -rf /",
+			"cmds": ["rm -rf /"],
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "rm -rf /",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "removing ~/projects ...",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "removing ~/links ...",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "removing ~/3x3 ...",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "removing the cat ...",
+						"c": "#ef4444"
+					}
+				],
+				[
+					{
+						"t": "the cat refuses.",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "just kidding. everything is still here.",
+						"c": "#9ca3af"
+					}
+				]
+			]
+		},
+		{
+			"id": "Exit ×3",
+			"cmds": ["exit", "exit", "exit"],
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "exit",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "there is no exit. only honk.",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "exit",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "seriously, your browser tab has a close button.",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "exit",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "logging out guest ... jk. you live here now.",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Exit Strategy  [██░░░░░░░░░░░░░░░░░░] 2/20",
+						"c": "#00ff00"
+					}
+				]
+			]
+		},
+		{
+			"id": "sl and coffee",
+			"cmds": ["sl", "coffee"],
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "sl",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "sl: did you mean ls? a cat runs past instead.",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "                                  =^@.@^=  ~",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "coffee",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "418 I'm a teapot. this shell only brews tea. (try honk)",
+						"c": "#facc15"
+					}
+				]
+			]
+		},
+		{
+			"id": "The cat trusts you",
+			"cmds": ["honk", "cat .secrets/games.txt"],
+			"pre": ["honk", "honk", "honk", "honk", "honk", "honk", "honk", "honk", "honk"],
+			"lines": [
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "honk",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "HONK!",
+						"c": "#facc15"
+					}
+				],
+				[
+					{
+						"t": "the cat trusts you now. ",
+						"c": "#f472b6"
+					},
+					{
+						"t": ".secrets/",
+						"c": "#60a5fa",
+						"run": "ls ~/.secrets"
+					},
+					{
+						"t": " is open.",
+						"c": "#f472b6"
+					}
+				],
+				[
+					{
+						"t": "+ achievement: Trusted  [███░░░░░░░░░░░░░░░░░] 3/20",
+						"c": "#00ff00"
+					}
+				],
+				[
+					{
+						"t": "guest_4821@bobbynooby.dev:~$ ",
+						"c": "#4ade80"
+					},
+					{
+						"t": "cat .secrets/games.txt",
+						"c": "#f5f5f5"
+					}
+				],
+				[
+					{
+						"t": "commands that are not in help:",
+						"c": "#f472b6"
+					}
+				],
+				[
+					{
+						"t": "snake",
+						"c": "#4ade80",
+						"run": "snake"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "hunt",
+						"c": "#4ade80",
+						"run": "hunt"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "trivia",
+						"c": "#4ade80",
+						"run": "trivia"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "gacha",
+						"c": "#4ade80",
+						"run": "gacha"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "fortune",
+						"c": "#4ade80",
+						"run": "fortune"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "catsay hi",
+						"c": "#4ade80",
+						"run": "catsay hi"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "nmap",
+						"c": "#4ade80",
+						"run": "nmap"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "sl",
+						"c": "#4ade80",
+						"run": "sl"
+					},
+					{
+						"t": "  "
+					},
+					{
+						"t": "vim",
+						"c": "#4ade80",
+						"run": "vim"
+					}
+				],
+				[
+					{
+						"t": "also try: sudo (a few times), rm -rf /, exit (3 times), coffee",
+						"c": "#9ca3af"
+					}
+				],
+				[
+					{
+						"t": "↑ ↑ ↓ ↓ ← → ← → B A   (on a phone, tap the title 7 times)",
+						"c": "#facc15"
+					}
+				]
+			]
+		}
+	]
+}

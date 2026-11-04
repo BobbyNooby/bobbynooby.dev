@@ -1,0 +1,510 @@
+{
+	"exportedAt": "2026-11-04T15:35:45.837Z",
+	"links": [
+		{
+			"uid": 1,
+			"label": "YouTube_1",
+			"href": "https://www.youtube.com/@bobbynooby",
+			"color": "#FF0000",
+			"item_order": 0
+		},
+		{
+			"uid": 2,
+			"label": "YouTube_2",
+			"href": "https://www.youtube.com/@bobsterlobster",
+			"color": "#FF0000",
+			"item_order": 1
+		},
+		{
+			"uid": 3,
+			"label": "GitHub",
+			"href": "https://github.com/bobbynooby",
+			"color": "#79A3AF",
+			"item_order": 2
+		},
+		{
+			"uid": 4,
+			"label": "Twitter",
+			"href": "https://twitter.com/bobbynoobyu",
+			"color": "#1DA1F2",
+			"item_order": 3
+		},
+		{
+			"uid": 5,
+			"label": "Twitch",
+			"href": "https://www.twitch.tv/bobbynooby",
+			"color": "#9147FF",
+			"item_order": 4
+		},
+		{
+			"uid": 6,
+			"label": "Ko-fi",
+			"href": "https://ko-fi.com/bobbynooby",
+			"color": "#FF5A62",
+			"item_order": 5
+		},
+		{
+			"uid": 13,
+			"label": "Discord",
+			"href": "https://discord.gg/Bn9qX8hzNQ",
+			"color": "#5865F2",
+			"item_order": 6
+		},
+		{
+			"uid": 7,
+			"label": "Spotify",
+			"href": "https://open.spotify.com/artist/3ixFauWAVAnvtA1u7VJ5Ju?si=BxypzrtlT3aKuNPeqBFu2g",
+			"color": "#1FDF64",
+			"item_order": 7
+		},
+		{
+			"uid": 8,
+			"label": "SoundCloud",
+			"href": "https://soundcloud.com/bobbynooby",
+			"color": "#FF5500",
+			"item_order": 8
+		},
+		{
+			"uid": 9,
+			"label": "osu!",
+			"href": "https://osu.ppy.sh/users/11574990",
+			"color": "#E6649E",
+			"item_order": 9
+		},
+		{
+			"uid": 10,
+			"label": "Geartics",
+			"href": "https://www.geartics.com/bobbynoobyu",
+			"color": "#039BE5",
+			"item_order": 10
+		},
+		{
+			"uid": 11,
+			"label": "MyAnimeList",
+			"href": "https://myanimelist.net/profile/BobbyNooby",
+			"color": "#2E51A2",
+			"item_order": 11
+		},
+		{
+			"uid": 12,
+			"label": "Bluesky",
+			"href": "https://bsky.app/profile/bobbynooby.bsky.social",
+			"color": "#0886FE",
+			"item_order": 12
+		}
+	],
+	"projects": [
+		{
+			"uid": 1,
+			"title": "Arcane Odyssey Tools",
+			"description": "Plan your Arcane Odyssey armor sets.",
+			"href": "https://github.com/BobbyNooby/AOGearBuilder/",
+			"item_order": 0
+		},
+		{
+			"uid": 7,
+			"title": "agamoto",
+			"description": "nmap + CVE context + LLM attack recommendations, in one CLI.",
+			"href": "https://github.com/BobbyNooby/agamoto",
+			"item_order": 1
+		},
+		{
+			"uid": 5,
+			"title": "create-stelle",
+			"description": "Scaffolds a Bun + SvelteKit + ElysiaJS fullstack starter.",
+			"href": "https://github.com/BobbyNooby/create-stelle",
+			"item_order": 2
+		},
+		{
+			"uid": 6,
+			"title": "OpenMarket",
+			"description": "Real-time in-game item marketplace. SvelteKit 5, Elysia, PostgreSQL, WebSockets.",
+			"href": "https://github.com/BobbyNooby/OpenMarket",
+			"item_order": 3
+		},
+		{
+			"uid": 3,
+			"title": "You Only Live Twice",
+			"description": "Fabric mod that raises the stakes of a multiplayer Minecraft playthrough by removing what you take for granted.",
+			"href": "https://github.com/BobbyNooby/youonlylivetwice",
+			"item_order": 4
+		},
+		{
+			"uid": 4,
+			"title": "MC Name Spoofer",
+			"description": "Fabric mod that replaces your username client-side with whatever you set.",
+			"href": "https://github.com/BobbyNooby/mc-namespoofer/",
+			"item_order": 5
+		},
+		{
+			"uid": 8,
+			"title": "Discord Message Scraper",
+			"description": "Pulls a Discord channel's full history into a local SQLite database.",
+			"href": "https://github.com/BobbyNooby/discord-message-scraper",
+			"item_order": 6
+		},
+		{
+			"uid": 9,
+			"title": "GitHub Stats Card",
+			"description": "Animated GitHub stats card — language bar, code-over-time graphs — served as a live SVG by Elysia.",
+			"href": "https://github.com/BobbyNooby/bobbynooby-github-stats",
+			"item_order": 7
+		},
+		{
+			"uid": 11,
+			"title": "honestea",
+			"description": "Local-first AI chat for Android & iOS. One OpenRouter key, 400+ models, honest cost per message.",
+			"href": "https://github.com/BobbyNooby/honestea",
+			"item_order": 8
+		},
+		{
+			"uid": 12,
+			"title": "Better Event Quests",
+			"description": "A cleaner, filterable view of Monster Hunter Wilds' event quests — weekly Capcom scrape into SQLite, live countdowns, zero rate-limit anxiety.",
+			"href": "https://github.com/BobbyNooby/BetterEventQuestsPageWilds",
+			"item_order": 9
+		}
+	],
+	"games": [
+		{
+			"appid": 730,
+			"name": "Counter-Strike 2",
+			"hours": 1964,
+			"lastPlayed": 1781007844,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/730/library_600x900.jpg",
+			"genres": ["Action", "Free To Play"],
+			"releaseDate": "21 Aug, 2012",
+			"achievements": {
+				"unlocked": 1,
+				"total": 1
+			}
+		},
+		{
+			"appid": 582010,
+			"name": "Monster Hunter: World",
+			"hours": 265,
+			"lastPlayed": 1790683585,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/582010/library_600x900.jpg",
+			"genres": [],
+			"releaseDate": null,
+			"achievements": null
+		},
+		{
+			"appid": 2246340,
+			"name": "Monster Hunter Wilds",
+			"hours": 217,
+			"lastPlayed": 1793061760,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/2246340/library_600x900.jpg",
+			"genres": ["Action", "Adventure", "RPG"],
+			"releaseDate": "27 Feb, 2025",
+			"achievements": {
+				"unlocked": 45,
+				"total": 50
+			}
+		},
+		{
+			"appid": 1245620,
+			"name": "ELDEN RING",
+			"hours": 150,
+			"lastPlayed": 1781208087,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/1245620/library_600x900.jpg",
+			"genres": ["Action", "RPG"],
+			"releaseDate": "24 Feb, 2022",
+			"achievements": {
+				"unlocked": 35,
+				"total": 42
+			}
+		},
+		{
+			"appid": 105600,
+			"name": "Terraria",
+			"hours": 103,
+			"lastPlayed": 1732711353,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/105600/library_600x900.jpg",
+			"genres": ["Action", "Adventure", "Indie", "RPG"],
+			"releaseDate": "16 May, 2011",
+			"achievements": {
+				"unlocked": 87,
+				"total": 137
+			}
+		},
+		{
+			"appid": 1172620,
+			"name": "Sea of Thieves",
+			"hours": 86,
+			"lastPlayed": 1767988600,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/1172620/library_600x900.jpg",
+			"genres": [],
+			"releaseDate": null,
+			"achievements": null
+		},
+		{
+			"appid": 389730,
+			"name": "TEKKEN 7",
+			"hours": 67,
+			"lastPlayed": 1764388592,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/389730/library_600x900.jpg",
+			"genres": ["Action", "Sports"],
+			"releaseDate": "1 Jun, 2017",
+			"achievements": {
+				"unlocked": 35,
+				"total": 42
+			}
+		},
+		{
+			"appid": 1446780,
+			"name": "MONSTER HUNTER RISE",
+			"hours": 65,
+			"lastPlayed": 1767483865,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/1446780/library_600x900.jpg",
+			"genres": [],
+			"releaseDate": null,
+			"achievements": null
+		},
+		{
+			"appid": 1778820,
+			"name": "TEKKEN 8",
+			"hours": 56,
+			"lastPlayed": 1781195130,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/1778820/library_600x900.jpg",
+			"genres": [],
+			"releaseDate": null,
+			"achievements": null
+		},
+		{
+			"appid": 671860,
+			"name": "BattleBit Remastered",
+			"hours": 50,
+			"lastPlayed": 1776108082,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/671860/library_600x900.jpg",
+			"genres": [],
+			"releaseDate": null,
+			"achievements": null
+		},
+		{
+			"appid": 413150,
+			"name": "Stardew Valley",
+			"hours": 40,
+			"lastPlayed": 1769700447,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/413150/library_600x900.jpg",
+			"genres": ["Indie", "RPG", "Simulation"],
+			"releaseDate": "26 Feb, 2016",
+			"achievements": {
+				"unlocked": 12,
+				"total": 49
+			}
+		},
+		{
+			"appid": 239140,
+			"name": "Dying Light",
+			"hours": 32,
+			"lastPlayed": 1733390709,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/239140/library_600x900.jpg",
+			"genres": ["Action", "Adventure", "RPG"],
+			"releaseDate": "26 Jan, 2015",
+			"achievements": {
+				"unlocked": 35,
+				"total": 78
+			}
+		},
+		{
+			"appid": 323190,
+			"name": "Frostpunk",
+			"hours": 24,
+			"lastPlayed": 1781282684,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/323190/library_600x900.jpg",
+			"genres": [],
+			"releaseDate": null,
+			"achievements": null
+		},
+		{
+			"appid": 474960,
+			"name": "Quantum Break",
+			"hours": 8,
+			"lastPlayed": 1641019951,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/474960/library_600x900.jpg",
+			"genres": [],
+			"releaseDate": null,
+			"achievements": null
+		},
+		{
+			"appid": 2379780,
+			"name": "Balatro",
+			"hours": 8,
+			"lastPlayed": 1760457120,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/2379780/library_600x900.jpg",
+			"genres": [],
+			"releaseDate": null,
+			"achievements": null
+		},
+		{
+			"appid": 1237970,
+			"name": "Titanfall® 2",
+			"hours": 5,
+			"lastPlayed": 1680509554,
+			"capsule": "https://steamcdn-a.akamaihd.net/steam/apps/1237970/library_600x900.jpg",
+			"genres": [],
+			"releaseDate": null,
+			"achievements": null
+		}
+	],
+	"lastPlayed": {
+		"isPlaying": false,
+		"title": "360",
+		"artist": "Charli xcx",
+		"album": "BRAT",
+		"albumImageUrl": "https://i.scdn.co/image/ab67616d0000b273f88b43d15fd14e9525338b59",
+		"songUrl": "https://open.spotify.com/track/4w2GLmK2wnioVnb5CPQeex",
+		"playedAt": "2026-11-04T02:21:13.157Z"
+	},
+	"threeByThree": {
+		"anime": [
+			{
+				"label": "GTO",
+				"anilistId": 245,
+				"review": null,
+				"title": "GTO: Great Teacher Onizuka",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx245-NcQAyTipUMeO.jpg",
+				"color": "#e4930d"
+			},
+			{
+				"label": "Mononoke Hime",
+				"anilistId": 164,
+				"review": null,
+				"title": "Princess Mononoke",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx164-ySuGzCWVw2cL.jpg",
+				"color": null
+			},
+			{
+				"label": "Garden Of Words",
+				"anilistId": 16782,
+				"review": null,
+				"title": "The Garden of Words",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx16782-qpFGk18UqaHn.jpg",
+				"color": "#93e450"
+			},
+			{
+				"label": "Chuunibyou",
+				"anilistId": 14741,
+				"review": null,
+				"title": "Love, Chunibyo & Other Delusions",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx14741-CGXEIeUe2roA.jpg",
+				"color": "#43a1f1"
+			},
+			{
+				"label": "Nichijou",
+				"anilistId": 10165,
+				"review": null,
+				"title": "Nichijou - My Ordinary Life",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx10165-tw8Cz7K9tfVJ.png",
+				"color": "#e4bb93"
+			},
+			{
+				"label": "azumanga",
+				"anilistId": 66,
+				"review": null,
+				"title": "Azumanga Daioh",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx66-ZqYQWl6LsfeI.png",
+				"color": null
+			},
+			{
+				"label": "Steins Gate",
+				"anilistId": 9253,
+				"review": null,
+				"title": "Steins;Gate",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx9253-tIUXF2gfU8Sg.jpg",
+				"color": "#ffd6ae"
+			},
+			{
+				"label": "One Piece",
+				"anilistId": 21,
+				"review": null,
+				"title": "ONE PIECE",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx21-ELSYx3yMPcKM.jpg",
+				"color": "#e49335"
+			},
+			{
+				"label": "Mushoku Tensei",
+				"anilistId": "217434",
+				"review": "Diddy Tensei",
+				"title": "Mushoku Tensei III: Isekai Ittara Honki Dasu Part 2",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx217434-xqZNBp5U3hgY.jpg",
+				"color": "#e4935d"
+			}
+		],
+		"manga": [
+			{
+				"label": "Beastars",
+				"anilistId": 98587,
+				"review": null,
+				"title": "BEASTARS",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx98587-useiMvZ0nfya.png",
+				"color": "#e45d6b"
+			},
+			{
+				"label": "GTO",
+				"anilistId": 30336,
+				"review": "Great Teacher Onizuka. He da goat fr. What else is there to say",
+				"title": "GTO: Great Teacher Onizuka",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx30336-KWTPMwsNTeSa.png",
+				"color": "#e4bb5d"
+			},
+			{
+				"label": "Chainsawman",
+				"anilistId": 105778,
+				"review": "This manga is fucking insane. Fujimoto is an absollute beast at creating double page panels. First part was a solid meal despite feeling slightly rushed. Second part consisted of climax after climax so far and i cant wait to see more",
+				"title": "Chainsaw Man",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx105778-euxXZEIfDY2u.png",
+				"color": "#f1c90d"
+			},
+			{
+				"label": "Kaguya-sama Love is War",
+				"anilistId": "86635",
+				"review": null,
+				"title": "Kaguya-sama: Love is War",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx86635-EdaLQmsn86Fy.png",
+				"color": "#d61a35"
+			},
+			{
+				"label": "Lovely Complex",
+				"anilistId": "30031",
+				"review": null,
+				"title": "Love★Com",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx30031-xUpamYLeMCUl.png",
+				"color": "#e46b28"
+			},
+			{
+				"label": "Cigarette and Cherry",
+				"anilistId": "102215",
+				"review": "Yes mother",
+				"title": "Cigarette & Cherry",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/nx102215-24gnPidc83kv.jpg",
+				"color": "#a1c9e4"
+			},
+			{
+				"label": "Domestic Girlfriend",
+				"anilistId": 85802,
+				"review": "Like a wise gigg UK once said. This manga is a dumpster fire that i cant stop looking at. While the premise of this manga is absolutely morally, socially, ethically outta pocket, i cant help  but constantly turn to the next page looking to see what happens next in this rollercoaster ride of bullshit, emotions, and romance(?)",
+				"title": "Domestic Girlfriend",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx85802-lh7gZHgQmliE.png",
+				"color": "#e43578"
+			},
+			{
+				"label": "Yotsubaaa",
+				"anilistId": 30104,
+				"review": "Hehe funny yotbers :3",
+				"title": "Yotsuba&!",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx30104-sUVzNlTWZ5cu.jpg",
+				"color": "#e4a135"
+			},
+			{
+				"label": "Azumanga Daioh",
+				"anilistId": 30085,
+				"review": "Saata Aandagi",
+				"title": "Azumanga Daioh",
+				"cover": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/n30085-EiFHtQfdeHjp.jpg",
+				"color": "#f1a128"
+			}
+		]
+	}
+}

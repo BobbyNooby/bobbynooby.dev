@@ -12,6 +12,8 @@
 	];
 
 	const CHIPS = ['ls', 'tree', 'cd ..', 'neofetch', 'honk', 'help'];
+	// Plenty for any command, and a pasted novel can't stall the page.
+	const MAX_INPUT = 2000;
 
 	let input = $state('');
 	let field = $state<HTMLInputElement>();
@@ -145,6 +147,7 @@
 				autocapitalize="off"
 				spellcheck="false"
 				enterkeyhint="go"
+				maxlength={MAX_INPUT}
 				placeholder={view.ready ? 'type a command' : 'mounting…'}
 				disabled={!view.ready}
 				aria-label="Shell command"

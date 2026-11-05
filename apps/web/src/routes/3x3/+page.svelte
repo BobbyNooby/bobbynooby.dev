@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { navigating } from '$app/state';
 	import ThreeByThreeListsButton from '$lib/components/3x3/ThreeByThreeListsButton.svelte';
-	import GenericButton from '$lib/components/GenericButton.svelte';
+	import GenericButton from '$lib/components/ui/GenericButton.svelte';
 	import type { PageServerData } from './$types';
 
 	let { data }: { data: PageServerData } = $props();

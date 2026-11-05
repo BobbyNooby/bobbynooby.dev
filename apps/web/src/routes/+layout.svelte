@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Loader from '$lib/components/widgets/Loader.svelte';
+	import Loader from '$lib/components/ui/Loader.svelte';
 	import { Toaster } from 'svelte-french-toast';
 	import '../app.css';
 	let { children } = $props();

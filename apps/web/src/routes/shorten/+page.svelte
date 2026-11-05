@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Title from '$lib/components/sections/Title.svelte';
+	import Title from '$lib/components/ui/Title.svelte';
 	import toast from 'svelte-french-toast';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import { navigating, page } from '$app/state';
 	import type { PageServerData } from './$types';
-	import DiscordLoginBall from '$lib/components/DiscordLoginBall.svelte';
+	import DiscordLoginBall from '$lib/components/auth/DiscordLoginBall.svelte';
 	import { SignOut } from '@auth/sveltekit/components';
-	import GenericButton from '$lib/components/GenericButton.svelte';
+	import GenericButton from '$lib/components/ui/GenericButton.svelte';
 
 	let { data }: { data: PageServerData } = $props();
 

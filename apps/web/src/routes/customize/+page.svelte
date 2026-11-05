@@ -3,8 +3,8 @@
 	import { beforeNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { CustomizeState } from '$lib/admin/customize.svelte';
-	import DiscordLoginBall from '$lib/components/DiscordLoginBall.svelte';
-	import GenericButton from '$lib/components/GenericButton.svelte';
+	import DiscordLoginBall from '$lib/components/auth/DiscordLoginBall.svelte';
+	import GenericButton from '$lib/components/ui/GenericButton.svelte';
 	import GridPane from '$lib/components/customize/GridPane.svelte';
 	import LinksPane from '$lib/components/customize/LinksPane.svelte';
 	import ProjectsPane from '$lib/components/customize/ProjectsPane.svelte';

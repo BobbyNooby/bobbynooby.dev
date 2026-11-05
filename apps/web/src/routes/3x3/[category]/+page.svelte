@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { navigating } from '$app/state';
-	import GenericButton from '$lib/components/GenericButton.svelte';
+	import GenericButton from '$lib/components/ui/GenericButton.svelte';
 	import { onMount } from 'svelte';
 	import type { PageServerData } from './$types';
 	import { fade } from 'svelte/transition';

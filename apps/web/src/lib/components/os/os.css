@@ -931,6 +931,17 @@
 .os .boot.fade {
 	opacity: 0;
 }
+/* If the page script never runs, the boot screen still gets out of the way. */
+.os .boot {
+	animation: os-boot-out 0.4s 4s forwards;
+}
+@keyframes os-boot-out {
+	to {
+		opacity: 0;
+		visibility: hidden;
+	}
+}
+
 .os.phos {
 	filter: sepia(1) saturate(2.6) hue-rotate(-12deg) brightness(1.05);
 }
@@ -1013,6 +1024,9 @@
 	}
 }
 @media (prefers-reduced-motion: reduce) {
+	.os .boot {
+		display: none;
+	}
 	.os *,
 	.os *::before,
 	.os *::after {

@@ -14,6 +14,7 @@
 	import { playAudio } from '$lib/utils/playAudio';
 	import { onMount, untrack } from 'svelte';
 	import Bar from './Bar.svelte';
+	import Boot from './Boot.svelte';
 	import Cursors from './Cursors.svelte';
 	import HerePopover from './HerePopover.svelte';
 	import './os.css';
@@ -165,6 +166,7 @@
 	onpointermove={pointer}
 	role="presentation"
 >
+	<Boot />
 	<h1 class="sr-only">bobbynooby.dev</h1>
 	<Bar onbrand={() => titleTaps(performance.now()) && phosphor()}>
 		{#snippet here()}<HerePopover />{/snippet}

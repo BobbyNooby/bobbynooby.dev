@@ -22,9 +22,9 @@
 			{/if}
 		{/if}
 		<p>/time</p>
-		<p class="i1">/UK</p>
+		<p class="i1">/UK <span class="emoji-font">🇬🇧</span></p>
 		<p class="i2">{full('Europe/London', live.now)}</p>
-		<p class="i1">/MY</p>
+		<p class="i1">/MY <span class="emoji-font">🇲🇾</span></p>
 		<p class="i2">{full('Asia/Kuala_Lumpur', live.now)}</p>
 	</div>
 </Pane>

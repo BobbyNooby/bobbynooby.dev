@@ -338,6 +338,12 @@
 	margin: 0;
 	text-wrap: pretty;
 }
+/* Tailwind's reset makes svg a block; the brand icons sit inside the sentence. */
+.os .lines svg {
+	display: inline;
+	margin-left: 0.15em;
+	vertical-align: -0.15em;
+}
 .os .mode {
 	display: flex;
 	flex-wrap: wrap;

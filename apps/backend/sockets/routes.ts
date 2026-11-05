@@ -37,7 +37,14 @@ export function attachPresence(
   });
 }
 
+// /discord and /spotify only broadcast and the site never sends on them, so any
+// frame there (unchecked for size otherwise) ends the connection.
+function refuseMessages(ws: WebSocket) {
+  ws.on("message", () => ws.close(1003, "No messages accepted"));
+}
+
 export async function attachDiscord(ws: WebSocket, discordBot: DiscordBot) {
+  refuseMessages(ws);
   ws.on("close", () => {
     discordBot.removeWebSocket(ws);
     consoleBob("WebSocket connection to /discord closed");
@@ -50,6 +57,7 @@ export async function attachSpotify(
   ws: WebSocket,
   spotifyClient: SpotifyClient,
 ) {
+  refuseMessages(ws);
   ws.on("close", () => {
     spotifyClient.removeWebSocket(ws);
     consoleBob("WebSocket connection to /spotify closed");

@@ -78,7 +78,11 @@ async function handleConnection(ws: WebSocket, req: IncomingMessage) {
     await attachSpotify(ws, spotifyClient);
     return;
   }
-  if (subroute !== "/chat") return;
+  if (subroute !== "/chat") {
+    // An unknown path would otherwise sit open holding a connection slot.
+    ws.close(1008, "Unknown path");
+    return;
+  }
 
   const session = await getSession(convertReq(req, app), authConfig);
   // Closed during the lookup: its close event has passed, so nothing would remove it.

@@ -82,6 +82,8 @@ export class SnakeGame {
 
 	/** Arrow keys or WASD steer, q or Esc quits; returns true when the key was used. */
 	key(event: KeyboardEvent): boolean {
+		// Cmd+A, Ctrl+W and friends belong to the browser.
+		if (event.ctrlKey || event.metaKey || event.altKey) return false;
 		const k = event.key.toLowerCase();
 		const dir = KEYS[k];
 		if (dir) {

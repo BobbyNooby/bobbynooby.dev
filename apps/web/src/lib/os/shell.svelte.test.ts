@@ -146,6 +146,19 @@ describe('ShellView', () => {
 		expect(text().endsWith('guest_1234@bobbynooby.dev:~$ pwd\n~')).toBe(true);
 	});
 
+	it('leaves keys held with ctrl, cmd or alt to the browser', () => {
+		const { view } = setup();
+		view.run('snake');
+		for (const mod of ['ctrlKey', 'metaKey', 'altKey']) {
+			for (const k of ['a', 'q', 'ArrowUp']) {
+				const event = { key: k, [mod]: true, preventDefault: vi.fn() };
+				expect(view.snakeKey(event as unknown as KeyboardEvent)).toBe(false);
+				expect(event.preventDefault).not.toHaveBeenCalled();
+			}
+		}
+		expect(view.snaking).toBe(true);
+	});
+
 	it('leaves keys alone when no game is running', () => {
 		const { view } = setup();
 		expect(view.snakeKey(key('ArrowUp'))).toBe(false);

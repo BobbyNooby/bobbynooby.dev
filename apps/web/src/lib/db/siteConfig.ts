@@ -14,12 +14,14 @@ export async function getHiddenAppids(): Promise<Set<number>> {
 	return new Set(doc?.hiddenAppids ?? []);
 }
 
-export async function setHiddenAppids(appids: number[]): Promise<void> {
+// One atomic update per game: rewriting the whole list let two quick clicks
+// both start from the same list, so the later write dropped the earlier one.
+export async function setAppidHidden(appid: number, hidden: boolean): Promise<void> {
 	await db
 		.collection<SiteConfig>('site_config')
 		.updateOne(
 			{ key: DOC_KEY },
-			{ $set: { key: DOC_KEY, hiddenAppids: appids } },
+			hidden ? { $addToSet: { hiddenAppids: appid } } : { $pull: { hiddenAppids: appid } },
 			{ upsert: true }
 		);
 }

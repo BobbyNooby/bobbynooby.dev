@@ -35,6 +35,7 @@
 		const appid = Number(formData.get('appid'));
 		const name = games.find((g) => g.appid === appid)?.name ?? 'game';
 		const hide = !hidden.has(appid);
+		formData.set('hide', String(hide));
 		if (hide) hidden.add(appid);
 		else hidden.delete(appid);
 		return async ({ result }) => {

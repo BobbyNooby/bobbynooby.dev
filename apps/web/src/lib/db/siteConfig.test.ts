@@ -9,7 +9,7 @@ vi.mock('$lib/db/mongo', () => ({
 	}
 }));
 
-const { getHiddenAppids, setHiddenAppids } = await import('$lib/db/siteConfig');
+const { getHiddenAppids, setAppidHidden } = await import('$lib/db/siteConfig');
 
 describe('siteConfig', () => {
 	it('defaults to an empty hidden set when no config doc exists', async () => {
@@ -27,11 +27,21 @@ describe('siteConfig', () => {
 		await expect(getHiddenAppids()).resolves.toEqual(new Set());
 	});
 
-	it('upserts the hidden list under the fixed key', async () => {
-		await setHiddenAppids([730]);
-		expect(updateOne).toHaveBeenCalledWith(
+	// One atomic update per click, so two quick clicks cannot overwrite each other's list.
+	it('hides a game with $addToSet under the fixed key', async () => {
+		await setAppidHidden(730, true);
+		expect(updateOne).toHaveBeenLastCalledWith(
 			{ key: 'games' },
-			{ $set: { key: 'games', hiddenAppids: [730] } },
+			{ $addToSet: { hiddenAppids: 730 } },
+			{ upsert: true }
+		);
+	});
+
+	it('shows a game again with $pull', async () => {
+		await setAppidHidden(730, false);
+		expect(updateOne).toHaveBeenLastCalledWith(
+			{ key: 'games' },
+			{ $pull: { hiddenAppids: 730 } },
 			{ upsert: true }
 		);
 	});

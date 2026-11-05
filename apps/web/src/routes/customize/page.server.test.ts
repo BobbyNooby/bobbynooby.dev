@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const saveTables = vi.fn();
 const warmMediaCache = vi.fn();
+const getHiddenAppids = vi.fn();
+const setAppidHidden = vi.fn();
 
 vi.mock('$lib/db/mongo', () => ({ db: {}, getMongoClient: () => ({}) }));
 vi.mock('$lib/admin/persist', async (importOriginal) => ({
@@ -11,7 +13,7 @@ vi.mock('$lib/admin/persist', async (importOriginal) => ({
 vi.mock('$lib/db/mongoUtils.js', () => ({
 	getKnown3x3Routes: async () => new Set(['anime', 'manga'])
 }));
-vi.mock('$lib/db/siteConfig', () => ({}));
+vi.mock('$lib/db/siteConfig', () => ({ getHiddenAppids, setAppidHidden }));
 vi.mock('$lib/media/mediaCache', () => ({ warmMediaCache }));
 vi.mock('$lib/steam/steamCache', () => ({}));
 
@@ -79,5 +81,34 @@ describe('customize update action', () => {
 			data: { message: 'Duplicate 3x3 list: anime' }
 		});
 		expect(saveTables).not.toHaveBeenCalled();
+	});
+});
+
+describe('customize toggleGame action', () => {
+	beforeEach(() => {
+		getHiddenAppids.mockReset();
+		setAppidHidden.mockReset();
+	});
+
+	it('hides or shows the game the click asked for, without reading the list first', async () => {
+		expect(await actions.toggleGame(post({ appid: '730', hide: 'true' }))).toEqual({
+			success: true
+		});
+		expect(await actions.toggleGame(post({ appid: '570', hide: 'false' }))).toEqual({
+			success: true
+		});
+		expect(setAppidHidden.mock.calls).toEqual([
+			[730, true],
+			[570, false]
+		]);
+		expect(getHiddenAppids).not.toHaveBeenCalled();
+	});
+
+	it('rejects a click that does not say whether to hide or show', async () => {
+		const clicks: Record<string, string>[] = [{ appid: '730' }, { appid: '730', hide: 'yes' }];
+		for (const fields of clicks) {
+			await expect(actions.toggleGame(post(fields))).resolves.toMatchObject({ status: 400 });
+		}
+		expect(setAppidHidden).not.toHaveBeenCalled();
 	});
 });

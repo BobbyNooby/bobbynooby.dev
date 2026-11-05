@@ -2,7 +2,7 @@ import { parsePayload } from '$lib/admin/parsePayload';
 import { assertUniqueUids, saveTables, withOrder } from '$lib/admin/persist';
 import { linkSchema, listSchema, projectSchema } from '$lib/admin/schemas';
 import { getAll3x3Data, getKnown3x3Routes, getLinks, getProjects } from '$lib/db/mongoUtils.js';
-import { getHiddenAppids, setHiddenAppids } from '$lib/db/siteConfig';
+import { getHiddenAppids, setAppidHidden } from '$lib/db/siteConfig';
 import { getCachedCovers, warmMediaCache } from '$lib/media/mediaCache';
 import { dropSteamCache, getAllSteamGames, getSteamCacheMeta } from '$lib/steam/steamCache';
 import type { SteamGameSummary } from '$lib/steam/steamTypes';
@@ -139,17 +139,12 @@ export const actions = {
 		}
 		const formData = await event.request.formData();
 		const appid = Number(formData.get('appid'));
-		if (!Number.isInteger(appid)) {
+		const hide = formData.get('hide');
+		if (!Number.isInteger(appid) || (hide !== 'true' && hide !== 'false')) {
 			return fail(400, { message: 'Invalid game.' });
 		}
 		try {
-			const hidden = await getHiddenAppids();
-			if (hidden.has(appid)) {
-				hidden.delete(appid);
-			} else {
-				hidden.add(appid);
-			}
-			await setHiddenAppids([...hidden]);
+			await setAppidHidden(appid, hide === 'true');
 			return { success: true };
 		} catch (err) {
 			console.error('[steam] toggle failed:', err);

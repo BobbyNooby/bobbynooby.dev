@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { buildFs } from './fs';
-import { createMounts } from './mounts';
-import type { BshData, BshProject, DirNode, FileNode } from './types';
+import { buildFs } from '../fs';
+import { createMounts } from './index';
+import type { BshData, BshProject, DirNode, FileNode } from '../types';
 
 const env = {
 	live: () => ({ discord: 'online' as const, twitchLive: false, playing: false }),

@@ -31,10 +31,17 @@ const help: Command = (env) => {
 };
 
 const man: Command = (env, { args }) => {
-	const row = COMMANDS.find((r) => r[0].split(/[\s·]+/).includes(args[0] || ''));
+	if (!args[0]) return env.print('usage: man <cmd>   (try man ls)', '#ef4444');
+	const name = args[0].toLowerCase();
+	const row = COMMANDS.find((r) =>
+		r[0]
+			.toLowerCase()
+			.split(/[\s·]+/)
+			.includes(name)
+	);
 	return row
 		? env.print([{ t: row[0], c: '#facc15' }, { t: '  ' + row[1] }])
-		: env.print('man: no entry for ' + (args[0] || '?'), '#ef4444');
+		: env.print('man: no entry for ' + args[0], '#ef4444');
 };
 
 const history: Command = (env) => {

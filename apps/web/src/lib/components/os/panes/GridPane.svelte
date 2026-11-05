@@ -21,7 +21,8 @@
 <Pane pane="grid" title="/3x3" label="3x3 grids" program="anilist · tap a tile">
 	<div class="g3">
 		<div class="grid3">
-			{#each items as m, i (i)}
+			<!-- Keyed by category: reusing the tiles kept the old covers up until the new ones loaded. -->
+			{#each items as m, i (os.gridCat + ':' + i)}
 				<button
 					class="tile"
 					type="button"

@@ -108,7 +108,8 @@
 			{#if entry && group}
 				<div class="cz-editor">
 					{#if cover}
-						<img class="cz-cover" src={cover.cover} alt="" />
+						<!-- A fresh img per entry, so the last pick's cover never shows while this one loads. -->
+						{#key entry.uid}<img class="cz-cover" src={cover.cover} alt="" />{/key}
 					{:else}
 						<div class="cz-cover"></div>
 					{/if}

@@ -1,3 +1,4 @@
+import type { StorageLike } from '$lib/bsh/achievements';
 import type { ChatMessage } from '$lib/types';
 import { createLiveSocket, type LiveSocket } from '$lib/utils/liveSocket';
 import { playAudio } from '$lib/utils/playAudio';
@@ -15,15 +16,27 @@ const system = (message: string): ChatMessage => ({
 	created_at: new Date().toISOString()
 });
 
-function storedName(): string {
+const MAX_NAME = 24;
+const guest = () => `Guest_${Math.floor(1000 + Math.random() * 9000)}`;
+
+// The saved chat name, capped like the shell's (old chat boxes allowed any length).
+export function loadUsername(storage: StorageLike | null): string {
 	try {
-		const saved = localStorage.getItem('username');
+		const saved = storage?.getItem('username')?.trim().slice(0, MAX_NAME);
 		if (saved) return saved;
-		const fresh = `Guest_${Math.floor(1000 + Math.random() * 9000)}`;
-		localStorage.setItem('username', fresh);
+		const fresh = guest();
+		storage?.setItem('username', fresh);
 		return fresh;
 	} catch {
-		return `Guest_${Math.floor(1000 + Math.random() * 9000)}`;
+		return guest();
+	}
+}
+
+function browserStorage(): StorageLike | null {
+	try {
+		return localStorage;
+	} catch {
+		return null;
 	}
 }
 
@@ -35,7 +48,7 @@ export class ChatState {
 	#lastSent = { name: '', message: '' };
 
 	start(): () => void {
-		this.username = storedName();
+		this.username = loadUsername(browserStorage());
 		this.#ws = createLiveSocket<{ initialMessages: ChatMessage[] } | { message: ChatMessage }>(
 			'/chat',
 			(data) => {
@@ -72,7 +85,7 @@ export class ChatState {
 	}
 
 	rename(name: string) {
-		const clean = name.trim().slice(0, 24);
+		const clean = name.trim().slice(0, MAX_NAME);
 		if (!clean) return this.note('Usage: /username <name>');
 		this.username = clean;
 		try {

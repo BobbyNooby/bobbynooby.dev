@@ -1,4 +1,5 @@
-import { getMedia, MEDIA_FIELDS } from '$lib/anilist/anilist';
+import { MEDIA_FIELDS } from '$lib/anilist/anilist';
+import { toAnilistId } from '$lib/anilist/anilistId';
 import type { Anime, Manga } from '$lib/anilist/anilistTypes';
 import { db } from '$lib/db/mongo';
 
@@ -15,11 +16,34 @@ type CacheDoc = {
 const COLLECTION = 'anilist_media';
 const BATCH_SIZE = 12;
 
-function toMediaId(id: string | number): number | null {
-	// Number('') is 0, which would look up a media that does not exist.
-	if (String(id).trim() === '') return null;
-	const parsed = Number(id);
-	return Number.isInteger(parsed) ? parsed : null;
+// Ids AniList answered 404 for. Kept in memory for an hour so a tile with an
+// unknown id costs one live call an hour, not one per page view, and the Mongo
+// cache only ever holds real media.
+const NOT_FOUND_MS = 60 * 60 * 1000;
+const notFoundUntil = new Map<number, number>();
+
+const isNotFound = (id: number) => (notFoundUntil.get(id) ?? 0) > Date.now();
+const rememberNotFound = (id: number) => notFoundUntil.set(id, Date.now() + NOT_FOUND_MS);
+
+function toMediaIds(ids: (string | number)[]): number[] {
+	return [...new Set(ids.map(toAnilistId).filter((id): id is number => id != null))];
+}
+
+/** One aliased query for all of `ids`; `failed` when AniList answered with errors or no data. */
+async function queryMedia(ids: number[]) {
+	const aliases = ids.map((id, j) => `m${j}: Media(id: ${id}) { ${MEDIA_FIELDS} }`).join('\n');
+	const response = await fetch('https://graphql.anilist.co', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+		body: JSON.stringify({ query: `query {\n${aliases}\n}` })
+	});
+	const body = await response.json().catch(() => null);
+	const errors: { status?: number }[] = Array.isArray(body?.errors) ? body.errors : [];
+	return {
+		media: ids.map((_, j) => (body?.data?.[`m${j}`] ?? null) as CachedMedia | null),
+		failed: body?.data == null || errors.length > 0,
+		status: errors.some((error) => error?.status === 404) ? 404 : response.status
+	};
 }
 
 /**
@@ -28,7 +52,7 @@ function toMediaId(id: string | number): number | null {
  * API call. Cache misses fall through to the live API and backfill.
  */
 export async function getMediaCached(id: string | number): Promise<CachedMedia | null> {
-	const mediaId = toMediaId(id);
+	const mediaId = toAnilistId(id);
 	if (mediaId == null) {
 		return null;
 	}
@@ -37,9 +61,16 @@ export async function getMediaCached(id: string | number): Promise<CachedMedia |
 	if (cached) {
 		return cached.media;
 	}
+	if (isNotFound(mediaId)) {
+		return null;
+	}
 
 	try {
-		const media = (await getMedia(mediaId)) as CachedMedia | null;
+		const result = await queryMedia([mediaId]);
+		const media = result.media[0];
+		if (!media && result.status === 404) {
+			rememberNotFound(mediaId);
+		}
 		if (media) {
 			console.log(`[mediaCache] cache miss, fetching media ${mediaId}`);
 			await db
@@ -66,7 +97,7 @@ export async function getMediaCached(id: string | number): Promise<CachedMedia |
 export async function getCachedCovers(
 	ids: (string | number)[]
 ): Promise<Record<string, { cover: string; title: string }>> {
-	const mediaIds = [...new Set(ids.map(toMediaId).filter((id): id is number => id != null))];
+	const mediaIds = toMediaIds(ids);
 	if (mediaIds.length === 0) {
 		return {};
 	}
@@ -99,7 +130,7 @@ export async function getCachedCovers(
  * Called after customize saves, since that is the only moment ids change.
  */
 export async function warmMediaCache(ids: (string | number)[]): Promise<void> {
-	const mediaIds = [...new Set(ids.map(toMediaId).filter((id): id is number => id != null))];
+	const mediaIds = toMediaIds(ids).filter((id) => !isNotFound(id));
 	if (mediaIds.length === 0) {
 		return;
 	}
@@ -117,39 +148,38 @@ export async function warmMediaCache(ids: (string | number)[]): Promise<void> {
 	console.log(`[mediaCache] warming ${missing.length} media entries`);
 
 	for (let i = 0; i < missing.length; i += BATCH_SIZE) {
-		const chunk = missing.slice(i, i + BATCH_SIZE);
 		try {
-			const aliases = chunk
-				.map((id, j) => `m${j}: Media(id: ${id}) { ${MEDIA_FIELDS} }`)
-				.join('\n');
-			const response = await fetch('https://graphql.anilist.co', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-				body: JSON.stringify({ query: `query {\n${aliases}\n}` })
-			});
-			const body = await response.json();
-			if (body?.data == null) {
-				throw new Error(JSON.stringify(body?.errors ?? body).slice(0, 300));
-			}
-			const operations = chunk
-				.map((id, j) => ({ id, media: body.data[`m${j}`] as CachedMedia | null }))
-				.filter((entry): entry is { id: number; media: CachedMedia } => entry.media != null)
-				.map((entry) => ({
-					replaceOne: {
-						filter: { media_id: entry.id },
-						replacement: {
-							media_id: entry.id,
-							media: entry.media,
-							cached_at: new Date()
-						} satisfies CacheDoc,
-						upsert: true
-					}
-				}));
-			if (operations.length > 0) {
-				await db.collection<CacheDoc>(COLLECTION).bulkWrite(operations);
-			}
+			await warmBatch(missing.slice(i, i + BATCH_SIZE));
 		} catch (err) {
 			console.error('[mediaCache] batch warm failed:', err);
 		}
+	}
+}
+
+async function warmBatch(ids: number[]): Promise<void> {
+	const result = await queryMedia(ids);
+	const operations = ids.flatMap((id, j) => {
+		const media = result.media[j];
+		if (!media) return [];
+		const replacement: CacheDoc = { media_id: id, media, cached_at: new Date() };
+		return [{ replaceOne: { filter: { media_id: id }, replacement, upsert: true } }];
+	});
+	if (operations.length > 0) {
+		await db.collection<CacheDoc>(COLLECTION).bulkWrite(operations);
+	}
+	if (!result.failed) return;
+
+	if (ids.length === 1) {
+		if (result.status === 404) rememberNotFound(ids[0]);
+		else console.error(`[mediaCache] warm failed for media ${ids[0]}: HTTP ${result.status}`);
+		return;
+	}
+	if (result.status === 429) {
+		console.error('[mediaCache] batch warm rate limited; the rest warm on a later view');
+		return;
+	}
+	// One unknown id makes AniList fail the whole batch, so ask for the rest one by one.
+	for (const [j, id] of ids.entries()) {
+		if (!result.media[j]) await warmBatch([id]);
 	}
 }

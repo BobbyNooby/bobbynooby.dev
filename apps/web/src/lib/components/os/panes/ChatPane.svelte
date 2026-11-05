@@ -24,8 +24,7 @@
 
 	function submit(event: SubmitEvent) {
 		event.preventDefault();
-		chat.submit(draft);
-		draft = '';
+		if (chat.submit(draft)) draft = '';
 	}
 </script>
 

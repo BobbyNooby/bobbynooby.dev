@@ -50,6 +50,32 @@ describe('ChatState.send', () => {
 	});
 });
 
+describe('ChatState.submit', () => {
+	it('says true only when the message was sent', () => {
+		const chat = startedChat();
+		expect(chat.submit('hello')).toBe(true);
+		socket.open = false;
+		expect(chat.submit('hello')).toBe(false);
+		socket.open = true;
+		expect(chat.submit('x'.repeat(5000))).toBe(false);
+		expect(chat.submit('   ')).toBe(false);
+	});
+
+	it('says false when sending too fast', () => {
+		const chat = startedChat();
+		const results = Array.from({ length: 6 }, () => chat.submit('hi'));
+		expect(results).toEqual([true, true, true, true, true, false]);
+	});
+
+	it('says true for a rename and false when the rename had no name', () => {
+		const chat = startedChat();
+		expect(chat.submit('/username bob')).toBe(true);
+		expect(chat.username).toBe('bob');
+		expect(chat.submit('/username')).toBe(false);
+		expect(chat.messages.at(-1)?.message).toBe('Usage: /username <name>');
+	});
+});
+
 describe('loadUsername', () => {
 	it('keeps a saved name, capped at 24 characters', () => {
 		expect(loadUsername(memoryStorage({ username: 'bob' }))).toBe('bob');

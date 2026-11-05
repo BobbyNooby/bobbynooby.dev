@@ -77,14 +77,19 @@ export class ChatState {
 	}
 
 	// The chat box: /username renames, any other /word is unknown, the rest is a message.
-	submit(raw: string) {
+	// True when it went through, so the box only clears what was actually used.
+	submit(raw: string): boolean {
 		const text = raw.trim();
-		if (!text) return;
+		if (!text) return false;
 		const [command, ...rest] = text.split(/\s+/);
 		if (command === '/username') return this.rename(rest.join(' '));
-		if (command.startsWith('/')) return this.note(`Command ${command} not found`);
+		if (command.startsWith('/')) {
+			this.note(`Command ${command} not found`);
+			return false;
+		}
 		const result = this.send(this.username, text);
 		if (result !== 'sent') this.note(SEND_NOTES[result]);
+		return result === 'sent';
 	}
 
 	send(name: string, message: string): ChatSendResult {
@@ -97,9 +102,12 @@ export class ChatState {
 		return 'sent';
 	}
 
-	rename(name: string) {
+	rename(name: string): boolean {
 		const clean = name.trim().slice(0, MAX_NAME);
-		if (!clean) return this.note('Usage: /username <name>');
+		if (!clean) {
+			this.note('Usage: /username <name>');
+			return false;
+		}
 		this.username = clean;
 		try {
 			localStorage.setItem('username', clean);
@@ -107,6 +115,7 @@ export class ChatState {
 			// private mode: the name still applies for this visit
 		}
 		this.note(`Username changed to ${clean}`);
+		return true;
 	}
 
 	note(message: string) {

@@ -1,4 +1,5 @@
 import { parsePayload } from '$lib/admin/parsePayload';
+import { linkSchema, listSchema, projectSchema } from '$lib/admin/schemas';
 import { db, getMongoClient } from '$lib/db/mongo';
 import { getAll3x3Data, getKnown3x3Routes, getLinks, getProjects } from '$lib/db/mongoUtils.js';
 import { getHiddenAppids, setHiddenAppids } from '$lib/db/siteConfig';
@@ -45,42 +46,6 @@ export const load = async ({ locals }) => {
 		steamHidden: [...steamHidden]
 	};
 };
-
-const safeHref = /^(https?:\/\/|\/)/i;
-const hexOrColorName = /^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)$/;
-const safeListLabel = /^[a-zA-Z0-9 _-]+$/;
-
-// visible is deliberately absent: it is client-only UI state and is stripped
-// from the payload by zod's default key filtering.
-const linkSchema = z.object({
-	uid: z.number().int(),
-	label: z.string().min(1).max(100),
-	href: z.string().min(1).max(2048).regex(safeHref),
-	color: z.string().max(64).regex(hexOrColorName)
-});
-
-const projectSchema = z.object({
-	uid: z.number().int(),
-	title: z.string().min(1).max(200),
-	description: z.string().max(5000),
-	href: z.string().min(1).max(2048).regex(safeHref)
-});
-
-// bobscore arrives as a string from the text input, hence the coercion.
-// id keeps whatever type the row was created with (legacy rows store numbers).
-// review is absent on most legacy rows, so it stays optional.
-const entrySchema = z.object({
-	uid: z.number().int(),
-	id: z.union([z.string().max(200), z.number()]),
-	label: z.string().min(1).max(200),
-	review: z.string().max(10000).optional(),
-	bobscore: z.coerce.number()
-});
-
-const listSchema = z.object({
-	label: z.string().max(100).regex(safeListLabel),
-	data: z.array(entrySchema)
-});
 
 function assertUniqueUids(docs: { uid: number }[], name: string) {
 	const seen = new Set<number>();

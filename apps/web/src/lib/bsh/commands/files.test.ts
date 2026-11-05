@@ -1,0 +1,19 @@
+import { describe, expect, it } from 'vitest';
+import { record, textOf } from '../testing';
+
+const last = (cmds: string[]) => textOf(record(cmds)).split('\n').slice(1);
+
+describe('tree', () => {
+	it('says a locked folder is locked, and counts as nosy', () => {
+		const out = last(['tree .secrets']);
+		expect(out[0]).toBe('tree: permission denied. the cat does not trust you yet.');
+		expect(out[1]).toMatch(/^\+ achievement: Nosy {2}\[/);
+		expect(last(['tree ~/.secrets/games.txt'])[0]).toBe(
+			'tree: permission denied. the cat does not trust you yet.'
+		);
+	});
+
+	it('still says not a folder for a missing one', () => {
+		expect(last(['tree nope'])).toEqual(['tree: not a folder: nope']);
+	});
+});

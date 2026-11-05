@@ -46,7 +46,11 @@ const cd: Command = (env, { arg }) => {
 
 const tree: Command = (env, { arg }) => {
 	const r = env.find(arg);
-	if (!r.node || r.node.type !== 'dir' || env.locked(r.node)) {
+	if (r.locked || env.locked(r.node)) {
+		env.print('tree: permission denied. the cat does not trust you yet.', '#ef4444');
+		return env.unlock('secret');
+	}
+	if (!r.node || r.node.type !== 'dir') {
 		return env.print('tree: not a folder: ' + (arg || '.'), '#ef4444');
 	}
 	env.print(pathOf(r.parts), '#60a5fa');

@@ -71,16 +71,19 @@ files with real credentials are required for dev (`apps/web/.env`,
   - `/3x3` and `/3x3/[category]` — media grids backed by AniList + Mongo cache;
     unknown categories 404 (validated against `3x3_dynamic_routes` before any
     collection read)
-  - `/shorten` — URL shortener UI; `/[shortURL]` — redirect handler
+  - `/shorten` — URL shortener UI (links are stored normalised, always with an
+    http/https scheme); `/[shortURL]` — server-side 302 to the stored link; unknown
+    codes and non-http(s) links 404
   - `/customize` — admin-only editor for links/projects/3x3 (guarded in
     `+page.server.ts` via `locals.isAdmin`)
   - `/api/*` — JSON endpoints: `spotify/last_played`, `twitch/live`, `steam/games`,
     `steam/game/[appid]`, `links`, `projects` (`spotify/last_played` sends CORS headers
-    restricted to site origins; all `/api/*` GETs are rate-limited per client IP in
-    production; the steam routes are Mongo-cached with 6h/24h TTLs and stale-serve, no
-    CORS — first-party only). Discord status and now-playing come from the backend's
-    WebSockets, not from these routes.
-  - `/signin`, `/signout` — Auth.js entry points
+    restricted to site origins; all `/api/*` GETs and HEADs are rate-limited per client
+    IP in production, matched on `event.route.id`; the steam routes are Mongo-cached
+    with 6h/24h TTLs and stale-serve, no CORS — first-party only; `steam/game/[appid]`
+    only serves appids in the owned-games list). Discord status and now-playing come
+    from the backend's WebSockets, not from these routes.
+  - `/signin`, `/signout` — Auth.js form actions (a plain GET redirects to `/`)
 - **Auth & permissions:** `hooks.server.ts` resolves the session once per request into
   `locals.isAdmin` / `locals.canShorten` (typed in `apps/web/src/app.d.ts`) by looking
   up the user's Discord ID in the Mongo `admin_ids` collection. **Fails closed.** In

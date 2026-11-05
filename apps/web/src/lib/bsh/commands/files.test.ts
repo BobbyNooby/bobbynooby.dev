@@ -14,6 +14,19 @@ describe('ls', () => {
 	});
 });
 
+describe('cat', () => {
+	it('ignores flags like -n', () => {
+		expect(last(['cat -n about_me.txt'])).toEqual(last(['cat about_me.txt']));
+		expect(last(['open -n links/github.txt'])).toEqual(last(['open links/github.txt']));
+		expect(last(['cat -n'])).toEqual(['cat: which file?']);
+	});
+
+	it('refuses a file written like a folder', () => {
+		expect(last(['cat about_me.txt/'])).toEqual(['cat: not a folder: about_me.txt/']);
+		expect(last(['open links/github.txt/'])).toEqual(['open: not a folder: links/github.txt/']);
+	});
+});
+
 describe('tree', () => {
 	it('says a locked folder is locked, and counts as nosy', () => {
 		const out = last(['tree .secrets']);

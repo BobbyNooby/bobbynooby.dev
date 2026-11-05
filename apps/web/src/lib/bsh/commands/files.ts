@@ -62,7 +62,9 @@ const tree: Command = (env, { arg }) => {
 };
 
 // cat prints a file (and opens its window); open follows its link or opens its window.
-const catOrOpen: Command = (env, { name: c, arg }) => {
+const catOrOpen: Command = (env, { name: c, args }) => {
+	// Flags like cat -n change nothing here, so they are skipped rather than read as a path.
+	const arg = args.filter((x) => !x.startsWith('-')).join(' ');
 	if (!arg) return env.print(c + ': which file?', '#ef4444');
 	const r = env.find(arg);
 	if (r.locked) {
@@ -72,6 +74,7 @@ const catOrOpen: Command = (env, { name: c, arg }) => {
 	if (!r.node) return env.print(c + ': no such file: ' + arg, '#ef4444');
 	if (r.node.type === 'dir')
 		return env.print(c + ': ' + arg + ' is a folder (try ls or cd)', '#ef4444');
+	if (arg.endsWith('/')) return env.print(c + ': not a folder: ' + arg, '#ef4444');
 	const file: FileNode = r.node;
 	if (c === 'cat') {
 		for (const l of file.lines()) env.print(l);

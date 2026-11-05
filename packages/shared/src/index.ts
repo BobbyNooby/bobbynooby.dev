@@ -3,6 +3,21 @@ import { z } from 'zod';
 export { createTokenBucket, type TokenBucket } from './tokenBucket';
 export { pickForwardedIp } from './forwardedIp';
 export { createConnectionLimiter, type ConnectionLimiter } from './connectionLimiter';
+export {
+	PANE_KEYS,
+	PRESENCE_NAME_MAX_LENGTH,
+	presenceClientMessageSchema,
+	presenceCurSchema,
+	presenceHelloSchema,
+	presenceHideSchema,
+	type PaneKey,
+	type PresenceClientMessage,
+	type PresenceCur,
+	type PresenceCursor,
+	type PresenceHello,
+	type PresenceHide,
+	type PresenceState
+} from './presence';
 
 export type DiscordStatus = 'online' | 'idle' | 'dnd' | 'offline' | 'unknown';
 

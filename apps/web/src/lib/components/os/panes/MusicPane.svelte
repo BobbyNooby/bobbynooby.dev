@@ -15,47 +15,47 @@
 	}));
 
 	let song = $derived(live.song);
+	let track = $derived(safeHref(song.songUrl));
 	let label = $derived(
 		song.isPlaying ? '< Now Playing >' : '! Last Played ' + ago(song.playedAt, live.now) + ' !'
 	);
 </script>
 
 <Pane pane="music" title="/Music" label="Music" program="cava">
-	<div class="mus">
-		<!-- A mouse/touch shortcut only: keyboard and screen readers already get "open track" below. -->
-		<a
-			class="art"
-			href={safeHref(song.songUrl)}
-			target="_blank"
-			rel="noopener noreferrer"
-			tabindex="-1"
-			aria-hidden="true"
-		>
-			{#if song.albumImageUrl}
-				<img src={song.albumImageUrl} alt="" />
-			{/if}
-		</a>
-		<div class="meta">
-			<span style:color={song.isPlaying ? '#4ade80' : '#9ca3af'}>{label}</span>
-			<span class="w">{song.title}</span>
-			<span class="mut">{song.artist}</span>
-			<span class="dim">{song.album}</span>
+	<!-- One link for the whole song; with no track URL it is a plain, unclickable block. -->
+	<a
+		class="nowplay"
+		href={track}
+		target="_blank"
+		rel="noopener noreferrer"
+		aria-label={track ? `${song.title} by ${song.artist}, open on Spotify` : undefined}
+	>
+		<div class="mus">
+			<div class="art" aria-hidden="true">
+				{#if song.albumImageUrl}
+					<img src={song.albumImageUrl} alt="" />
+				{/if}
+			</div>
+			<div class="meta">
+				<span style:color={song.isPlaying ? '#4ade80' : '#9ca3af'}>{label}</span>
+				<span class="w">{song.title}</span>
+				<span class="mut">{song.artist}</span>
+				<span class="dim">{song.album}</span>
+			</div>
 		</div>
-	</div>
-	<div class="eq" class:idle={!song.isPlaying} aria-hidden="true">
-		{#each BARS as b, i (i)}
-			<span
-				style:height="{b.height}%"
-				style:animation-duration="{b.duration}s"
-				style:animation-delay="{b.delay}s"
-			></span>
-		{/each}
-	</div>
-	{#if safeHref(song.songUrl)}
-		<p class="np2">
-			<a href={safeHref(song.songUrl)} target="_blank" rel="noopener noreferrer">open track</a>
-		</p>
-	{/if}
+		<div class="eq" class:idle={!song.isPlaying} aria-hidden="true">
+			{#each BARS as b, i (i)}
+				<span
+					style:height="{b.height}%"
+					style:animation-duration="{b.duration}s"
+					style:animation-delay="{b.delay}s"
+				></span>
+			{/each}
+		</div>
+		{#if track}
+			<p class="np2"><span class="open">open track</span></p>
+		{/if}
+	</a>
 	<iframe
 		class="playlist"
 		src={PLAYLIST_EMBED}

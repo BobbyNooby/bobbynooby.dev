@@ -1,10 +1,11 @@
 import { PASS, type Command, type CommandTable, type ShellEnv } from './types';
 
 const SUDO_REPLIES = [
-	'guest is not in the sudoers file. This incident will be reported to bobby.',
-	'still no.',
-	'bobby has been notified. he will do nothing about it.',
-	'the cat has revoked your sudo privileges, permanently.'
+	(user: string) =>
+		user.toLowerCase() + ' is not in the sudoers file. This incident will be reported to bobby.',
+	() => 'still no.',
+	() => 'bobby has been notified. he will do nothing about it.',
+	() => 'the cat has revoked your sudo privileges, permanently.'
 ];
 const EXIT_REPLIES = [
 	'there is no exit. only honk.',
@@ -35,7 +36,8 @@ const sudo: Command = (env, { args }) => {
 		fakeRm(env);
 		return env.unlock('sudo');
 	}
-	env.print(SUDO_REPLIES[Math.min(env.st.sudos, SUDO_REPLIES.length) - 1], '#ef4444');
+	const reply = SUDO_REPLIES[Math.min(env.st.sudos, SUDO_REPLIES.length) - 1];
+	env.print(reply(env.st.user), '#ef4444');
 	return env.unlock('sudo');
 };
 

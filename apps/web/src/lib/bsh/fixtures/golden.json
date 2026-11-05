@@ -3976,7 +3976,7 @@
 				],
 				[
 					{
-						"t": "guest is not in the sudoers file. This incident will be reported to bobby.",
+						"t": "guest_4821 is not in the sudoers file. This incident will be reported to bobby.",
 						"c": "#ef4444"
 					}
 				],

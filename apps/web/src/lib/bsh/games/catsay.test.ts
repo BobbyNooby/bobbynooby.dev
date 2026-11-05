@@ -28,6 +28,11 @@ describe('catsay', () => {
 		]);
 	});
 
+	it('survives a huge paste', () => {
+		const lines = catsay('honk '.repeat(1_000_000));
+		expect(lines[1][0].t).toBe('/ ' + 'honk '.repeat(6).trim() + ' \\');
+	});
+
 	it('says honk when given nothing', () => {
 		for (const msg of ['', '   ']) expect(bubble(msg)[1]).toBe('< honk >');
 	});

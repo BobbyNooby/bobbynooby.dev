@@ -27,7 +27,8 @@ export function catsay(msg: string): Line[] {
 		} else cur = cur ? cur + ' ' + word : word;
 	}
 	lines.push(cur);
-	const w = Math.max(...lines.map((l) => l.length));
+	// reduce, not Math.max(...): a huge paste is more lines than a call can take as arguments.
+	const w = lines.reduce((m, l) => Math.max(m, l.length), 0);
 	return [
 		[{ t: ' ' + '_'.repeat(w + 2) }],
 		...lines.map((l, i): Line => {

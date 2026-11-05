@@ -38,6 +38,7 @@ export class SnakeGame {
 	#info: number;
 	#pad: number;
 	#timer: ReturnType<typeof setInterval> | undefined;
+	#stopped = false;
 	#screen: SnakeScreen;
 	#rng: Rng;
 	#onEnd: (why: SnakeEnd, score: number) => void;
@@ -100,6 +101,8 @@ export class SnakeGame {
 	}
 
 	stop(why: SnakeEnd) {
+		if (this.#stopped) return;
+		this.#stopped = true;
 		clearInterval(this.#timer);
 		this.#screen.remove(this.#pad);
 		const score = this.#state.score;

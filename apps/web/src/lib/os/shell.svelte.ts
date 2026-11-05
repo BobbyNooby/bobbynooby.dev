@@ -49,6 +49,8 @@ export class ShellView {
 	print(segs: Line, kind?: ShellLine['kind']): number {
 		const id = this.#next++;
 		this.lines = [...this.lines, { id, segs, kind }].slice(-MAX_LINES);
+		// A game you can no longer see shouldn't keep taking w/a/s/d.
+		if (this.#snake && !this.lines.some((l) => l.kind === 'snake')) this.#snake.stop('restart');
 		return id;
 	}
 

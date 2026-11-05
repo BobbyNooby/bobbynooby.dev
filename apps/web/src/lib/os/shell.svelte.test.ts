@@ -159,6 +159,15 @@ describe('ShellView', () => {
 		expect(view.snaking).toBe(true);
 	});
 
+	it('stops a snake whose board has scrolled out of the shell', () => {
+		const { view } = setup();
+		view.run('snake');
+		for (let i = 0; i < 150; i++) view.run('pwd');
+		expect(view.lines.some((l) => l.kind === 'snake')).toBe(false);
+		expect(view.snaking).toBe(false);
+		expect(view.snakeKey(key('w'))).toBe(false);
+	});
+
 	it('leaves keys alone when no game is running', () => {
 		const { view } = setup();
 		expect(view.snakeKey(key('ArrowUp'))).toBe(false);

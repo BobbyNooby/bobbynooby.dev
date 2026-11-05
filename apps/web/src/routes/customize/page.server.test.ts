@@ -71,6 +71,14 @@ describe('customize update action', () => {
 		expect(saveTables).not.toHaveBeenCalled();
 	});
 
+	it('rejects a forged score instead of saving it as 0', async () => {
+		for (const bobscore of ['', null, []]) {
+			const lists = [{ label: 'Anime', data: [{ ...entry(0), bobscore }] }];
+			await expect(update({ lists })).resolves.toMatchObject({ status: 400 });
+		}
+		expect(saveTables).not.toHaveBeenCalled();
+	});
+
 	it('rejects two lists that name the same collection once lowercased', async () => {
 		const lists = [
 			{ label: 'Anime', data: [entry(0)] },

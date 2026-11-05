@@ -95,7 +95,28 @@ describe('chat box commands', () => {
 	});
 });
 
+describe('ChatState.rename', () => {
+	it('cuts a long name without splitting an emoji', () => {
+		const chat = startedChat();
+		expect(chat.rename('a'.repeat(23) + '😀')).toBe(true);
+		expect(chat.username).toBe('a'.repeat(23));
+	});
+
+	it('refuses a name with nothing visible in it, and keeps the old one', () => {
+		const chat = startedChat();
+		chat.rename('bob');
+		expect(chat.submit('/username \u3164')).toBe(false);
+		expect(chat.rename('\u200B\u202E')).toBe(false);
+		expect(chat.username).toBe('bob');
+		expect(chat.messages.at(-1)?.message).toBe('That name has nothing visible in it.');
+	});
+});
+
 describe('loadUsername', () => {
+	it('mints a guest name when the saved one has nothing visible', () => {
+		expect(loadUsername(memoryStorage({ username: '\u200B' }))).toMatch(/^Guest_\d{4}$/);
+	});
+
 	it('keeps a saved name, capped at 24 characters', () => {
 		expect(loadUsername(memoryStorage({ username: 'bob' }))).toBe('bob');
 		expect(loadUsername(memoryStorage({ username: 'n'.repeat(60) }))).toBe('n'.repeat(24));

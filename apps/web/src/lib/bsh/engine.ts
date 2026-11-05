@@ -1,9 +1,10 @@
 import { ACH, type AchievementStore, type AchKey } from './achievements';
 import { COMMAND_TABLE, PASS, type Call, type ShellEnv, type ShellState } from './commands';
-import { honk, MAX_USERNAME } from './commands/people';
+import { honk } from './commands/people';
 import { bar } from './format';
 import { buildFs, isHidden, pathOf, resolve } from './fs';
 import { createMounts } from './mounts';
+import { cleanName } from './name';
 import { mulberry32 } from './rng';
 import type { BshData, FsNode, Line, PaneKey, ShellCtx, Win } from './types';
 
@@ -170,7 +171,7 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		honk: env.honk,
 		promptText,
 		setUser: (name: string) => {
-			const clean = name.trim().slice(0, MAX_USERNAME);
+			const clean = cleanName(name);
 			if (clean) st.user = clean;
 		},
 		get state() {

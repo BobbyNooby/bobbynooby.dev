@@ -1,8 +1,7 @@
 import { CHAT_MAX_MESSAGE_LENGTH, chatIntakeSchema } from '@bobbynooby/shared';
+import { cleanName } from '../name';
 import type { ChatSendResult } from '../types';
 import type { Command, CommandTable, ShellEnv } from './types';
-
-export const MAX_USERNAME = 24;
 
 const SAY_FAILED: Record<Exclude<ChatSendResult, 'sent'>, string> = {
 	offline: 'say: /Chat is reconnecting. try again in a moment.',
@@ -35,7 +34,9 @@ const username: Command = (env, { arg }) => {
 			'#ef4444'
 		);
 	}
-	env.st.user = arg.slice(0, MAX_USERNAME);
+	const name = cleanName(arg);
+	if (!name) return env.print('username: that name has nothing visible in it', '#ef4444');
+	env.st.user = name;
 	env.ctx.rename(env.st.user);
 	env.print('Username changed to ' + env.st.user, '#FDE047');
 	return env.unlock('rename');

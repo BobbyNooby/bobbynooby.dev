@@ -21,3 +21,18 @@ describe('say', () => {
 		expect(out).not.toContain('(sent to /Chat)');
 	});
 });
+
+describe('username', () => {
+	it('cuts a long name without splitting an emoji', () => {
+		const out = textOf(record(['username ' + 'a'.repeat(23) + '😀', 'whoami']));
+		expect(out).toContain('Username changed to ' + 'a'.repeat(23) + '\n');
+		expect(out).toContain('\n' + 'a'.repeat(23) + ' (you)');
+	});
+
+	it('refuses a name with nothing visible in it', () => {
+		const out = textOf(record(['username \u3164\u200B', 'whoami']));
+		expect(out).toContain('username: that name has nothing visible in it');
+		expect(out).not.toContain('Username changed');
+		expect(out).toContain('Guest_4821 (you)');
+	});
+});

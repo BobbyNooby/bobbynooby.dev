@@ -90,5 +90,7 @@ describe('createShell', () => {
 		expect(sh.promptText()).toBe('neo@bobbynooby.dev:~$');
 		sh.setUser('x'.repeat(40));
 		expect(sh.state.user).toHaveLength(24);
+		sh.setUser('\u3164');
+		expect(sh.state.user).toBe('x'.repeat(24));
 	});
 });

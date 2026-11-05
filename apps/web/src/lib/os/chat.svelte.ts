@@ -1,4 +1,5 @@
 import type { StorageLike } from '$lib/bsh/achievements';
+import { cleanName } from '$lib/bsh/name';
 import type { ChatSendResult } from '$lib/bsh/types';
 import type { ChatMessage } from '$lib/types';
 import { createLiveSocket, type LiveSocket } from '$lib/utils/liveSocket';
@@ -17,8 +18,6 @@ const system = (message: string): ChatMessage => ({
 	created_at: new Date().toISOString()
 });
 
-const MAX_NAME = 24;
-
 const SEND_NOTES: Record<Exclude<ChatSendResult, 'sent'>, string> = {
 	offline: '/Chat is reconnecting. Try again in a moment.',
 	'too-fast': 'Slow down: chat takes 5 messages, then one every 2 seconds.',
@@ -26,10 +25,10 @@ const SEND_NOTES: Record<Exclude<ChatSendResult, 'sent'>, string> = {
 };
 const guest = () => `Guest_${Math.floor(1000 + Math.random() * 9000)}`;
 
-// The saved chat name, capped like the shell's (old chat boxes allowed any length).
+// The saved chat name, cleaned like a rename (old chat boxes allowed any length).
 export function loadUsername(storage: StorageLike | null): string {
 	try {
-		const saved = storage?.getItem('username')?.trim().slice(0, MAX_NAME);
+		const saved = cleanName(storage?.getItem('username') ?? '');
 		if (saved) return saved;
 		const fresh = guest();
 		storage?.setItem('username', fresh);
@@ -99,9 +98,9 @@ export class ChatState {
 	}
 
 	rename(name: string): boolean {
-		const clean = name.trim().slice(0, MAX_NAME);
+		const clean = cleanName(name);
 		if (!clean) {
-			this.note('Usage: /username <name>');
+			this.note(name.trim() ? 'That name has nothing visible in it.' : 'Usage: /username <name>');
 			return false;
 		}
 		this.username = clean;

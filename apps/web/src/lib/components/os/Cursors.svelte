@@ -36,7 +36,10 @@
 				for (const v of presence.others) {
 					const p = sample(presence.buffers.get(v.id) ?? [], now - DELAY_MS, toPx);
 					const el = els.get(v.id);
-					if (el && p) el.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px)`;
+					if (!el) continue;
+					// A cursor over a pane this page doesn't show (say /Twitch) stays hidden.
+					el.style.visibility = p ? '' : 'hidden';
+					if (p) el.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px)`;
 				}
 			}
 			raf = requestAnimationFrame(draw);

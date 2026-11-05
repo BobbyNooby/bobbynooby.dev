@@ -121,6 +121,31 @@ describe('ShellView', () => {
 		}
 	});
 
+	it('ends a running game before a clicked command, instead of answering with it', () => {
+		const { view, text } = setup();
+		view.run('trivia');
+		view.runClicked('cd ..');
+		expect(text()).toMatch(
+			/ d\) {2}[^\n]+\nleft trivia\.\nguest_1234@bobbynooby\.dev:~\$ cd \.\.$/
+		);
+		expect(text()).not.toContain('nope, it was');
+		expect(view.prompt).toBe('guest_1234@bobbynooby.dev:~$');
+	});
+
+	it('quits snake before a clicked command', () => {
+		const { view, text } = setup();
+		view.run('snake');
+		view.runClicked('ls');
+		expect(view.snaking).toBe(false);
+		expect(text()).toMatch(/quit\. score 0 .*\nguest_1234@bobbynooby.dev:~\$ ls/);
+	});
+
+	it('runs a clicked command as usual when no game is on', () => {
+		const { view, text } = setup();
+		view.runClicked('pwd');
+		expect(text().endsWith('guest_1234@bobbynooby.dev:~$ pwd\n~')).toBe(true);
+	});
+
 	it('leaves keys alone when no game is running', () => {
 		const { view } = setup();
 		expect(view.snakeKey(key('ArrowUp'))).toBe(false);

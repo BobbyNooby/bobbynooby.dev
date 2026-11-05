@@ -32,6 +32,8 @@ export type ShellOptions = {
 
 export type Shell = {
 	run(raw: string): void;
+	/** Ends a running game, if any, with a "left <game>." line. */
+	leave(): void;
 	complete(value: string): string;
 	unlock(key: AchKey): void;
 	honk(): void;
@@ -116,6 +118,12 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		honk: () => honk(env)
 	};
 
+	const leave = () => {
+		if (!st.mode) return;
+		print('left ' + st.mode.name + '.', '#9ca3af');
+		env.endMode();
+	};
+
 	const run = (input: string) => {
 		const raw = input.trim();
 		print([
@@ -123,10 +131,7 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 			{ t: raw, c: '#f5f5f5' }
 		]);
 		if (st.mode) {
-			if (QUIT_WORDS.has(raw.toLowerCase()) && !st.mode.ownsQuit) {
-				print('left ' + st.mode.name + '.', '#9ca3af');
-				return env.endMode();
-			}
+			if (QUIT_WORDS.has(raw.toLowerCase()) && !st.mode.ownsQuit) return leave();
 			return st.mode.handle(raw);
 		}
 		if (!raw) return;
@@ -159,6 +164,7 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 
 	return {
 		run,
+		leave,
 		complete,
 		unlock,
 		honk: env.honk,

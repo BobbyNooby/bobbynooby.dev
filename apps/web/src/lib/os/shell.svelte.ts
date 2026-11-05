@@ -168,6 +168,13 @@ export class ShellView {
 		this.#sync();
 	}
 
+	// A chip or a tapped name is a shell command, so it ends a game rather than answering it.
+	runClicked(cmd: string) {
+		this.#snake?.stop('quit');
+		this.shell?.leave();
+		this.run(cmd);
+	}
+
 	honk() {
 		this.shell?.honk();
 	}

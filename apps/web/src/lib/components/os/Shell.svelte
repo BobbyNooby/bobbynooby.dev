@@ -27,7 +27,7 @@
 		typeof matchMedia !== 'undefined' && matchMedia('(pointer: fine)').matches;
 
 	function run(cmd: string) {
-		view.run(cmd);
+		view.runClicked(cmd);
 		if (finePointer()) field?.focus({ preventScroll: true });
 	}
 

@@ -42,9 +42,17 @@
 	function keydown(event: KeyboardEvent) {
 		if (view.snakeKey(event)) return;
 		const history = view.shell?.state.history ?? [];
-		if (event.key === 'Tab') {
-			event.preventDefault();
-			input = view.shell?.complete(input) ?? input;
+		if (event.key === 'Escape') {
+			field?.blur();
+		} else if (event.key === 'Tab') {
+			// Only take Tab when it completes something, so keyboard users can always move on.
+			if (event.shiftKey || !input.trim() || !view.shell) return;
+			const lastLine = view.lines.at(-1)?.id;
+			const done = view.shell.complete(input);
+			if (done !== input || view.lines.at(-1)?.id !== lastLine) {
+				event.preventDefault();
+				input = done;
+			}
 		} else if (event.key === 'ArrowUp' && history.length) {
 			event.preventDefault();
 			back = back < 0 ? history.length - 1 : Math.max(0, back - 1);

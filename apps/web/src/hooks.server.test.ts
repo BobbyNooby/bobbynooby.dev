@@ -9,10 +9,23 @@ vi.mock('$lib/db/mongo', () => ({ startMongoDB }));
 vi.mock('$lib/utils/permissions', () => ({
 	resolvePermissions: async () => ({ isAdmin: false, canShorten: false })
 }));
-vi.mock('./auth', () => ({ handle: () => {} }));
-// sequence() needs SvelteKit's request store; test the site's own handler directly.
+type Handler = (input: {
+	event: RequestEvent;
+	resolve: (event: RequestEvent) => unknown;
+}) => unknown;
+
+vi.mock('./auth', () => ({ handle: (({ event, resolve }) => resolve(event)) satisfies Handler }));
+// The real sequence() needs SvelteKit's request store, so chain the handlers by hand.
 vi.mock('@sveltejs/kit/hooks', () => ({
-	sequence: (...handlers: unknown[]) => handlers.at(-1)
+	sequence:
+		(...handlers: Handler[]): Handler =>
+		({ event, resolve }) => {
+			const run = (i: number, e: RequestEvent): unknown =>
+				i === handlers.length
+					? resolve(e)
+					: handlers[i]({ event: e, resolve: (next) => run(i + 1, next) });
+			return run(0, event);
+		}
 }));
 
 let ipCounter = 0;
@@ -116,5 +129,29 @@ describe('mongo connect', () => {
 		);
 		await handle({ event: makeEvent('/', '/'), resolve });
 		expect(startMongoDB).toHaveBeenCalledTimes(2);
+	});
+});
+
+describe('auth callbackUrl', () => {
+	it('answers 400 for a callbackUrl that is not http(s)', async () => {
+		const handle = await loadHandle();
+		for (const query of [
+			'callbackUrl=javascript:alert(1)',
+			'callbackUrl=data:text/html,hi',
+			'callbackUrl=%2F&callbackUrl=javascript:alert(1)'
+		]) {
+			const res = await handle({ event: makeEvent(`/auth/signin?${query}`, null), resolve });
+			expect(res.status, query).toBe(400);
+		}
+		expect(resolve).not.toHaveBeenCalled();
+	});
+
+	it('lets same-site and http(s) callbackUrls through to Auth.js', async () => {
+		const handle = await loadHandle();
+		for (const callbackUrl of ['/', '/customize', 'https://bobbynooby.dev/shorten']) {
+			const path = `/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+			const res = await handle({ event: makeEvent(path, null), resolve });
+			expect(res.status, callbackUrl).toBe(200);
+		}
 	});
 });

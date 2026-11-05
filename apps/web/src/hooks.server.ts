@@ -1,6 +1,6 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import { dev } from '$app/environment';
-import { json } from '@sveltejs/kit';
+import { json, type Handle } from '@sveltejs/kit';
 import { startMongoDB } from '$lib/db/mongo';
 import { resolvePermissions } from '$lib/utils/permissions';
 import { createTokenBucket } from '@bobbynooby/shared';
@@ -31,7 +31,31 @@ const apiBuckets = new Map<
 	{ bucket: ReturnType<typeof createTokenBucket>; seen: number }
 >();
 
-export const handle = sequence(authHandle, async ({ event, resolve }) => {
+// Same test Auth.js applies, which answers a failure with a 500. Auth.js reads
+// the last callbackUrl when there are several, so every one is checked.
+const isHttpCallbackUrl = (url: string, origin: string) => {
+	try {
+		return /^https?:$/.test(new URL(url, url.startsWith('/') ? origin : undefined).protocol);
+	} catch {
+		return false;
+	}
+};
+
+const rejectBadCallbackUrl: Handle = ({ event, resolve }) => {
+	const callbackUrls = event.url.searchParams.getAll('callbackUrl');
+	if (
+		event.url.pathname.startsWith('/auth/') &&
+		!callbackUrls.every((url) => isHttpCallbackUrl(url, event.url.origin))
+	) {
+		return json(
+			{ message: 'invalid callbackUrl' },
+			{ status: 400, headers: { 'Content-Security-Policy': csp } }
+		);
+	}
+	return resolve(event);
+};
+
+export const handle = sequence(rejectBadCallbackUrl, authHandle, async ({ event, resolve }) => {
 	if (dev) {
 		// Dev-only bypass: the OAuth round-trip is unreliable on the local dev
 		// server (cross-site cookies). `dev` is baked in at build time, so this

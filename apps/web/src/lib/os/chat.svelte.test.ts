@@ -1,10 +1,54 @@
 import { describe, expect, it, vi } from 'vitest';
 import { memoryStorage } from '$lib/bsh/testing';
 
-vi.mock('$lib/utils/liveSocket', () => ({ createLiveSocket: vi.fn() }));
+const socket = { open: true, send: vi.fn(), close: vi.fn(), isOpen: () => socket.open };
+vi.mock('$lib/utils/liveSocket', () => ({ createLiveSocket: vi.fn(() => socket) }));
 vi.mock('$lib/utils/playAudio', () => ({ playAudio: vi.fn() }));
 
-const { loadUsername } = await import('./chat.svelte');
+const { ChatState, loadUsername } = await import('./chat.svelte');
+
+function startedChat() {
+	socket.open = true;
+	socket.send.mockReset();
+	const chat = new ChatState();
+	chat.start();
+	return chat;
+}
+
+describe('ChatState.send', () => {
+	it('sends through the socket when it is open', () => {
+		const chat = startedChat();
+		expect(chat.send('bob', 'hi')).toBe('sent');
+		expect(socket.send).toHaveBeenCalledWith(JSON.stringify({ name: 'bob', message: 'hi' }));
+	});
+
+	it('reports offline instead of dropping the message silently', () => {
+		const chat = startedChat();
+		socket.open = false;
+		expect(chat.send('bob', 'hi')).toBe('offline');
+		expect(socket.send).not.toHaveBeenCalled();
+	});
+
+	it('stops at the same rate the server allows: 5, then one every 2s', () => {
+		const chat = startedChat();
+		const results = Array.from({ length: 6 }, () => chat.send('bob', 'hi'));
+		expect(results).toEqual(['sent', 'sent', 'sent', 'sent', 'sent', 'too-fast']);
+		expect(socket.send).toHaveBeenCalledTimes(5);
+	});
+
+	it('rejects a message the server would refuse', () => {
+		const chat = startedChat();
+		expect(chat.send('bob', 'x'.repeat(5000))).toBe('invalid');
+		expect(socket.send).not.toHaveBeenCalled();
+	});
+
+	it('tells the chat box why a message did not go', () => {
+		const chat = startedChat();
+		socket.open = false;
+		chat.submit('hello');
+		expect(chat.messages.at(-1)?.message).toBe('/Chat is reconnecting. Try again in a moment.');
+	});
+});
 
 describe('loadUsername', () => {
 	it('keeps a saved name, capped at 24 characters', () => {

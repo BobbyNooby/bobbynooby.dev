@@ -77,6 +77,9 @@ export type DirNode = {
 export type FsNode = FileNode | DirNode;
 
 // The only way the shell touches the page.
+/** What happened to a chat message: say only claims it was sent when it was. */
+export type ChatSendResult = 'sent' | 'offline' | 'too-fast' | 'invalid';
+
 export type ShellCtx = {
 	print(line: Line): void;
 	clear(): void;
@@ -84,7 +87,7 @@ export type ShellCtx = {
 	showCat(category: string): void;
 	openWindow(win: Win): void;
 	openLink(href: string): void;
-	sendChat(user: string, msg: string): void;
+	sendChat(user: string, msg: string): ChatSendResult;
 	rename(user: string): void;
 	toast(text: string): void;
 	honked(count: number): void;

@@ -1,8 +1,9 @@
 import type { StorageLike } from '$lib/bsh/achievements';
+import type { ChatSendResult } from '$lib/bsh/types';
 import type { ChatMessage } from '$lib/types';
 import { createLiveSocket, type LiveSocket } from '$lib/utils/liveSocket';
 import { playAudio } from '$lib/utils/playAudio';
-import { chatIntakeSchema } from '@bobbynooby/shared';
+import { chatIntakeSchema, createTokenBucket } from '@bobbynooby/shared';
 
 const STARTERS = [
 	'Welcome to the chat! Use /username to change your username.',
@@ -17,6 +18,12 @@ const system = (message: string): ChatMessage => ({
 });
 
 const MAX_NAME = 24;
+
+const SEND_NOTES: Record<Exclude<ChatSendResult, 'sent'>, string> = {
+	offline: '/Chat is reconnecting. Try again in a moment.',
+	'too-fast': 'Slow down: chat takes 5 messages, then one every 2 seconds.',
+	invalid: 'That message is too long to send.'
+};
 const guest = () => `Guest_${Math.floor(1000 + Math.random() * 9000)}`;
 
 // The saved chat name, capped like the shell's (old chat boxes allowed any length).
@@ -46,6 +53,8 @@ export class ChatState {
 	username = $state('Guest');
 	#ws: LiveSocket | null = null;
 	#lastSent = { name: '', message: '' };
+	// Same limits as the server's bucket, so a message it would drop is reported here.
+	#bucket = createTokenBucket({ capacity: 5, refillPerSecond: 0.5 });
 
 	start(): () => void {
 		this.username = loadUsername(browserStorage());
@@ -74,14 +83,18 @@ export class ChatState {
 		const [command, ...rest] = text.split(/\s+/);
 		if (command === '/username') return this.rename(rest.join(' '));
 		if (command.startsWith('/')) return this.note(`Command ${command} not found`);
-		this.send(this.username, text);
+		const result = this.send(this.username, text);
+		if (result !== 'sent') this.note(SEND_NOTES[result]);
 	}
 
-	send(name: string, message: string) {
+	send(name: string, message: string): ChatSendResult {
 		const check = chatIntakeSchema.safeParse({ name, message });
-		if (!check.success) return this.note('That message is too long to send.');
+		if (!check.success) return 'invalid';
+		if (!this.#ws?.isOpen()) return 'offline';
+		if (!this.#bucket.tryTake()) return 'too-fast';
 		this.#lastSent = check.data;
-		this.#ws?.send(JSON.stringify(check.data));
+		this.#ws.send(JSON.stringify(check.data));
+		return 'sent';
 	}
 
 	rename(name: string) {

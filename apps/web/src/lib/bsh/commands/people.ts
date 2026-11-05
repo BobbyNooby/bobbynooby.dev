@@ -1,7 +1,14 @@
 import { CHAT_MAX_MESSAGE_LENGTH, chatIntakeSchema } from '@bobbynooby/shared';
+import type { ChatSendResult } from '../types';
 import type { Command, CommandTable, ShellEnv } from './types';
 
 export const MAX_USERNAME = 24;
+
+const SAY_FAILED: Record<Exclude<ChatSendResult, 'sent'>, string> = {
+	offline: 'say: /Chat is reconnecting. try again in a moment.',
+	'too-fast': 'say: slow down. /Chat takes 5 messages, then one every 2 seconds.',
+	invalid: 'say: that message cannot be sent.'
+};
 
 /** The honk, shared by the command, sudo honk and the cat logo. 10 opens .secrets/. */
 export function honk(env: ShellEnv) {
@@ -47,7 +54,8 @@ const say: Command = (env, { arg }) => {
 			'#ef4444'
 		);
 	}
-	env.ctx.sendChat(env.st.user, arg);
+	const result = env.ctx.sendChat(env.st.user, arg);
+	if (result !== 'sent') return env.print(SAY_FAILED[result], '#ef4444');
 	env.print('(sent to /Chat)', '#9ca3af');
 	return env.unlock('say');
 };

@@ -5,7 +5,7 @@ import fixtureJson from './fixtures/site-data.json';
 import { pathOf } from './fs';
 import { snakeBoard, type Point } from './games/snake';
 import type { Rng } from './rng';
-import type { BshData, Line, PaneKey, ShellCtx } from './types';
+import type { BshData, ChatSendResult, Line, PaneKey, ShellCtx } from './types';
 
 export const fixture = fixtureJson as unknown as BshData;
 
@@ -14,6 +14,8 @@ export type RecordOptions = {
 	showCd?: boolean;
 	runTab?: boolean;
 	untilDone?: boolean;
+	// What the chat socket reports for say (default: sent).
+	chat?: ChatSendResult;
 };
 export type GoldenCase = RecordOptions & { id: string; cmds: string[]; lines: Line[] };
 
@@ -69,7 +71,11 @@ function recorder(data: BshData, o: RecordOptions, storage: StorageLike) {
 					' window'
 			),
 		openLink: (href) => fx('opens ' + href.replace(/^https?:\/\/(www\.)?/, '') + ' in a new tab'),
-		sendChat: (user, msg) => fx('shows up in /Chat as <' + user + '> ' + msg),
+		sendChat: (user, msg) => {
+			const result = o.chat ?? 'sent';
+			if (result === 'sent') fx('shows up in /Chat as <' + user + '> ' + msg);
+			return result;
+		},
 		rename: () => {},
 		toast: () => {},
 		honked: () => {},

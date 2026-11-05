@@ -4,6 +4,8 @@ import { PUBLIC_WEBSOCKET_BASE_URL } from '$env/static/public';
 export type LiveSocket = {
 	send: (data: string) => void;
 	close: () => void;
+	// Whether a send right now would go out (send drops data while reconnecting).
+	isOpen: () => boolean;
 };
 
 const MAX_BACKOFF_MS = 30_000;
@@ -22,7 +24,7 @@ export function createLiveSocket<T>(
 	onOpen?: () => void
 ): LiveSocket {
 	if (!browser) {
-		return { send: () => {}, close: () => {} };
+		return { send: () => {}, close: () => {}, isOpen: () => false };
 	}
 
 	let ws: WebSocket | null = null;
@@ -58,6 +60,7 @@ export function createLiveSocket<T>(
 		send: (data: string) => {
 			if (ws?.readyState === WebSocket.OPEN) ws.send(data);
 		},
+		isOpen: () => ws?.readyState === WebSocket.OPEN,
 		close: () => {
 			closed = true;
 			if (retryTimer) clearTimeout(retryTimer);

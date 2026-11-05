@@ -71,7 +71,10 @@ describe('createShell', () => {
 		const sent: string[] = [];
 		const ctx = {
 			print: (l: { t: string }[]) => lines.push(l.map((s) => s.t).join('')),
-			sendChat: (user: string) => sent.push(user)
+			sendChat: (user: string) => {
+				sent.push(user);
+				return 'sent' as const;
+			}
 		};
 		const sh = createShell(
 			new Proxy(ctx, { get: (t, k) => (t as never)[k] ?? (() => {}) }) as never,

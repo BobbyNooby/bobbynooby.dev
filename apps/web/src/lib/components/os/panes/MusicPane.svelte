@@ -21,11 +21,19 @@
 
 <Pane pane="music" title="/Music" label="Music" program="cava">
 	<div class="mus">
-		<div class="art" aria-hidden="true">
+		<!-- A mouse/touch shortcut only: keyboard and screen readers already get "open track" below. -->
+		<a
+			class="art"
+			href={safeHref(song.songUrl)}
+			target="_blank"
+			rel="noopener noreferrer"
+			tabindex="-1"
+			aria-hidden="true"
+		>
 			{#if song.albumImageUrl}
 				<img src={song.albumImageUrl} alt="" />
 			{/if}
-		</div>
+		</a>
 		<div class="meta">
 			<span style:color={song.isPlaying ? '#4ade80' : '#9ca3af'}>{label}</span>
 			<span class="w">{song.title}</span>

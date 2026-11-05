@@ -30,6 +30,15 @@ describe('issues', () => {
 		const project = { uid: 1, title: '', description: '', href: 'ftp://x' };
 		expect(issues(projectSchema, project)).toEqual(new Set(['title', 'href']));
 	});
+
+	it('rejects whitespace-only link labels, project titles and tile labels', () => {
+		const link = { uid: 1, label: '   ', href: 'https://x.dev', color: 'red' };
+		const project = { uid: 1, title: '\t ', description: '', href: 'https://x.dev' };
+		const entry = { uid: 1, id: 245, label: '  ', bobscore: 0.9 };
+		expect(issues(linkSchema, link)).toEqual(new Set(['label']));
+		expect(issues(projectSchema, project)).toEqual(new Set(['title']));
+		expect(entrySchema.safeParse(entry).success).toBe(false);
+	});
 });
 
 describe('link and project hrefs', () => {

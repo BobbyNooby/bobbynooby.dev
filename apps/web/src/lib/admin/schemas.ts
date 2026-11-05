@@ -10,6 +10,12 @@ const href = z
 	.string()
 	.max(2048)
 	.refine((value) => safeHref(value) != null);
+// A whitespace-only name would show nothing on the site.
+const name = (max: number) =>
+	z
+		.string()
+		.max(max)
+		.refine((value) => value.trim() !== '');
 const hexOrColorName = /^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)$/;
 const safeListLabel = /^[a-zA-Z0-9 _-]+$/;
 const decimalText = z
@@ -21,14 +27,14 @@ const decimalText = z
 // from the payload by zod's default key filtering.
 export const linkSchema = z.object({
 	uid: z.number().int(),
-	label: z.string().min(1).max(100),
+	label: name(100),
 	href,
 	color: z.string().max(64).regex(hexOrColorName)
 });
 
 export const projectSchema = z.object({
 	uid: z.number().int(),
-	title: z.string().min(1).max(200),
+	title: name(200),
 	description: z.string().max(5000),
 	href
 });
@@ -40,7 +46,7 @@ export const projectSchema = z.object({
 export const entrySchema = z.object({
 	uid: z.number().int(),
 	id: z.union([z.string(), z.number()]).refine((id) => toAnilistId(id) != null),
-	label: z.string().min(1).max(200),
+	label: name(200),
 	review: z.string().max(10000).optional(),
 	bobscore: z.union([z.number(), decimalText]).pipe(z.number().min(0).max(1))
 });
@@ -65,12 +71,7 @@ export function idFromInput(text: string): string | number {
 	return toAnilistId(text) ?? text;
 }
 
-/**
- * A 3x3 entry's problems. Stricter than the server in one place: a blank
- * label passes min(1) but shows nothing on the tile.
- */
+/** A 3x3 entry's problems. */
 export function entryIssues(entry: z.input<typeof entrySchema>): Set<string> {
-	const found = issues(entrySchema, entry);
-	if (String(entry.label).trim() === '') found.add('label');
-	return found;
+	return issues(entrySchema, entry);
 }

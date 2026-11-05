@@ -16,4 +16,8 @@ describe('csp', () => {
 			expect(section).toContain('https://fonts.cdnfonts.com');
 		}
 	});
+
+	it('stops other sites from framing any page', () => {
+		expect(csp.split('; ')).toContain("frame-ancestors 'none'");
+	});
 });

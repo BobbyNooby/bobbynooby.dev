@@ -1,5 +1,6 @@
 // Baseline CSP: allows inline scripts/styles (SvelteKit hydration), remote
 // images/media, websocket connections, and the Spotify/Twitch embeds only.
+// No page may be framed by another site (clickjacking on /customize, /shorten).
 export const csp = [
 	"default-src 'self'",
 	"script-src 'self' 'unsafe-inline'",
@@ -8,5 +9,6 @@ export const csp = [
 	"img-src 'self' https:",
 	"media-src 'self' https:",
 	"connect-src 'self' wss:",
-	'frame-src https://open.spotify.com https://player.twitch.tv'
+	'frame-src https://open.spotify.com https://player.twitch.tv',
+	"frame-ancestors 'none'"
 ].join('; ');

@@ -2,7 +2,7 @@
 	import type { CustomizeState } from '$lib/admin/customize.svelte';
 	import { issues, projectSchema } from '$lib/admin/schemas';
 	import { sortable } from '$lib/admin/sortable';
-	import { flushSync } from 'svelte';
+	import { dragOptions, moveKeepingFocus } from './reorder';
 	import { flip } from 'svelte/animate';
 	import { cubicOut } from 'svelte/easing';
 	import { SvelteSet } from 'svelte/reactivity';
@@ -17,12 +17,6 @@
 	function toggle(uid: number) {
 		if (opened.has(uid)) opened.delete(uid);
 		else opened.add(uid);
-	}
-
-	function moveKeepingFocus(event: MouseEvent, from: number, to: number) {
-		const button = event.currentTarget as HTMLButtonElement;
-		flushSync(() => cz.move(cz.projects, from, to));
-		button.focus();
 	}
 
 	function add() {
@@ -42,19 +36,7 @@
 	</div>
 	<div class="pbody">
 		<p class="hint">click a project to edit it · drag ⠿ to reorder</p>
-		<ul
-			class="cz-rows"
-			use:sortable={{
-				item: '.cz-row',
-				handle: '.cz-grip',
-				onmove: (from, to) => cz.projects.swapOrder(from, to),
-				onstart: (uid) => (cz.dragUid = uid),
-				ondrop: (uid) => {
-					cz.dragUid = null;
-					cz.flash(uid);
-				}
-			}}
-		>
+		<ul class="cz-rows" use:sortable={dragOptions(cz, cz.projects)}>
 			{#each cz.projects.items as project, i (project.uid)}
 				{@const bad = issues(projectSchema, project)}
 				{@const open = opened.has(project.uid) || bad.size > 0}
@@ -82,14 +64,14 @@
 							type="button"
 							class="cz-ib mv"
 							disabled={i === 0}
-							onclick={(e) => moveKeepingFocus(e, i, i - 1)}
+							onclick={(e) => moveKeepingFocus(cz, cz.projects, e, i, i - 1)}
 							aria-label="Move {project.title} up">↑</button
 						>
 						<button
 							type="button"
 							class="cz-ib mv"
 							disabled={i === cz.projects.items.length - 1}
-							onclick={(e) => moveKeepingFocus(e, i, i + 1)}
+							onclick={(e) => moveKeepingFocus(cz, cz.projects, e, i, i + 1)}
 							aria-label="Move {project.title} down">↓</button
 						>
 						<button

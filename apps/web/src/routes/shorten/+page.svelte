@@ -6,6 +6,7 @@
 	import { navigating, page } from '$app/state';
 	import type { PageServerData } from './$types';
 	import DiscordLoginBall from '$lib/components/auth/DiscordLoginBall.svelte';
+	import NoAccess from '$lib/components/auth/NoAccess.svelte';
 	import { SignOut } from '@auth/sveltekit/components';
 	import GenericButton from '$lib/components/ui/GenericButton.svelte';
 
@@ -126,18 +127,7 @@
 				{/if}
 			</div>
 		{:else}
-			<div class="flex h-screen flex-col items-center justify-center overflow-hidden text-center">
-				<p class="font-cascadia-code bouncy-animation text-3xl">
-					NAH BRUH you aint got the perms bruh GETCHO ASS OUTTA HERE <span class="emoji-font"
-						>🗣🗣🗣🔥🔥🔥💯💯🤣🤣🤣🫵🫵🫵🫵</span
-					>
-				</p>
-				<SignOut
-					><div slot="submitButton" class="buttonPrimary">
-						<GenericButton text={'Sign Out'} extraClasses={'text-2xl m-10'} />
-					</div></SignOut
-				>
-			</div>
+			<NoAccess text="NAH BRUH you aint got the perms bruh GETCHO ASS OUTTA HERE" />
 		{/if}
 	{:else}
 		<DiscordLoginBall />

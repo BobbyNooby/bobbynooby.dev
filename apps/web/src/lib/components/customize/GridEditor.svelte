@@ -3,6 +3,7 @@
 	import { entryIssues } from '$lib/admin/schemas';
 	import { toTen } from '$lib/admin/score';
 	import { sortable } from '$lib/admin/sortable';
+	import { dragOptions } from './reorder';
 	import { getGreenRedColorFromScore } from '$lib/utils/getGreenRedColorFromScore';
 	import { flip } from 'svelte/animate';
 	import { cubicOut } from 'svelte/easing';
@@ -67,46 +68,42 @@
 		</p>
 		<div class="cz-g3">
 			{#key cat}
-				<div
-					class="cz-grid"
-					use:sortable={{
-						item: '.cz-tile',
-						handle: '.cz-tgrip',
-						mouseAnywhere: true,
-						onmove: (from, to) => group?.entries.swapOrder(from, to),
-						onstart: (uid) => (cz.dragUid = uid),
-						ondrop: (uid) => {
-							cz.dragUid = null;
-							cz.flash(uid);
-						}
-					}}
-				>
-					{#each entries as e, i (e.uid)}
-						{@const c = covers[String(e.id)]}
-						<button
-							type="button"
-							class="cz-tile"
-							class:sel={e.uid === entry?.uid}
-							class:bad={entryIssues(e).size > 0}
-							class:extra={i >= 9}
-							class:flash={cz.flashUid === e.uid}
-							data-uid={e.uid}
-							aria-pressed={e.uid === entry?.uid}
-							title={i >= 9 ? 'only the first 9 show on the site' : e.label}
-							onclick={() => (selected = e.uid)}
-							animate:flip={{ duration: cz.dragUid === e.uid ? 0 : 260, easing: cubicOut }}
-							in:scale={{ start: 0.9, duration: 200 }}
-							out:scale={{ start: 0.9, duration: 160 }}
-						>
-							{#if c}<img src={c.cover} alt="" loading="lazy" />{/if}
-							<span class="sc" style:color={getGreenRedColorFromScore(e.bobscore * 100)}
-								>{toTen(e.bobscore)}</span
+				{#if group}
+					<div
+						class="cz-grid"
+						use:sortable={dragOptions(cz, group.entries, {
+							item: '.cz-tile',
+							handle: '.cz-tgrip',
+							mouseAnywhere: true
+						})}
+					>
+						{#each entries as e, i (e.uid)}
+							{@const c = covers[String(e.id)]}
+							<button
+								type="button"
+								class="cz-tile"
+								class:sel={e.uid === entry?.uid}
+								class:bad={entryIssues(e).size > 0}
+								class:extra={i >= 9}
+								class:flash={cz.flashUid === e.uid}
+								data-uid={e.uid}
+								aria-pressed={e.uid === entry?.uid}
+								title={i >= 9 ? 'only the first 9 show on the site' : e.label}
+								onclick={() => (selected = e.uid)}
+								animate:flip={{ duration: cz.dragUid === e.uid ? 0 : 260, easing: cubicOut }}
+								in:scale={{ start: 0.9, duration: 200 }}
+								out:scale={{ start: 0.9, duration: 160 }}
 							>
-							<span class="cap">{e.label}</span>
-							<span class="cz-tgrip" aria-hidden="true">⠿</span>
-						</button>
-					{/each}
-				</div>
+								{#if c}<img src={c.cover} alt="" loading="lazy" />{/if}
+								<span class="sc" style:color={getGreenRedColorFromScore(e.bobscore * 100)}
+									>{toTen(e.bobscore)}</span
+								>
+								<span class="cap">{e.label}</span>
+								<span class="cz-tgrip" aria-hidden="true">⠿</span>
+							</button>
+						{/each}
+					</div>
+				{/if}
 			{/key}
 
 			{#if entry && group}

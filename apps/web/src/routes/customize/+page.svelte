@@ -4,15 +4,14 @@
 	import { page } from '$app/state';
 	import { CustomizeState } from '$lib/admin/customize.svelte';
 	import DiscordLoginBall from '$lib/components/auth/DiscordLoginBall.svelte';
-	import GenericButton from '$lib/components/ui/GenericButton.svelte';
-	import GridPane from '$lib/components/customize/GridPane.svelte';
-	import LinksPane from '$lib/components/customize/LinksPane.svelte';
-	import ProjectsPane from '$lib/components/customize/ProjectsPane.svelte';
+	import NoAccess from '$lib/components/auth/NoAccess.svelte';
+	import GridEditor from '$lib/components/customize/GridEditor.svelte';
+	import LinksEditor from '$lib/components/customize/LinksEditor.svelte';
+	import ProjectsEditor from '$lib/components/customize/ProjectsEditor.svelte';
 	import SaveControls from '$lib/components/customize/SaveControls.svelte';
-	import SteamPane from '$lib/components/customize/SteamPane.svelte';
+	import SteamEditor from '$lib/components/customize/SteamEditor.svelte';
 	import '$lib/components/customize/customize.css';
 	import '$lib/components/os/os.css';
-	import { SignOut } from '@auth/sveltekit/components';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import { SvelteSet } from 'svelte/reactivity';
 	import { fly } from 'svelte/transition';
@@ -129,13 +128,13 @@
 
 		<main class="cz-main">
 			{#if tab === 'links'}
-				<LinksPane {cz} />
+				<LinksEditor {cz} />
 			{:else if tab === 'projects'}
-				<ProjectsPane {cz} />
+				<ProjectsEditor {cz} />
 			{:else if tab === 'grid'}
-				<GridPane {cz} covers={data.covers} />
+				<GridEditor {cz} covers={data.covers} />
 			{:else}
-				<SteamPane
+				<SteamEditor
 					games={data.steam.games}
 					lastRefresh={data.steam.lastRefresh}
 					{hidden}
@@ -181,36 +180,7 @@
 		</dialog>
 	</div>
 {:else if page.data.session}
-	<div class="flex h-screen flex-col items-center justify-center overflow-hidden text-center">
-		<p class="font-cascadia-code bouncy-animation text-3xl">
-			NAH BRUH you aint the admin bruh GETCHO ASS OUTTA HERE <span class="emoji-font"
-				>🗣🗣🗣🔥🔥🔥💯💯🤣🤣🤣🫵🫵🫵🫵</span
-			>
-		</p>
-		<SignOut
-			><div slot="submitButton" class="buttonPrimary">
-				<GenericButton text={'Sign Out'} extraClasses={'text-2xl m-10'} />
-			</div></SignOut
-		>
-	</div>
+	<NoAccess text="NAH BRUH you aint the admin bruh GETCHO ASS OUTTA HERE" />
 {:else}
 	<DiscordLoginBall />
 {/if}
-
-<style>
-	.bouncy-animation {
-		animation: bouncy 1s linear infinite;
-	}
-
-	@keyframes bouncy {
-		0% {
-			transform: scale(0.5, 0.5);
-		}
-		50% {
-			transform: scale(1, 1);
-		}
-		100% {
-			transform: scale(0.5, 0.5);
-		}
-	}
-</style>

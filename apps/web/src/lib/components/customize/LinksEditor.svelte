@@ -3,20 +3,13 @@
 	import type { CustomizeState } from '$lib/admin/customize.svelte';
 	import { issues, linkSchema } from '$lib/admin/schemas';
 	import { sortable } from '$lib/admin/sortable';
+	import { dragOptions, moveKeepingFocus } from './reorder';
 	import { flushSync } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { cubicOut } from 'svelte/easing';
 	import { fly, scale } from 'svelte/transition';
 
 	let { cz }: { cz: CustomizeState } = $props();
-
-	// Moving a row re-inserts its node, which drops focus; put it back so the
-	// same key press can keep moving the row.
-	function moveKeepingFocus(event: MouseEvent, from: number, to: number) {
-		const button = event.currentTarget as HTMLButtonElement;
-		flushSync(() => cz.move(cz.links, from, to));
-		button.focus();
-	}
 
 	function add() {
 		const uid = cz.links.createNew({ label: 'New_Link', href: 'https://', color: '#FFFFFF' });
@@ -32,19 +25,7 @@
 	</div>
 	<div class="pbody">
 		<p class="hint">drag ⠿ to reorder · the swatch opens a colour picker</p>
-		<ul
-			class="cz-rows"
-			use:sortable={{
-				item: '.cz-row',
-				handle: '.cz-grip',
-				onmove: (from, to) => cz.links.swapOrder(from, to),
-				onstart: (uid) => (cz.dragUid = uid),
-				ondrop: (uid) => {
-					cz.dragUid = null;
-					cz.flash(uid);
-				}
-			}}
-		>
+		<ul class="cz-rows" use:sortable={dragOptions(cz, cz.links)}>
 			{#each cz.links.items as link, i (link.uid)}
 				{@const bad = issues(linkSchema, link)}
 				<li
@@ -88,14 +69,14 @@
 							type="button"
 							class="cz-ib mv"
 							disabled={i === 0}
-							onclick={(e) => moveKeepingFocus(e, i, i - 1)}
+							onclick={(e) => moveKeepingFocus(cz, cz.links, e, i, i - 1)}
 							aria-label="Move {link.label} up">↑</button
 						>
 						<button
 							type="button"
 							class="cz-ib mv"
 							disabled={i === cz.links.items.length - 1}
-							onclick={(e) => moveKeepingFocus(e, i, i + 1)}
+							onclick={(e) => moveKeepingFocus(cz, cz.links, e, i, i + 1)}
 							aria-label="Move {link.label} down">↓</button
 						>
 						<button

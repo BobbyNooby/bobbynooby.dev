@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { CustomizeState } from '$lib/admin/customize.svelte';
-	import { entryIssues } from '$lib/admin/schemas';
+	import { entryIssues, idFromInput } from '$lib/admin/schemas';
 	import { toTen } from '$lib/admin/score';
 	import { sortable } from '$lib/admin/sortable';
 	import { dragOptions } from './reorder';
@@ -40,9 +40,8 @@
 		if (group && entry) cz.move(group.entries, index, to);
 	}
 
-	// AniList ids are numbers; keep them numeric so an untouched id does not show as a change.
 	function setId(text: string) {
-		if (entry) entry.id = /^\d+$/.test(text) ? Number(text) : text;
+		if (entry) entry.id = idFromInput(text);
 	}
 </script>
 

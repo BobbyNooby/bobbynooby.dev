@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { CustomizeState } from './customize.svelte';
 import { parsePayload } from './parsePayload';
-import { linkSchema, listSchema, projectSchema } from './schemas';
+import { idFromInput, linkSchema, listSchema, projectSchema } from './schemas';
 
 const data = () => ({
 	links: [
@@ -35,6 +35,14 @@ describe('CustomizeState', () => {
 		cz.links.items[1].href = 'twitch.tv/b';
 		cz.grid.groups[0].entries.items[0].id = '';
 		expect(cz.problems).toBe(2);
+	});
+
+	it('retyping a legacy number id as the same digits is not a change', () => {
+		const cz = new CustomizeState(data());
+		const entry = cz.grid.groups[0].entries.items[0];
+		entry.id = idFromInput('24');
+		entry.id = idFromInput('245');
+		expect(cz.unsaved).toBe(0);
 	});
 
 	it('remove offers an undo that puts the row back', () => {

@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { entryIssues, issues, linkSchema, listSchema, projectSchema } from './schemas';
+import {
+	entryIssues,
+	entrySchema,
+	idFromInput,
+	issues,
+	linkSchema,
+	listSchema,
+	projectSchema
+} from './schemas';
 
 describe('issues', () => {
 	it('is empty for a valid link', () => {
@@ -23,11 +31,42 @@ describe('issues', () => {
 	});
 });
 
-describe('entryIssues', () => {
-	it('flags an empty AniList id even though the server would take it', () => {
-		expect(entryIssues({ uid: 1, id: '', label: 'GTO', bobscore: 0.9 })).toEqual(new Set(['id']));
+describe('3x3 AniList id', () => {
+	const entry = (id: string | number) => ({ uid: 1, id, label: 'GTO', bobscore: 0.9 });
+
+	it.each(['', 'abc', '-5', '+5', '1.5', ' 123', '123 ', '0x10', '1e5', '0', '2147483648'])(
+		'rejects %j on the server and in the editor',
+		(id) => {
+			expect(entrySchema.safeParse(entry(id)).success).toBe(false);
+			expect(entryIssues(entry(id))).toEqual(new Set(['id']));
+		}
+	);
+
+	it('rejects a 20-digit id instead of rounding it', () => {
+		expect(entryIssues(entry('99999999999999999999'))).toEqual(new Set(['id']));
 	});
 
+	it('accepts digit strings and legacy integer ids in range', () => {
+		for (const id of ['1', '245', '2147483647', 245, 2147483647]) {
+			expect(entryIssues(entry(id))).toEqual(new Set());
+		}
+	});
+
+	it('rejects legacy number ids that are not ids', () => {
+		for (const id of [0, -5, 1.5, 2147483648, NaN]) {
+			expect(entryIssues(entry(id))).toEqual(new Set(['id']));
+		}
+	});
+
+	it('stores typed digits as a number only when nothing is lost', () => {
+		expect(idFromInput('245')).toBe(245);
+		expect(idFromInput('99999999999999999999')).toBe('99999999999999999999');
+		expect(idFromInput('1e5')).toBe('1e5');
+		expect(idFromInput('')).toBe('');
+	});
+});
+
+describe('entryIssues', () => {
 	it('flags an empty label and a score that is not a number', () => {
 		expect(entryIssues({ uid: 1, id: 245, label: ' ', bobscore: NaN })).toEqual(
 			new Set(['label', 'bobscore'])

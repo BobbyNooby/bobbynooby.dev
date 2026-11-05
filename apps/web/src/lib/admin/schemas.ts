@@ -1,3 +1,4 @@
+import { toAnilistId } from '$lib/anilist/anilistId';
 import { z } from 'zod';
 
 // The save rules for /customize. The server enforces them; the editor runs the
@@ -28,7 +29,7 @@ export const projectSchema = z.object({
 // review is absent on most legacy rows, so it stays optional.
 export const entrySchema = z.object({
 	uid: z.number().int(),
-	id: z.union([z.string().max(200), z.number()]),
+	id: z.union([z.string(), z.number()]).refine((id) => toAnilistId(id) != null),
 	label: z.string().min(1).max(200),
 	review: z.string().max(10000).optional(),
 	bobscore: z.coerce.number()
@@ -47,13 +48,19 @@ export function issues(schema: z.ZodType, row: unknown): Set<string> {
 }
 
 /**
- * A 3x3 entry's problems. Stricter than the server in two places: an empty
- * AniList id would save a tile that can never load, and a blank label passes
- * min(1) but shows nothing on the tile.
+ * What the id field stores for typed text: a number when it is a valid id, so
+ * retyping a legacy number id is not a change, else the text as typed.
+ */
+export function idFromInput(text: string): string | number {
+	return toAnilistId(text) ?? text;
+}
+
+/**
+ * A 3x3 entry's problems. Stricter than the server in one place: a blank
+ * label passes min(1) but shows nothing on the tile.
  */
 export function entryIssues(entry: z.input<typeof entrySchema>): Set<string> {
 	const found = issues(entrySchema, entry);
-	if (String(entry.id).trim() === '') found.add('id');
 	if (String(entry.label).trim() === '') found.add('label');
 	if (Number.isNaN(Number(entry.bobscore))) found.add('bobscore');
 	return found;

@@ -85,6 +85,8 @@ export type Shell = {
 	unlock(key: AchKey): void;
 	honk(): void;
 	promptText(): string;
+	// A rename made outside the shell (the chat box), so both share one name.
+	setUser(name: string): void;
 	readonly state: {
 		cwd: string[];
 		history: string[];
@@ -443,6 +445,10 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		unlock,
 		honk,
 		promptText,
+		setUser: (name: string) => {
+			const clean = name.trim().slice(0, MAX_USERNAME);
+			if (clean) st.user = clean;
+		},
 		get state() {
 			return { cwd: st.cwd, history: st.history, user: st.user, mode: st.mode };
 		}

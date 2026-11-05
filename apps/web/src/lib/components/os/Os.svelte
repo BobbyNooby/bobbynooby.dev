@@ -60,10 +60,13 @@
 	let waited = $state(false);
 	let root = $state<HTMLDivElement>();
 
-	// A rename in the chat box or the shell updates the name on our cursor.
+	// One name everywhere: a rename in the chat box or the shell reaches the other and our cursor.
 	$effect(() => {
-		void chat.username;
-		untrack(() => presence.hello());
+		const name = chat.username;
+		untrack(() => {
+			presence.hello();
+			view.setUser(name);
+		});
 	});
 
 	function pointer(event: PointerEvent) {

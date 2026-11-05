@@ -247,6 +247,12 @@ export class ShellView {
 		this.shell?.honk();
 	}
 
+	setUser(name: string) {
+		if (!this.shell || this.shell.state.user === name) return;
+		this.shell.setUser(name);
+		this.#sync();
+	}
+
 	unlock(key: Parameters<Shell['unlock']>[0]) {
 		this.shell?.unlock(key);
 	}

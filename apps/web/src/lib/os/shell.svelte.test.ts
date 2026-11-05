@@ -108,4 +108,12 @@ describe('ShellView', () => {
 		const { view } = setup();
 		expect(view.snakeKey(key('ArrowUp'))).toBe(false);
 	});
+
+	it('follows a rename made in the chat box', () => {
+		const { view, chat } = setup();
+		view.setUser('Neo');
+		expect(view.prompt).toBe('neo@bobbynooby.dev:~$');
+		view.run('say hi');
+		expect(chat.send).toHaveBeenCalledWith('Neo', 'hi');
+	});
 });

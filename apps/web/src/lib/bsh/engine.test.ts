@@ -1,6 +1,7 @@
 import { CHAT_MAX_MESSAGE_LENGTH } from '@bobbynooby/shared';
 import { describe, expect, it } from 'vitest';
-import { ACH } from './achievements';
+import { ACH, createAchievementStore } from './achievements';
+import { createShell } from './engine';
 import { bar } from './format';
 import goldenJson from './fixtures/golden.json';
 import { fixture, memoryStorage, record, runOn, textOf, type GoldenCase } from './testing';
@@ -63,5 +64,28 @@ describe('createShell', () => {
 		);
 		expect(out).not.toContain('shows up in /Chat');
 		expect(out).not.toContain('(sent to /Chat)');
+	});
+
+	it('takes a rename made outside the shell, capped like username', () => {
+		const lines: string[] = [];
+		const sent: string[] = [];
+		const ctx = {
+			print: (l: { t: string }[]) => lines.push(l.map((s) => s.t).join('')),
+			sendChat: (user: string) => sent.push(user)
+		};
+		const sh = createShell(
+			new Proxy(ctx, { get: (t, k) => (t as never)[k] ?? (() => {}) }) as never,
+			{
+				data: fixture,
+				user: 'Guest_1',
+				store: createAchievementStore(memoryStorage())
+			}
+		);
+		sh.setUser('Neo');
+		sh.run('say hi');
+		expect(sent).toEqual(['Neo']);
+		expect(sh.promptText()).toBe('neo@bobbynooby.dev:~$');
+		sh.setUser('x'.repeat(40));
+		expect(sh.state.user).toHaveLength(24);
 	});
 });

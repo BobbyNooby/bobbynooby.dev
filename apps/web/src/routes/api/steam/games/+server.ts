@@ -1,4 +1,4 @@
-import { getSteamGames, steamConfigured } from '$lib/steam/steamCache';
+import { getSteamGamesWithDetails, steamConfigured } from '$lib/steam/steamCache';
 import { json } from '@sveltejs/kit';
 
 export async function GET(): Promise<Response> {
@@ -8,7 +8,7 @@ export async function GET(): Promise<Response> {
 	}
 	try {
 		return json(
-			{ success: true, configured, games: await getSteamGames() },
+			{ success: true, configured, games: await getSteamGamesWithDetails() },
 			{ headers: { 'Cache-Control': 'no-store' } }
 		);
 	} catch (err) {

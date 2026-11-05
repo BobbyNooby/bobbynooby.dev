@@ -3,7 +3,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 const findOne = vi.fn();
 const updateOne = vi.fn();
 const deleteMany = vi.fn();
-const collection = vi.fn(() => ({ findOne, updateOne, deleteMany }));
+const find = vi.fn();
+const collection = vi.fn(() => ({ findOne, updateOne, deleteMany, find }));
 
 vi.mock('$lib/db/mongo', () => ({ db: { collection } }));
 vi.mock('$env/dynamic/private', () => ({
@@ -13,14 +14,20 @@ vi.mock('$env/dynamic/private', () => ({
 const getHiddenAppids = vi.fn(async () => new Set<number>());
 vi.mock('$lib/db/siteConfig', () => ({ getHiddenAppids }));
 
-const { getSteamGames, getAllSteamGames, getSteamGameDetails, isStale, LIST_TTL_MS } = await import(
-	'./steamCache'
-);
+const {
+	getSteamGames,
+	getAllSteamGames,
+	getSteamGameDetails,
+	getSteamGamesWithDetails,
+	isStale,
+	LIST_TTL_MS
+} = await import('./steamCache');
 
 afterEach(() => {
 	findOne.mockReset();
 	updateOne.mockReset();
 	deleteMany.mockReset();
+	find.mockReset();
 	getHiddenAppids.mockClear();
 	vi.unstubAllGlobals();
 });
@@ -178,5 +185,51 @@ describe('getSteamGameDetails', () => {
 		});
 		vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('down')));
 		await expect(getSteamGameDetails(555)).resolves.toMatchObject({ name: 'Cached' });
+	});
+});
+
+describe('getSteamGamesWithDetails', () => {
+	const details = {
+		appid: 1,
+		name: 'G',
+		description: '',
+		short: '',
+		headerImage: null,
+		releaseDate: '1 Jan, 2020',
+		genres: ['RPG'],
+		achievements: { unlocked: 3, total: 10 }
+	};
+
+	it('adds cached details, stale or not, without asking Steam', async () => {
+		const fetchMock = vi.fn();
+		vi.stubGlobal('fetch', fetchMock);
+		getHiddenAppids.mockResolvedValue(new Set());
+		findOne.mockResolvedValue({
+			key: 'games',
+			fetchedAt: new Date(),
+			games: [
+				{ appid: 1, name: 'G', img_icon_url: 'a', playtime_forever: 120 },
+				{ appid: 2, name: 'H', img_icon_url: 'b', playtime_forever: 60 }
+			]
+		});
+		find.mockReturnValue({
+			toArray: async () => [{ appid: 1, fetchedAt: new Date(0), details }]
+		});
+		const games = await getSteamGamesWithDetails(16);
+		expect(games[0]).toMatchObject({
+			appid: 1,
+			genres: ['RPG'],
+			releaseDate: '1 Jan, 2020',
+			achievements: { unlocked: 3, total: 10 }
+		});
+		expect(games[1]).toMatchObject({ appid: 2, genres: [], releaseDate: null, achievements: null });
+		expect(find).toHaveBeenCalledWith({ appid: { $in: [1, 2] } }, expect.anything());
+		expect(fetchMock).not.toHaveBeenCalled();
+	});
+
+	it('skips the details query when there are no games', async () => {
+		findOne.mockResolvedValue({ key: 'games', fetchedAt: new Date(), games: [] });
+		await expect(getSteamGamesWithDetails(16)).resolves.toEqual([]);
+		expect(find).not.toHaveBeenCalled();
 	});
 });

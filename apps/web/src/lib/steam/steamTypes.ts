@@ -27,3 +27,10 @@ export type OwnedGameRaw = {
 	playtime_forever: number;
 	rtime_last_played?: number;
 };
+
+// A list entry plus whatever details are already cached; never triggers a Store fetch.
+export type SteamGameListItem = SteamGameSummary & {
+	genres: string[];
+	releaseDate: string | null;
+	achievements: SteamAchievementCount | null;
+};

@@ -2,7 +2,12 @@ import { env } from '$env/dynamic/private';
 import { db } from '$lib/db/mongo';
 import { getHiddenAppids } from '$lib/db/siteConfig';
 import { mapAchievements, mapAppDetails, mapOwnedGames } from './steamTransforms';
-import type { OwnedGameRaw, SteamGameDetails, SteamGameSummary } from './steamTypes';
+import type {
+	OwnedGameRaw,
+	SteamGameDetails,
+	SteamGameListItem,
+	SteamGameSummary
+} from './steamTypes';
 
 export const LIST_TTL_MS = 6 * 60 * 60 * 1000;
 export const DETAILS_TTL_MS = 24 * 60 * 60 * 1000;
@@ -58,6 +63,25 @@ export async function getSteamGames(topN = 16): Promise<SteamGameSummary[]> {
 	const all = await readGamesList();
 	const hidden = await getHiddenAppids();
 	return all.filter((game) => game.hours > 0 && !hidden.has(game.appid)).slice(0, topN);
+}
+
+export async function getSteamGamesWithDetails(topN = 16): Promise<SteamGameListItem[]> {
+	const games = await getSteamGames(topN);
+	if (!games.length) return [];
+	const docs = await db
+		.collection<DetailsCacheDoc>(DETAILS_COLLECTION)
+		.find({ appid: { $in: games.map((g) => g.appid) } }, { projection: { _id: 0 } })
+		.toArray();
+	const byId = new Map(docs.map((d) => [d.appid, d.details]));
+	return games.map((game) => {
+		const d = byId.get(game.appid);
+		return {
+			...game,
+			genres: d?.genres ?? [],
+			releaseDate: d?.releaseDate ?? null,
+			achievements: d?.achievements ?? null
+		};
+	});
 }
 
 export async function getAllSteamGames(): Promise<SteamGameSummary[]> {

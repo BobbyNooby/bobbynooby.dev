@@ -21,6 +21,9 @@ export class Presence {
   // Every open /presence socket, with the bucket that rate-limits its cursor.
   sockets = new Map<WebSocket, TokenBucket>();
   sentVersion = this.registry.version();
+  // Sockets that have said hello, refused ones included. Until then we cannot
+  // tell which cursor is the visitor's own (from another tab), so they get nothing.
+  greeted = new WeakSet<WebSocket>();
 
   constructor() {
     setInterval(() => this.broadcast(), BROADCAST_INTERVAL_MS);
@@ -32,8 +35,6 @@ export class Presence {
       ws,
       createTokenBucket({ capacity: 20, refillPerSecond: 12 }),
     );
-    // Nothing changed for anyone else, so the next tick would skip this socket.
-    this.send(ws);
   }
 
   removeWebSocket(ws: WebSocket) {
@@ -58,6 +59,9 @@ export class Presence {
       if (!this.registry.hello(ws, message.id, message.name)) {
         consoleBob("[Presence] hello refused: too many ids from one address");
       }
+      this.greeted.add(ws);
+      // Answer at once rather than on the next tick.
+      this.send(ws);
     } else if (message.t === "cur") {
       if (this.sockets.get(ws)?.tryTake() !== true) return;
       this.registry.move(ws, message.pane, message.x, message.y, Date.now());
@@ -77,7 +81,7 @@ export class Presence {
   }
 
   send(ws: WebSocket) {
-    if (ws.readyState === WebSocket.OPEN) {
+    if (ws.readyState === WebSocket.OPEN && this.greeted.has(ws)) {
       ws.send(JSON.stringify(this.registry.stateFor(ws)));
     }
   }

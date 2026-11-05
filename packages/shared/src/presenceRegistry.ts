@@ -25,7 +25,9 @@ const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 
 export function createPresenceRegistry<S>({
   maxIdsPerIp = 8,
-  cursorTtlMs = 10_000,
+  // Long enough to read a page without nudging the mouse; leaving the page or
+  // switching tabs takes the cursor down at once, so this only clears walk-aways.
+  cursorTtlMs = 300_000,
   publicId = (id: string) => id,
 }: {
   maxIdsPerIp?: number;

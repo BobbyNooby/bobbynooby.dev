@@ -83,17 +83,17 @@ describe("createPresenceRegistry", () => {
     expect(reg.stateFor("viewer").cursors.map((c) => c.id)).toEqual([idFor(2)]);
   });
 
-  it("drops a cursor after 10s idle but still counts the visitor", () => {
+  it("keeps a still cursor for 5 minutes, then drops it but still counts the visitor", () => {
     const reg = createPresenceRegistry<string>();
     reg.connect("a", IP);
     reg.connect("viewer", OTHER_IP);
     reg.hello("a", idFor(1), "bob");
     reg.move("a", "games", 0.2, 0.3, 1_000);
 
-    reg.expire(10_999);
+    reg.expire(301_000 - 1);
     expect(reg.stateFor("viewer").cursors).toHaveLength(1);
 
-    reg.expire(11_000);
+    reg.expire(301_000);
     expect(reg.stateFor("viewer").cursors).toEqual([]);
     expect(reg.here()).toBe(1);
   });
@@ -266,7 +266,7 @@ describe("createPresenceRegistry", () => {
       reg.move("a", "chat", 0.5, 0.5, 0);
       reg.expire(0);
       changed();
-      reg.expire(10_000);
+      reg.expire(300_000);
       expect(changed()).toBe(true);
       reg.disconnect("a");
       expect(changed()).toBe(true);

@@ -174,6 +174,7 @@
 	class:phos={os.phosphor}
 	bind:this={root}
 	onpointermove={pointer}
+	onpointerleave={(event) => event.pointerType !== 'touch' && presence.leave()}
 	role="presentation"
 >
 	<Boot />

@@ -92,6 +92,11 @@ export class PresenceState {
 		this.#send({ t: 'cur', pane, x, y });
 	}
 
+	// The pointer left the page: take the cursor down instead of leaving it parked at the edge.
+	leave() {
+		if (this.share) this.#send({ t: 'hide' });
+	}
+
 	setShare(on: boolean) {
 		this.share = on;
 		writeFlag('presence:share', on);

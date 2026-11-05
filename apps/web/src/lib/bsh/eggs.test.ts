@@ -152,3 +152,15 @@ describe('fortune', () => {
 		expect(out.at(-1)).toEqual([{ t: 'no fortunes yet.' }]);
 	});
 });
+
+describe('catsay', () => {
+	it('answers to cowsay too, in any case', () => {
+		const said = runOn(fixture, ['catsay hi']).slice(1);
+		expect(textOf(said)).toContain('< hi >');
+		expect(runOn(fixture, ['  COWSAY   hi ']).slice(1)).toEqual(said);
+	});
+
+	it('says honk with no message', () => {
+		expect(textOf(runOn(fixture, ['catsay']))).toContain('< honk >');
+	});
+});

@@ -31,6 +31,17 @@
 		if (finePointer()) field?.focus({ preventScroll: true });
 	}
 
+	// Pad taps keep the keyboard on the input, so arrow keys still steer afterwards.
+	function steer(dir: [number, number]) {
+		view.snakeTurn(dir);
+		if (finePointer()) field?.focus({ preventScroll: true });
+	}
+
+	function quitSnake() {
+		view.snakeQuit();
+		if (finePointer()) field?.focus({ preventScroll: true });
+	}
+
 	function submit(event: SubmitEvent) {
 		event.preventDefault();
 		back = -1;
@@ -82,15 +93,15 @@
 	<div class="out" bind:this={out} role="log" aria-live="polite">
 		{#each view.lines as line (line.id)}
 			{#if line.kind === 'snake'}
-				<div class="snake">{line.segs[0]?.t}</div>
+				<div class="snake" aria-hidden="true">{line.segs[0]?.t}</div>
 			{:else if line.kind === 'pad'}
 				<div class="snakepad">
 					{#each PAD as [label, dir, name] (name)}
-						<button type="button" aria-label="Snake {name}" onclick={() => view.snakeTurn(dir)}
+						<button type="button" aria-label="Snake {name}" onclick={() => steer(dir)}
 							>{label}</button
 						>
 					{/each}
-					<button type="button" onclick={() => view.snakeQuit()}>quit</button>
+					<button type="button" onclick={() => quitSnake()}>quit</button>
 				</div>
 			{:else}
 				<div>

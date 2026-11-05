@@ -9,6 +9,7 @@ import {
 import { consoleBob } from "../utils";
 
 const BROADCAST_INTERVAL_MS = 100;
+const MAX_BUFFERED_BYTES = 1024 * 1024;
 
 export class Presence {
   // Others see a salted hash, so nobody can read a visitor's id off the wire
@@ -18,8 +19,9 @@ export class Presence {
     publicId: (id) =>
       createHash("sha256").update(this.salt).update(id).digest("base64url").slice(0, 16),
   });
-  // Every open /presence socket, with the bucket that rate-limits its cursor.
-  sockets = new Map<WebSocket, TokenBucket>();
+  // Every open /presence socket, with the buckets that rate-limit its cursor
+  // and its hellos (each hello is answered with the full state).
+  sockets = new Map<WebSocket, { cursor: TokenBucket; hello: TokenBucket }>();
   sentVersion = this.registry.version();
   // Sockets that have said hello, refused ones included. Until then we cannot
   // tell which cursor is the visitor's own (from another tab), so they get nothing.
@@ -31,10 +33,10 @@ export class Presence {
 
   addWebSocket(ws: WebSocket, ip: string) {
     this.registry.connect(ws, ip);
-    this.sockets.set(
-      ws,
-      createTokenBucket({ capacity: 20, refillPerSecond: 12 }),
-    );
+    this.sockets.set(ws, {
+      cursor: createTokenBucket({ capacity: 20, refillPerSecond: 12 }),
+      hello: createTokenBucket({ capacity: 5, refillPerSecond: 1 }),
+    });
   }
 
   removeWebSocket(ws: WebSocket) {
@@ -54,6 +56,7 @@ export class Presence {
     const message = parsed.data;
 
     if (message.t === "hello") {
+      if (this.sockets.get(ws)?.hello.tryTake() !== true) return;
       // A refused socket stays open as an uncounted viewer, so a busy shared
       // network still sees everyone instead of reconnecting in a loop.
       if (!this.registry.hello(ws, message.id, message.name)) {
@@ -63,7 +66,7 @@ export class Presence {
       // Answer at once rather than on the next tick.
       this.send(ws);
     } else if (message.t === "cur") {
-      if (this.sockets.get(ws)?.tryTake() !== true) return;
+      if (this.sockets.get(ws)?.cursor.tryTake() !== true) return;
       this.registry.move(ws, message.pane, message.x, message.y, Date.now());
     } else {
       this.registry.hide(ws);
@@ -81,8 +84,9 @@ export class Presence {
   }
 
   send(ws: WebSocket) {
-    if (ws.readyState === WebSocket.OPEN && this.greeted.has(ws)) {
-      ws.send(JSON.stringify(this.registry.stateFor(ws)));
-    }
+    if (ws.readyState !== WebSocket.OPEN || !this.greeted.has(ws)) return;
+    // A client that stopped reading would otherwise queue state in our memory.
+    if (ws.bufferedAmount > MAX_BUFFERED_BYTES) return;
+    ws.send(JSON.stringify(this.registry.stateFor(ws)));
   }
 }

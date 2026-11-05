@@ -63,12 +63,22 @@ async function handleConnection(ws: WebSocket, req: IncomingMessage) {
 
   const subroute = req.url;
 
-  // Presence needs no session. Wiring it up before the await below means the
-  // hello a client sends on open never arrives before there is a listener.
+  // Only chat needs the session. Wiring presence up before the await below
+  // means the hello a client sends on open never arrives before there is a
+  // listener.
   if (subroute === "/presence") {
     attachPresence(ws, clientIp, presence);
     return;
   }
+  if (subroute === "/discord") {
+    await attachDiscord(ws, discordBot);
+    return;
+  }
+  if (subroute === "/spotify") {
+    await attachSpotify(ws, spotifyClient);
+    return;
+  }
+  if (subroute !== "/chat") return;
 
   const session = await getSession(convertReq(req, app), authConfig);
   // Closed during the lookup: its close event has passed, so nothing would remove it.
@@ -81,16 +91,12 @@ async function handleConnection(ws: WebSocket, req: IncomingMessage) {
   const sessionId = session?.user?.id || "skibiditoiletmoment";
   const bucketKey = session?.user?.id || clientIp;
 
-  if (subroute === "/discord") await attachDiscord(ws, discordBot);
-  if (subroute === "/spotify") await attachSpotify(ws, spotifyClient);
-  if (subroute === "/chat") {
-    await attachChat(ws, chat, {
-      sessionId,
-      name: session?.user?.name ?? undefined,
-      chatLimits,
-      bucketKey,
-    });
-  }
+  await attachChat(ws, chat, {
+    sessionId,
+    name: session?.user?.name ?? undefined,
+    chatLimits,
+    bucketKey,
+  });
 }
 
 wss.on("connection", (ws, req) => {

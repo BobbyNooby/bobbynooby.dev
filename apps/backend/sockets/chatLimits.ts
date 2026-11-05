@@ -8,8 +8,9 @@ export type ChatEntry = {
 };
 
 // Per-identity chat rate limiting: 5 messages instantly, then one every 2s.
-// Authed users are keyed by session id, guests by socket address; entries
-// idle for over 5 minutes are evicted on each connect to bound the map.
+// Authed users are keyed by session id, guests by socket address. Looked up on
+// every message, so all of a visitor's sockets share the entry in the map;
+// entries idle for over 5 minutes are evicted to bound it.
 export function createChatLimits() {
   const chatBuckets = new Map<string, ChatEntry>();
 
@@ -35,3 +36,5 @@ export function createChatLimits() {
 
   return { entryFor };
 }
+
+export type ChatLimits = ReturnType<typeof createChatLimits>;

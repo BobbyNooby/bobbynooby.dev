@@ -79,9 +79,7 @@ async function handleConnection(ws: WebSocket, req: IncomingMessage) {
   );
 
   const sessionId = session?.user?.id || "skibiditoiletmoment";
-  // Every page connect refreshes the visitor's chat bucket, not only /chat.
   const bucketKey = session?.user?.id || clientIp;
-  const chatEntry = chatLimits.entryFor(bucketKey);
 
   if (subroute === "/discord") await attachDiscord(ws, discordBot);
   if (subroute === "/spotify") await attachSpotify(ws, spotifyClient);
@@ -89,7 +87,7 @@ async function handleConnection(ws: WebSocket, req: IncomingMessage) {
     await attachChat(ws, chat, {
       sessionId,
       name: session?.user?.name ?? undefined,
-      chatEntry,
+      chatLimits,
       bucketKey,
     });
   }

@@ -4,7 +4,7 @@ import type { DiscordBot } from "../modules/discord";
 import type { Presence } from "../modules/presence";
 import type { SpotifyClient } from "../modules/spotify";
 import { consoleBob } from "../utils";
-import type { ChatEntry } from "./chatLimits";
+import type { ChatLimits } from "./chatLimits";
 
 // Bun's ws implementation does not enforce maxPayload, so the handlers that
 // read messages repeat this check.
@@ -64,11 +64,11 @@ export async function attachChat(
   opts: {
     sessionId: string;
     name: string | undefined;
-    chatEntry: ChatEntry;
+    chatLimits: ChatLimits;
     bucketKey: string;
   },
 ) {
-  const { sessionId, chatEntry, bucketKey } = opts;
+  const { sessionId, chatLimits, bucketKey } = opts;
   ws.on("close", () => {
     chat.removeWebSocket(ws);
     consoleBob("WebSocket connection to /chat closed");
@@ -76,7 +76,7 @@ export async function attachChat(
 
   ws.on("message", async (message) => {
     try {
-      if (chatEntry.bucket.tryTake() == false) {
+      if (chatLimits.entryFor(bucketKey).bucket.tryTake() == false) {
         consoleBob(`Chat rate limited: ${bucketKey}`);
         return;
       }

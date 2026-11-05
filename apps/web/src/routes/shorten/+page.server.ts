@@ -51,9 +51,10 @@ export const actions = {
 				message: shortURLResponse.error
 			});
 		} catch (err) {
+			console.error('[shorten] create failed:', err);
 			return fail(500, {
 				error: true,
-				message: err instanceof Error ? err.message : 'Unknown error occurred'
+				message: 'Failed to create short URL'
 			});
 		}
 	}

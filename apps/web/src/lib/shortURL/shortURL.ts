@@ -3,8 +3,10 @@ import { randomInt } from 'node:crypto';
 import { db } from '$lib/db/mongo';
 
 export async function createShortURL(longURL: string) {
-	if ((await db.collection('shortURLs').countDocuments({ longURL: longURL })) > 0)
-		return { success: false, error: 'Long URL already exists' };
+	const existing = await db
+		.collection<{ shortURL: string; longURL: string }>('shortURLs')
+		.findOne({ longURL: longURL });
+	if (existing) return { success: true, shortURL: existing.shortURL };
 
 	let shortURL = generateShortURL(5);
 

@@ -37,4 +37,12 @@ describe('shorten create action', () => {
 		await expect(submit('example.com', false)).resolves.toMatchObject({ status: 403 });
 		expect(createShortURL).not.toHaveBeenCalled();
 	});
+
+	it('keeps database errors out of the reply', async () => {
+		vi.spyOn(console, 'error').mockImplementation(() => {});
+		createShortURL.mockRejectedValue(new Error('E11000 duplicate key on cluster0-shard-00'));
+		const result = await submit('example.com');
+		expect(result).toMatchObject({ status: 500 });
+		expect(JSON.stringify(result)).not.toContain('E11000');
+	});
 });

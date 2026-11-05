@@ -3,6 +3,17 @@ import { record, textOf } from '../testing';
 
 const last = (cmds: string[]) => textOf(record(cmds)).split('\n').slice(1);
 
+describe('ls', () => {
+	it('shows hidden folders with any flag that has an a in it', () => {
+		const hidden = last(['ls -a']);
+		expect(hidden.join('\n')).toContain('.secrets/');
+		for (const flag of ['-al', '-la', '-A', '-lA', '--all']) {
+			expect(last(['ls ' + flag]), flag).toEqual(hidden);
+		}
+		expect(last(['ls -l']).join('\n')).not.toContain('.secrets/');
+	});
+});
+
 describe('tree', () => {
 	it('says a locked folder is locked, and counts as nosy', () => {
 		const out = last(['tree .secrets']);

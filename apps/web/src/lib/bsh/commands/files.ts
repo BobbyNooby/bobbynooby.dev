@@ -19,7 +19,8 @@ function lsLine(env: ShellEnv, node: DirNode, parts: string[], all: boolean) {
 }
 
 const ls: Command = (env, { args }) => {
-	const all = args.includes('-a') || args.includes('-la');
+	// -a, -al, -A, --all: any flag with an a shows hidden folders.
+	const all = args.some((x) => x.startsWith('-') && /a/i.test(x));
 	const target = args.filter((x) => !x.startsWith('-')).join(' ');
 	const r = env.find(target);
 	if (r.locked || env.locked(r.node)) {

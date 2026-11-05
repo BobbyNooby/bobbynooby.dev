@@ -15,7 +15,7 @@ const emptyData: BshData = {
 	threeByThree: {}
 };
 
-describe.each(['samples', 'outputs'] as const)('%s match the prototype', (group) => {
+describe.each(['samples', 'outputs', 'eggs'] as const)('%s match the prototype', (group) => {
 	it.each(golden[group].map((c) => [c.id, c] as const))('%s', (_id, c) => {
 		expect(record(c.cmds, c)).toEqual(c.lines);
 	});

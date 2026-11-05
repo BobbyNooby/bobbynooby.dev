@@ -16,6 +16,8 @@ const COLLECTION = 'anilist_media';
 const BATCH_SIZE = 12;
 
 function toMediaId(id: string | number): number | null {
+	// Number('') is 0, which would look up a media that does not exist.
+	if (String(id).trim() === '') return null;
 	const parsed = Number(id);
 	return Number.isInteger(parsed) ? parsed : null;
 }

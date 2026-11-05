@@ -1,8 +1,10 @@
 import {
   Client,
+  escapeMarkdown,
   Guild,
   GuildMember,
   IntentsBitField,
+  MessageFlags,
   TextChannel,
 } from "discord.js";
 import { DiscordStatuses } from "../types";
@@ -129,13 +131,36 @@ export class DiscordBot {
   }
 
   async sendDiscordMessage(name: string, message: string, rank: string) {
-    const parsedName = rank == "owner" ? `👑**${name}**` : name;
-    const parsedMessage = message;
+    const parsedName =
+      rank == "owner" ? `👑**${plainLine(name)}**` : plainLine(name);
+    const parsedMessage = plainLine(message);
     const sentMessage = `${parsedName} : ${parsedMessage}`;
-    // Chat text is public input, so it must never ping anyone in the log channel.
+    // Chat text is public input, so it must never ping anyone or unfurl a
+    // link preview in the log channel.
     await this.chatChannel.send({
-      content: sentMessage,
+      content: sentMessage.slice(0, DISCORD_MAX_LENGTH),
       allowedMentions: { parse: [] },
+      flags: MessageFlags.SuppressEmbeds,
     });
   }
+}
+
+// Escaping can double a message's length past Discord's limit.
+const DISCORD_MAX_LENGTH = 2000;
+
+// Public text as one literal line, so nobody can fake a crowned owner line or
+// start a second message.
+function plainLine(text: string): string {
+  const oneLine = text.replace(/\s*[\r\n\u0085\u2028\u2029]+\s*/g, " ");
+  return (
+    escapeMarkdown(oneLine, {
+      heading: true,
+      bulletedList: true,
+      numberedList: true,
+      maskedLink: true,
+    })
+      // Quotes and subtext only work at the start of a line, and
+      // escapeMarkdown leaves them alone.
+      .replace(/^[>-]/, "\\$&")
+  );
 }

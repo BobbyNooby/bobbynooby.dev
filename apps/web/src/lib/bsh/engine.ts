@@ -2,6 +2,7 @@ import { CHAT_MAX_MESSAGE_LENGTH, chatIntakeSchema } from '@bobbynooby/shared';
 import { ACH, type AchievementStore, type AchKey } from './achievements';
 import { bar } from './format';
 import { buildFs, pathOf, resolve, treeText } from './fs';
+import { fortune } from './games/fortune';
 import { gachaPull } from './games/gacha';
 import { huntTurn, startHunt } from './games/hunt';
 import { answerTrivia, startTrivia } from './games/trivia';
@@ -393,6 +394,7 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		if (c === 'hunt') return hunt();
 		if (c === 'trivia') return trivia();
 		if (c === 'gacha' || c === 'pull') return gacha();
+		if (c === 'fortune') return printAll(fortune(opts.data.threeByThree, rng));
 		print('bsh: command not found: ' + c + '. try help', '#ef4444');
 	};
 

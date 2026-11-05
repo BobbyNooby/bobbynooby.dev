@@ -141,3 +141,14 @@ describe('gacha', () => {
 		}
 	});
 });
+
+describe('fortune', () => {
+	it('quotes a 3x3 review', () => {
+		expect(textOf(runOn(fixture, [' FORTUNE ']))).toContain('   — bobby on ');
+	});
+
+	it('has no fortunes without reviews', () => {
+		const out = runOn({ ...fixture, threeByThree: {} }, ['fortune']);
+		expect(out.at(-1)).toEqual([{ t: 'no fortunes yet.' }]);
+	});
+});

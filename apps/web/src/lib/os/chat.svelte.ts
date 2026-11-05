@@ -76,17 +76,13 @@ export class ChatState {
 		return () => this.#ws?.close();
 	}
 
-	// The chat box: /username renames, any other /word is unknown, the rest is a message.
+	// The chat box: /username renames, anything else (even "/r/svelte") is a message.
 	// True when it went through, so the box only clears what was actually used.
 	submit(raw: string): boolean {
 		const text = raw.trim();
 		if (!text) return false;
 		const [command, ...rest] = text.split(/\s+/);
-		if (command === '/username') return this.rename(rest.join(' '));
-		if (command.startsWith('/')) {
-			this.note(`Command ${command} not found`);
-			return false;
-		}
+		if (command.toLowerCase() === '/username') return this.rename(rest.join(' '));
 		const result = this.send(this.username, text);
 		if (result !== 'sent') this.note(SEND_NOTES[result]);
 		return result === 'sent';

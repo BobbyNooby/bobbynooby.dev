@@ -76,6 +76,25 @@ describe('ChatState.submit', () => {
 	});
 });
 
+describe('chat box commands', () => {
+	it('takes /username in any case', () => {
+		const chat = startedChat();
+		expect(chat.submit('/Username Neo')).toBe(true);
+		expect(chat.username).toBe('Neo');
+		chat.submit('/USERNAME Trin');
+		expect(chat.username).toBe('Trin');
+		expect(socket.send).not.toHaveBeenCalled();
+	});
+
+	it('sends anything else that starts with a slash as a message', () => {
+		const chat = startedChat();
+		expect(chat.submit('/r/svelte is cool')).toBe(true);
+		expect(socket.send).toHaveBeenCalledWith(
+			JSON.stringify({ name: chat.username, message: '/r/svelte is cool' })
+		);
+	});
+});
+
 describe('loadUsername', () => {
 	it('keeps a saved name, capped at 24 characters', () => {
 		expect(loadUsername(memoryStorage({ username: 'bob' }))).toBe('bob');

@@ -215,7 +215,11 @@ export class SpotifyClient {
 
   async addWebSocket(ws: WebSocket) {
     this.websockets.add(ws);
-    this.checkCurrentSong();
+    // Not awaited, so its errors are caught here: a Spotify outage used to
+    // reject unhandled and take the whole server down.
+    this.checkCurrentSong().catch((error) =>
+      this.consoleBob(`Error checking Spotify on connect: ${error}`)
+    );
   }
 
   removeWebSocket(ws: WebSocket) {

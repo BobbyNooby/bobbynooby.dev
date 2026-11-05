@@ -23,6 +23,12 @@ import {
 
 const IS_PRODUCTION = process.env.IS_PRODUCTION === "true";
 
+// Last line of defence: Bun exits on an unhandled rejection, and one failing
+// widget (Spotify, Discord) must not take chat and presence down with it.
+process.on("unhandledRejection", (reason) => {
+  consoleBob(`Unhandled rejection: ${reason}`);
+});
+
 const app = express();
 app.set("trust proxy", true);
 app.use("/", ExpressAuth(authConfig));

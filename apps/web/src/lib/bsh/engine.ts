@@ -9,6 +9,7 @@ import { huntTurn, startHunt } from './games/hunt';
 import { nmap } from './games/nmap';
 import { slFrames } from './games/sl';
 import { answerTrivia, startTrivia } from './games/trivia';
+import { vimInput, vimSplash } from './games/vim';
 import { createMounts } from './mounts';
 import { mulberry32 } from './rng';
 import type { BshData, DirNode, FileNode, FsNode, Line, PaneKey, ShellCtx, Win } from './types';
@@ -216,6 +217,16 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		st.pulls++;
 		if (st.pulls >= 5) unlock('gacha');
 	};
+	const vim = () => {
+		printAll(vimSplash());
+		enterMode(':', (raw) => {
+			const r = vimInput(raw);
+			printAll(r.lines);
+			if (!r.quit) return;
+			unlock('vim');
+			endMode();
+		});
+	};
 
 	const run = (input: string) => {
 		const raw = input.trim();
@@ -404,6 +415,7 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 			print('sl: did you mean ls? a cat runs past instead.', '#9ca3af');
 			return ctx.animate(slFrames(), 60);
 		}
+		if (c === 'vim' || c === 'vi' || c === 'nvim') return vim();
 		print('bsh: command not found: ' + c + '. try help', '#ef4444');
 	};
 

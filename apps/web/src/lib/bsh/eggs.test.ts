@@ -174,6 +174,31 @@ describe('nmap', () => {
 	});
 });
 
+describe('vim', () => {
+	it('traps the prompt until :q, then unlocks Vim Survivor', () => {
+		const { shell, lines } = liveShell();
+		shell.run('vim');
+		expect(shell.promptText()).toBe(':');
+		shell.run('exit');
+		shell.run('ls');
+		expect(shell.promptText()).toBe(':');
+		shell.run(':q');
+		expect(shell.promptText()).toBe(PROMPT);
+		expect(textOf(lines())).toContain(
+			'you escaped vim. most people never do.\n+ achievement: Vim Survivor  ['
+		);
+		expect(shell.state.history).toEqual(['vim']);
+	});
+
+	it('answers to vi and nvim, in any case', () => {
+		for (const cmd of ['vi', 'nvim', 'VIM', '  Vi  ', 'NVim']) {
+			const { shell } = liveShell();
+			shell.run(cmd);
+			expect(shell.promptText()).toBe(':');
+		}
+	});
+});
+
 describe('sl', () => {
 	it('runs a cat past, in any case', () => {
 		for (const cmd of ['sl', ' SL ']) {

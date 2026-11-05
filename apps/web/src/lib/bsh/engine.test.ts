@@ -4,7 +4,15 @@ import { ACH, createAchievementStore } from './achievements';
 import { createShell } from './engine';
 import { bar } from './format';
 import goldenJson from './fixtures/golden.json';
-import { fixture, memoryStorage, record, runOn, textOf, type GoldenCase } from './testing';
+import {
+	fixture,
+	liveShell,
+	memoryStorage,
+	record,
+	runOn,
+	textOf,
+	type GoldenCase
+} from './testing';
 import type { BshData } from './types';
 
 const golden = goldenJson as unknown as Record<'samples' | 'outputs' | 'eggs', GoldenCase[]>;
@@ -36,6 +44,16 @@ describe('createShell', () => {
 		);
 		expect(record(['cd ~/3x3/manga/..', 'pwd']).at(-1)).toEqual([{ t: '~/3x3' }]);
 		expect(record(['  ls    -a  ']).slice(1)).toEqual(record(['ls -a']).slice(1));
+	});
+
+	it('fills in what several Tab matches share, and lists them', () => {
+		const { shell, lines } = liveShell();
+		expect(shell.complete('cat games/mon')).toBe('cat games/monster-hunter-');
+		expect(textOf(lines()).split('\n').at(-1)).toBe(
+			'monster-hunter-world.txt  monster-hunter-wilds.txt  monster-hunter-rise.txt'
+		);
+		expect(shell.complete('cat links/TW')).toBe('cat links/twit');
+		expect(shell.complete('cat links/s')).toBe('cat links/s');
 	});
 
 	it('prints (empty) for a mount with no data', () => {

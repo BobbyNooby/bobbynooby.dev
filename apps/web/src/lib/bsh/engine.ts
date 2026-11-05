@@ -158,9 +158,13 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 				n.toLowerCase().startsWith(partial) && (!isHidden(dir.kids[n]) || partial.startsWith('.'))
 		);
 		const shown = (n: string) => n + (dir.kids[n].type === 'dir' ? '/' : '');
-		if (matches.length === 1) return v.slice(0, v.length - tok.length) + base + shown(matches[0]);
-		if (matches.length > 1) print(matches.map(shown).join('  '), '#9ca3af');
-		return v;
+		const head = v.slice(0, v.length - tok.length) + base;
+		if (matches.length === 1) return head + shown(matches[0]);
+		if (matches.length < 2) return v;
+		print(matches.map(shown).join('  '), '#9ca3af');
+		let shared = matches[0];
+		for (const m of matches) while (!m.startsWith(shared)) shared = shared.slice(0, -1);
+		return shared.length > partial.length ? head + shared : v;
 	};
 
 	return {

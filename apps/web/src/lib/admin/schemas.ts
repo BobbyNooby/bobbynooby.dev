@@ -7,6 +7,10 @@ import { z } from 'zod';
 const safeHref = /^(https?:\/\/|\/)/i;
 const hexOrColorName = /^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)$/;
 const safeListLabel = /^[a-zA-Z0-9 _-]+$/;
+const decimalText = z
+	.string()
+	.regex(/^\d+(\.\d+)?$/)
+	.transform(Number);
 
 // visible is deliberately absent: it is client-only UI state and is stripped
 // from the payload by zod's default key filtering.
@@ -24,7 +28,8 @@ export const projectSchema = z.object({
 	href: z.string().min(1).max(2048).regex(safeHref)
 });
 
-// bobscore arrives as a string from the text input, hence the coercion.
+// bobscore is stored 0-1. Decimal text is still read as a number in case an
+// old row holds one, but not via coercion, which turns "", null and [] into 0.
 // id keeps whatever type the row was created with (legacy rows store numbers).
 // review is absent on most legacy rows, so it stays optional.
 export const entrySchema = z.object({
@@ -32,7 +37,7 @@ export const entrySchema = z.object({
 	id: z.union([z.string(), z.number()]).refine((id) => toAnilistId(id) != null),
 	label: z.string().min(1).max(200),
 	review: z.string().max(10000).optional(),
-	bobscore: z.coerce.number()
+	bobscore: z.union([z.number(), decimalText]).pipe(z.number().min(0).max(1))
 });
 
 export const listSchema = z.object({
@@ -62,6 +67,5 @@ export function idFromInput(text: string): string | number {
 export function entryIssues(entry: z.input<typeof entrySchema>): Set<string> {
 	const found = issues(entrySchema, entry);
 	if (String(entry.label).trim() === '') found.add('label');
-	if (Number.isNaN(Number(entry.bobscore))) found.add('bobscore');
 	return found;
 }

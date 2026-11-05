@@ -8,6 +8,7 @@ import {
 	listSchema,
 	projectSchema
 } from './schemas';
+import { fromTen } from './score';
 
 describe('issues', () => {
 	it('is empty for a valid link', () => {
@@ -73,9 +74,33 @@ describe('entryIssues', () => {
 		);
 	});
 
-	it('leaves scores above 10 alone', () => {
-		expect(entryIssues({ uid: 1, id: 85802, label: 'DG', bobscore: 6.9 }).size).toBe(0);
+	it('flags a score typed above 10 or below 0', () => {
+		for (const text of ['11', '10.5', '-1']) {
+			const entry = { uid: 1, id: 245, label: 'GTO', bobscore: fromTen(text) };
+			expect(entryIssues(entry)).toEqual(new Set(['bobscore']));
+		}
 	});
+
+	it('flags a stored score outside 0-1, like a legacy 6.9', () => {
+		expect(entryIssues({ uid: 1, id: 85802, label: 'DG', bobscore: 6.9 })).toEqual(
+			new Set(['bobscore'])
+		);
+	});
+});
+
+describe('entrySchema bobscore', () => {
+	const entry = (bobscore: unknown) => ({ uid: 1, id: 245, label: 'GTO', bobscore });
+
+	it.each([0, 0.75, 1, '0.9'])('accepts %j', (bobscore) => {
+		expect(entrySchema.safeParse(entry(bobscore)).success).toBe(true);
+	});
+
+	it.each(['', '  ', null, [], true, 1.1, -0.1, '1e-1', '0x1', NaN])(
+		'rejects a forged %j',
+		(bobscore) => {
+			expect(entrySchema.safeParse(entry(bobscore)).success).toBe(false);
+		}
+	);
 });
 
 describe('listSchema', () => {

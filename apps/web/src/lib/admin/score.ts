@@ -4,7 +4,10 @@ export function toTen(bobscore: number): string {
 	return (bobscore * 10).toFixed(1);
 }
 
+// Plain decimal text only: Number() would also take '0x10', '1e1' and '-1'.
+// The 0-10 range is left to the save rules so an 11 still shows as typed.
 export function fromTen(input: string): number {
-	if (input.trim() === '') return NaN;
-	return Math.round(Number(input) * 10) / 100;
+	const text = input.trim();
+	if (!/^\d+\.?\d*$/.test(text)) return NaN;
+	return Math.round(Number(text) * 10) / 100;
 }

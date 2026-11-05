@@ -5,7 +5,8 @@
 
 	const { live } = useOs();
 
-	const PLAYLIST = 'https://open.spotify.com/playlist/4XMKgF2w5YScCmVCaODvlC';
+	const PLAYLIST_EMBED =
+		'https://open.spotify.com/embed/playlist/4XMKgF2w5YScCmVCaODvlC?utm_source=generator&theme=0';
 	// Fixed bar shapes so the equaliser looks the same on every render.
 	const BARS = Array.from({ length: 24 }, (_, i) => ({
 		height: 30 + ((i * 37) % 70),
@@ -50,10 +51,17 @@
 			></span>
 		{/each}
 	</div>
-	<p class="np2">
-		{#if safeHref(song.songUrl)}
-			<a href={safeHref(song.songUrl)} target="_blank" rel="noopener noreferrer">open track</a> ·
-		{/if}
-		<a href={PLAYLIST} target="_blank" rel="noopener noreferrer">/Playlist</a>
-	</p>
+	{#if safeHref(song.songUrl)}
+		<p class="np2">
+			<a href={safeHref(song.songUrl)} target="_blank" rel="noopener noreferrer">open track</a>
+		</p>
+	{/if}
+	<iframe
+		class="playlist"
+		src={PLAYLIST_EMBED}
+		title="Recommended playlist"
+		height="352"
+		loading="lazy"
+		allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+	></iframe>
 </Pane>

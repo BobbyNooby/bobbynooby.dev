@@ -5,7 +5,11 @@ export const load = async () => {
 	const [links, projects, threeByThree] = await Promise.all([
 		getLinks(),
 		getProjects(),
-		loadHomeGrid()
+		// The grid is a nice-to-have; an AniList or cache hiccup shouldn't take the page down.
+		loadHomeGrid().catch((err) => {
+			console.error('[3x3] home grid failed:', err);
+			return {};
+		})
 	]);
 	return { links, projects, threeByThree };
 };

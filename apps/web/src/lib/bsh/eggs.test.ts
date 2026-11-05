@@ -164,3 +164,12 @@ describe('catsay', () => {
 		expect(textOf(runOn(fixture, ['catsay']))).toContain('< honk >');
 	});
 });
+
+describe('nmap', () => {
+	it('answers to agamoto too, and scans the target you name', () => {
+		const scan = runOn(fixture, ['nmap']).slice(1);
+		expect(textOf(scan)).toContain('the real tool: https://github.com/BobbyNooby/agamoto');
+		expect(runOn(fixture, [' AGAMOTO ']).slice(1)).toEqual(scan);
+		expect(textOf(runOn(fixture, ['Nmap  example.com']))).toContain('report for example.com');
+	});
+});

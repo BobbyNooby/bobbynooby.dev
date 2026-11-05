@@ -6,6 +6,7 @@ import { catsay } from './games/catsay';
 import { fortune } from './games/fortune';
 import { gachaPull } from './games/gacha';
 import { huntTurn, startHunt } from './games/hunt';
+import { nmap } from './games/nmap';
 import { answerTrivia, startTrivia } from './games/trivia';
 import { createMounts } from './mounts';
 import { mulberry32 } from './rng';
@@ -397,6 +398,7 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		if (c === 'gacha' || c === 'pull') return gacha();
 		if (c === 'catsay' || c === 'cowsay') return printAll(catsay(arg));
 		if (c === 'fortune') return printAll(fortune(opts.data.threeByThree, rng));
+		if (c === 'nmap' || c === 'agamoto') return printAll(nmap(arg, opts.data.projects));
 		print('bsh: command not found: ' + c + '. try help', '#ef4444');
 	};
 

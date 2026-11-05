@@ -38,12 +38,17 @@ export class SpotifyClient {
   websockets: Set<WebSocket>;
   access_token: string;
   db: Db;
+  // The song last sent to everyone, handed straight to each new socket.
+  lastSong: SpotifySongData | null;
   private interval: NodeJS.Timeout | null;
+  private firstCheck: Promise<void> | null;
 
   constructor(mongoDbClient: MongoDBClient) {
     this.websockets = new Set<WebSocket>();
     this.access_token = "";
+    this.lastSong = null;
     this.interval = null;
+    this.firstCheck = null;
     this.db = mongoDbClient.dbAtlas;
   }
 
@@ -163,7 +168,7 @@ export class SpotifyClient {
     };
 
     if (isPlaying) {
-      this.broadcast({ song: currentSong });
+      this.sendSong(currentSong);
       this.songLog(currentSong);
       await this.updateLastPlayed(currentSong);
     } else {
@@ -186,11 +191,11 @@ export class SpotifyClient {
         songUrl: lastPlayed.songUrl,
         playedAt: lastPlayed.playedAt,
       };
-      this.broadcast({ song: lastPlayedSong });
+      this.sendSong(lastPlayedSong);
       this.songLog(lastPlayedSong);
     } else {
       // Fallback to error song if nothing in DB
-      this.broadcast({ song: errorSong });
+      this.sendSong(errorSong);
       this.songLog(errorSong);
     }
   }
@@ -215,15 +220,29 @@ export class SpotifyClient {
 
   async addWebSocket(ws: WebSocket) {
     this.websockets.add(ws);
+    if (this.lastSong) {
+      ws.send(JSON.stringify({ song: this.lastSong }));
+      return;
+    }
+    // Nothing polled yet: one check, shared by every socket waiting on it.
     // Not awaited, so its errors are caught here: a Spotify outage used to
     // reject unhandled and take the whole server down.
-    this.checkCurrentSong().catch((error) =>
-      this.consoleBob(`Error checking Spotify on connect: ${error}`)
-    );
+    this.firstCheck ??= this.checkCurrentSong()
+      .catch((error) =>
+        this.consoleBob(`Error checking Spotify on connect: ${error}`)
+      )
+      .finally(() => {
+        this.firstCheck = null;
+      });
   }
 
   removeWebSocket(ws: WebSocket) {
     this.websockets.delete(ws);
+  }
+
+  sendSong(song: SpotifySongData) {
+    this.lastSong = song;
+    this.broadcast({ song });
   }
 
   broadcast(message: any) {

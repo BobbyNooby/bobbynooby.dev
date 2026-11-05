@@ -23,6 +23,12 @@ describe('presenceHelloSchema', () => {
 		expect(presenceHelloSchema.parse({ t: 'hello', id: ID, name }).name).toBe('a'.repeat(24));
 	});
 
+	it('strips invisible and direction-flipping characters from the name', () => {
+		expect(presenceHelloSchema.parse({ t: 'hello', id: ID, name: '\u202ebob\u200b' }).name).toBe(
+			'bob'
+		);
+	});
+
 	it('accepts ids of 8 and 64 url-safe characters', () => {
 		expect(presenceHelloSchema.safeParse({ t: 'hello', id: 'aB3_-xyz', name: 'b' }).success).toBe(
 			true
@@ -40,6 +46,7 @@ describe('presenceHelloSchema', () => {
 		['a non-string id', { t: 'hello', id: 12345678, name: 'bob' }],
 		['an empty name', { t: 'hello', id: ID, name: '' }],
 		['a whitespace name', { t: 'hello', id: ID, name: '   ' }],
+		['an invisible-only name', { t: 'hello', id: ID, name: '\u200b\u3164\u2800' }],
 		['a 25-character name', { t: 'hello', id: ID, name: 'a'.repeat(25) }],
 		['a missing name', { t: 'hello', id: ID }]
 	])('rejects %s', (_label, message) => {

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { cleanText } from './text';
 
 export const PANE_KEYS = [
 	'about',
@@ -19,7 +20,7 @@ export const PRESENCE_NAME_MAX_LENGTH = 24;
 export const presenceHelloSchema = z.object({
 	t: z.literal('hello'),
 	id: z.string().regex(/^[A-Za-z0-9_-]{8,64}$/),
-	name: z.string().trim().min(1).max(PRESENCE_NAME_MAX_LENGTH)
+	name: z.string().overwrite(cleanText).min(1).max(PRESENCE_NAME_MAX_LENGTH)
 });
 
 // Any finite number is accepted; the registry clamps to 0-1.

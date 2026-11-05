@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { cleanText } from './text';
 
 export { createTokenBucket, type TokenBucket } from './tokenBucket';
 export { pickForwardedIp } from './forwardedIp';
@@ -19,6 +20,7 @@ export {
 	type PresenceState
 } from './presence';
 export { createPresenceRegistry, type PresenceRegistry } from './presenceRegistry';
+export { cleanText } from './text';
 
 export type DiscordStatus = 'online' | 'idle' | 'dnd' | 'offline' | 'unknown';
 
@@ -50,8 +52,8 @@ export type ReceivedChatMessage = {
 export const CHAT_MAX_MESSAGE_LENGTH = 1900;
 
 export const chatIntakeSchema = z.object({
-	name: z.string().min(1).max(50),
-	message: z.string().min(1).max(CHAT_MAX_MESSAGE_LENGTH)
+	name: z.string().overwrite(cleanText).min(1).max(50),
+	message: z.string().overwrite(cleanText).min(1).max(CHAT_MAX_MESSAGE_LENGTH)
 });
 
 export type ChatIntake = z.infer<typeof chatIntakeSchema>;

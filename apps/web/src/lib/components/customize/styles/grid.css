@@ -1,0 +1,150 @@
+/* 3x3 */
+.cz-gtools {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 8px;
+}
+.cz-g3 {
+	display: grid;
+	grid-template-columns: 372px minmax(0, 1fr);
+	gap: 14px;
+	align-items: start;
+}
+.cz-grid {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 4px;
+}
+.cz-tile {
+	position: relative;
+	aspect-ratio: 1;
+	border: 0;
+	border-radius: 2px;
+	overflow: hidden;
+	padding: 0;
+	background: #1a1a1a;
+	color: #fff;
+	cursor: grab;
+	user-select: none;
+	-webkit-touch-callout: none;
+	font: inherit;
+}
+.cz-tile img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	pointer-events: none;
+}
+.cz-tile .cap {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 16px 6px 5px;
+	font-size: 11px;
+	line-height: 1.2;
+	text-align: left;
+	background: linear-gradient(transparent, rgba(0, 0, 0, 0.88));
+	overflow-wrap: anywhere;
+}
+.cz-tile .sc {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	padding: 0 5px;
+	border-radius: 2px;
+	background: #0a0a0a;
+	font-size: 11px;
+}
+.cz-tgrip {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 34px;
+	height: 34px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.55);
+	border-bottom-right-radius: 3px;
+	color: #d1d5db;
+	touch-action: none;
+	opacity: 0;
+}
+.cz-tile.sel {
+	outline: 3px solid #facc15;
+	outline-offset: -3px;
+}
+.cz-tile.bad {
+	outline: 3px solid #ef4444;
+	outline-offset: -3px;
+}
+.cz-tile.extra {
+	opacity: 0.4;
+}
+.cz-tile.flash {
+	animation: cz-tflash 0.7s ease-out;
+}
+@keyframes cz-tflash {
+	from {
+		outline: 3px solid #facc15;
+		outline-offset: -3px;
+	}
+}
+.cz-editor {
+	border: 1px solid #262626;
+	border-radius: 3.2px;
+	padding: 10px;
+	display: grid;
+	grid-template-columns: 110px minmax(0, 1fr);
+	gap: 10px 14px;
+	align-items: start;
+}
+.cz-cover {
+	display: block;
+	width: 110px;
+	aspect-ratio: 0.7;
+	object-fit: cover;
+	border-radius: 2px;
+	background: #1a1a1a;
+}
+.cz-editor h3 {
+	margin: 0 0 2px;
+	font-size: 16px;
+	font-weight: 400;
+	color: #facc15;
+}
+.cz-efields {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 6px 8px;
+}
+.cz-efields .full {
+	grid-column: 1 / -1;
+}
+.cz-efields textarea.in {
+	min-height: 120px;
+}
+.cz-eacts {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	align-items: end;
+	justify-content: flex-end;
+}
+.cz-scorebar {
+	height: 6px;
+	margin-top: 6px;
+	border-radius: 3px;
+	background: #262626;
+	overflow: hidden;
+}
+.cz-scorebar i {
+	display: block;
+	height: 100%;
+}

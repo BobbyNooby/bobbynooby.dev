@@ -1,0 +1,127 @@
+/* Touch grips, then tablet (900px) and phone (640px) layouts. */
+@media (hover: hover) {
+	.cz-tile:hover .cz-tgrip {
+		opacity: 1;
+	}
+}
+@media (pointer: coarse) {
+	.cz-tgrip {
+		opacity: 1;
+	}
+}
+
+/* Tablets and narrow windows: the 3x3 editor drops under the grid, and the hex
+   box goes (the swatch still shows and picks the colour). */
+@media (max-width: 900px) {
+	.cz-g3 {
+		grid-template-columns: minmax(0, 420px);
+	}
+	.cz-link {
+		grid-template-columns: 22px 30px 170px minmax(0, 1fr) auto;
+		grid-template-areas: 'grip sw label href acts';
+	}
+	.cz-hex {
+		display: none;
+	}
+	.cz-sum .t {
+		flex-basis: 200px;
+	}
+}
+
+@media (max-width: 640px) {
+	.os.cz {
+		padding: 8px;
+	}
+	.cz-g3 {
+		grid-template-columns: 1fr;
+	}
+	.os.cz .bar {
+		position: static;
+		gap: 8px;
+	}
+	.cz-crumb,
+	.cz-right .cz-save {
+		display: none;
+	}
+	.cz .ws {
+		order: 3;
+		width: 100%;
+		overflow-x: auto;
+	}
+	.cz .in {
+		min-height: 40px;
+	}
+	.cz-ib {
+		min-width: 40px;
+		min-height: 40px;
+	}
+	.cz-link {
+		grid-template-columns: 22px 34px minmax(0, 1fr) auto;
+		grid-template-areas: 'grip sw label acts' 'grip . href href';
+	}
+	.cz-swatch {
+		width: 34px;
+		height: 40px;
+	}
+	.cz-hex,
+	.cz-acts .mv {
+		display: none;
+	}
+	.cz-sum {
+		flex-direction: column;
+		gap: 0;
+	}
+	.cz-sum .t {
+		flex: none;
+		max-width: 100%;
+	}
+	.cz-sum .caret {
+		display: none;
+	}
+	.cz-ed,
+	.cz-efields {
+		grid-template-columns: 1fr;
+	}
+	.cz-g3 {
+		grid-template-columns: 1fr;
+	}
+	.cz-editor {
+		grid-template-columns: 80px minmax(0, 1fr);
+	}
+	.cz-cover {
+		width: 80px;
+	}
+	.cz-stools .in {
+		width: 100%;
+	}
+	.cz-stools form {
+		margin-left: 0;
+	}
+	.cz-games {
+		grid-template-columns: 1fr;
+	}
+	.cz-mbar {
+		position: sticky;
+		bottom: 0;
+		z-index: 6;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin: 0 -8px -8px;
+		padding: 8px;
+		background: #0a0a0a;
+		border-top: 2px solid #fff;
+	}
+	.cz-mbar .cz-dirty {
+		margin-right: auto;
+		white-space: normal;
+	}
+	.cz-mbar .btn {
+		min-height: 44px;
+	}
+	.cz-toasts {
+		left: 12px;
+		right: 12px;
+		bottom: 76px;
+	}
+}

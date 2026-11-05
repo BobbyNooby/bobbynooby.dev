@@ -1,0 +1,161 @@
+/* rows (links, projects) */
+.cz-rows {
+	position: relative;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.cz-row {
+	display: grid;
+	align-items: center;
+	gap: 6px 8px;
+	padding: 4px 6px;
+	border: 1px solid #262626;
+	border-radius: 3.2px;
+	background: #0d0d0d;
+}
+.cz-row.flash {
+	animation: cz-flash 0.7s ease-out;
+}
+@keyframes cz-flash {
+	from {
+		border-color: #facc15;
+		background: #1f1a05;
+	}
+}
+.cz-row.dragging,
+.cz-tile.dragging {
+	position: relative;
+	z-index: 4;
+	pointer-events: none;
+	border-color: #facc15;
+	box-shadow:
+		0 10px 24px rgba(0, 0, 0, 0.7),
+		0 0 0 2px #facc15;
+}
+.cz-grip {
+	grid-area: grip;
+	align-self: stretch;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: grab;
+	color: #6b6b6b;
+	touch-action: none;
+	user-select: none;
+	font-size: 16px;
+	line-height: 1;
+}
+.cz-grip:hover {
+	color: #facc15;
+}
+.cz-swatch {
+	grid-area: sw;
+	width: 30px;
+	height: 30px;
+	padding: 0;
+	border: 1px solid #4a4a4a;
+	border-radius: 3.2px;
+	background: none;
+	cursor: pointer;
+}
+.cz-swatch::-webkit-color-swatch-wrapper {
+	padding: 3px;
+}
+.cz-swatch::-webkit-color-swatch {
+	border: 0;
+	border-radius: 2px;
+}
+.cz-swatch::-moz-color-swatch {
+	border: 0;
+	border-radius: 2px;
+}
+.cz-hex {
+	grid-area: hex;
+}
+.cz-label {
+	grid-area: label;
+}
+.cz-href {
+	grid-area: href;
+}
+.cz-acts {
+	grid-area: acts;
+	display: flex;
+	gap: 4px;
+}
+.cz-ib {
+	min-width: 32px;
+	min-height: 32px;
+	border: 1px solid #333;
+	border-radius: 3.2px;
+	background: none;
+	color: #9ca3af;
+	cursor: pointer;
+}
+.cz-ib:hover:not(:disabled) {
+	color: #f5f5f5;
+	border-color: #f5f5f5;
+}
+.cz-ib.del:hover {
+	color: #ef4444;
+	border-color: #ef4444;
+}
+.cz-ib:disabled {
+	opacity: 0.3;
+	cursor: default;
+}
+.cz-link {
+	grid-template-columns: 22px 30px 92px 190px minmax(0, 1fr) auto;
+	grid-template-areas: 'grip sw hex label href acts';
+}
+.cz-project {
+	grid-template-columns: 22px minmax(0, 1fr) auto;
+	grid-template-areas: 'grip sum acts' '. ed ed';
+}
+.cz-sum {
+	grid-area: sum;
+	display: flex;
+	gap: 16px;
+	align-items: baseline;
+	min-width: 0;
+	border: 0;
+	background: none;
+	color: inherit;
+	text-align: left;
+	padding: 6px 0;
+	cursor: pointer;
+	font: inherit;
+}
+.cz-sum .t {
+	flex: 0 0 260px;
+	color: #facc15;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.cz-sum .u {
+	color: #9ca3af;
+	font-size: 13px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.cz-sum .caret {
+	margin-left: auto;
+	color: #6b6b6b;
+	white-space: nowrap;
+}
+.cz-ed {
+	grid-area: ed;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 6px 8px;
+	padding: 2px 0 6px;
+}
+.cz-ed .full {
+	grid-column: 1 / -1;
+}

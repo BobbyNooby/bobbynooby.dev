@@ -56,6 +56,15 @@ describe('createShell', () => {
 		expect(shell.complete('cat links/s')).toBe('cat links/s');
 	});
 
+	it('does not Tab-complete folder names in the command slot', () => {
+		const { shell, lines } = liveShell();
+		const before = lines().length;
+		expect(shell.complete('pro')).toBe('pro');
+		expect(shell.complete('  m')).toBe('  m');
+		expect(lines().length).toBe(before);
+		expect(shell.complete('cd pro')).toBe('cd projects/');
+	});
+
 	it('prints (empty) for a mount with no data', () => {
 		expect(textOf(runOn(emptyData, ['ls games']))).toContain('(empty)');
 	});

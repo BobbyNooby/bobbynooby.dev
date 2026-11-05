@@ -147,6 +147,8 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 
 	const complete = (v: string) => {
 		const tok = /(\S*)$/.exec(v)![1];
+		// The first word is a command, and folder names aren't commands.
+		if (!v.slice(0, v.length - tok.length).trim()) return v;
 		const cut = tok.lastIndexOf('/') + 1;
 		const base = tok.slice(0, cut);
 		const partial = tok.slice(cut).toLowerCase();

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { toTen } from '$lib/admin/score';
 	import type { GeneralMedia } from '$lib/media/mediaTypes';
 	import { getGreenRedColorFromScore } from '$lib/utils/getGreenRedColorFromScore';
 
@@ -59,7 +60,7 @@
 		<div class=" mt-5 space-y-4">
 			<p class="text-3xl md:text-5xl">BobStats™</p>
 			<p style="color: {getGreenRedColorFromScore(media.bobStats.score * 100)};">
-				Score : {media.bobStats.score * 10}
+				Score : {toTen(media.bobStats.score)}
 			</p>
 			<p>{media.bobStats.review}</p>
 		</div>

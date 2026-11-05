@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { toTen } from '$lib/admin/score';
 	import { bar, fmtHours, safeHref } from '$lib/bsh/format';
 	import { slug } from '$lib/bsh/slug';
 	import type { GridEntry } from '$lib/media/homeGrid';
@@ -135,7 +136,7 @@
 					</div>
 					<p class="bs">BobStats™</p>
 					<p style:color={getGreenRedColorFromScore(media.score * 100)}>
-						Score : {media.score * 10}
+						Score : {toTen(media.score)}
 					</p>
 					<p>{media.review || 'No review yet.'}</p>
 					{#if media.description}<p class="desc mut">{media.description}</p>{/if}

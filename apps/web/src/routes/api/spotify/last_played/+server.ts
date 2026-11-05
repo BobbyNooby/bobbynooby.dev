@@ -5,9 +5,16 @@ import { json } from '@sveltejs/kit';
 
 export async function GET({ request }: { request: Request }) {
 	const cors = corsHeaders(request.headers.get('origin'));
-	const lastPlayed = await db.collection('recently_played').findOne({});
+	try {
+		const lastPlayed = await db
+			.collection('recently_played')
+			.findOne({}, { projection: { _id: 0 } });
 
-	if (!lastPlayed) return json({ data: errorLastPlayedSong }, { status: 404, headers: cors });
+		if (!lastPlayed) return json({ data: errorLastPlayedSong }, { status: 404, headers: cors });
 
-	return json({ data: lastPlayed, success: true }, { status: 200, headers: cors });
+		return json({ data: lastPlayed, success: true }, { status: 200, headers: cors });
+	} catch (err) {
+		console.error('[spotify] last played lookup failed:', err);
+		return json({ success: false, error: 'internal' }, { status: 500, headers: cors });
+	}
 }

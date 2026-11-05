@@ -4,17 +4,13 @@ import { OrderedTable } from './orderedTable.svelte';
 export class ThreeByThreeGroup {
 	label: string;
 	entries: OrderedTable<threeByThreeEntry>;
-	visible = $state(false);
 
 	constructor(data: threeByThreeServerData) {
 		this.label = data.label;
 		this.entries = new OrderedTable(data.data);
 	}
 
-	/**
-	 * Wire shape for the save payload: the server expects { label, data } per
-	 * list. Visible is client-only UI state and must not be sent.
-	 */
+	/** Wire shape for the save payload: the server expects { label, data } per list. */
 	toJSON() {
 		return { label: this.label, data: this.entries.items };
 	}
@@ -27,31 +23,27 @@ export class ThreeByThreeCollection {
 		this.groups = data.map((item) => new ThreeByThreeGroup(item));
 	}
 
-	#find(label: string): ThreeByThreeGroup | undefined {
+	group(label: string): ThreeByThreeGroup | undefined {
 		return this.groups.find((group) => group.label === label);
 	}
 
-	toggle(label: string) {
-		const group = this.#find(label);
-		if (group) {
-			group.visible = !group.visible;
-		}
-	}
-
-	createNew(label: string) {
-		this.#find(label)?.entries.createNew({
-			id: '',
-			label: 'New Entry',
-			review: '',
-			bobscore: 0
-		});
+	/** Adds a blank entry to the named list; returns its uid, or null for an unknown list. */
+	createNew(label: string): number | null {
+		return (
+			this.group(label)?.entries.createNew({
+				id: '',
+				label: 'New Entry',
+				review: '',
+				bobscore: 0
+			}) ?? null
+		);
 	}
 
 	swapOrder(label: string, index1: number, index2: number) {
-		this.#find(label)?.entries.swapOrder(index1, index2);
+		this.group(label)?.entries.swapOrder(index1, index2);
 	}
 
 	deleteByUid(label: string, uid: number) {
-		this.#find(label)?.entries.deleteByUid(uid);
+		this.group(label)?.entries.deleteByUid(uid);
 	}
 }

@@ -153,30 +153,19 @@ describe('ThreeByThreeCollection', () => {
 		];
 	}
 
-	it('builds groups and toggles only the named one', () => {
+	it('builds one group per list and finds them by label', () => {
 		const collection = new ThreeByThreeCollection(makeServerData());
 		expect(collection.groups.map((group) => group.label)).toEqual(['Anime', 'Manga']);
-		expect(collection.groups.every((group) => !group.visible)).toBe(true);
-
-		collection.toggle('Anime');
-		expect(collection.groups[0].visible).toBe(true);
-		expect(collection.groups[1].visible).toBe(false);
-
-		collection.toggle('Anime');
-		expect(collection.groups[0].visible).toBe(false);
+		expect(collection.group('Manga')?.entries.items).toHaveLength(1);
+		expect(collection.group('Nope')).toBeUndefined();
 	});
 
-	it('toggle on an unknown label does nothing', () => {
+	it('createNew adds an entry only to the named group and returns its uid', () => {
 		const collection = new ThreeByThreeCollection(makeServerData());
-		expect(() => collection.toggle('Nope')).not.toThrow();
-	});
-
-	it('createNew adds an entry only to the named group', () => {
-		const collection = new ThreeByThreeCollection(makeServerData());
-		collection.createNew('Manga');
+		const uid = collection.createNew('Manga');
 		expect(collection.groups[0].entries.items).toHaveLength(2);
 		expect(collection.groups[1].entries.items).toHaveLength(2);
-		expect(collection.groups[1].entries.items[1].label).toBe('New Entry');
+		expect(collection.groups[1].entries.items[1]).toMatchObject({ uid, label: 'New Entry' });
 	});
 
 	it('swapOrder is scoped to the named group', () => {
@@ -197,7 +186,6 @@ describe('ThreeByThreeCollection', () => {
 	// which the server rejected with "expected array, received undefined".
 	it('serializes to the server wire shape: { label, data } without visible', () => {
 		const collection = new ThreeByThreeCollection(makeServerData());
-		collection.toggle('Anime');
 		const json = JSON.parse(JSON.stringify(collection.groups));
 		expect(json).toEqual([
 			{

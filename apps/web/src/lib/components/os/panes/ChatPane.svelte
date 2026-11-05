@@ -33,7 +33,7 @@
 	<div class="chat" bind:this={box} aria-live="polite">
 		{#each chat.messages as m, i (i)}
 			<p title={when(m.created_at)}>
-				<span style:color={chatColorForRank(m.rank)}>&lt;{m.name}&gt;</span>
+				<span style:color={chatColorForRank(m.rank)}>&lt;<bdi>{m.name}</bdi>&gt;</span>
 				{m.message}
 			</p>
 		{/each}

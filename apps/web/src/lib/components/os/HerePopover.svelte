@@ -32,13 +32,13 @@
 		<div class="herepop" id="herepop">
 			<div>
 				<p>
-					<span style:color="#CECECE">&lt;{chat.username}&gt;</span><span class="mut"
+					<span style:color="#CECECE">&lt;<bdi>{chat.username}</bdi>&gt;</span><span class="mut"
 						>{' you' + (presence.share ? '' : ' · cursor hidden')}</span
 					>
 				</p>
 				{#each presence.others as v (v.id)}
 					<p>
-						<span style:color={v.color}>&lt;{v.name}&gt;</span><span class="mut"
+						<span style:color={v.color}>&lt;<bdi>{v.name}</bdi>&gt;</span><span class="mut"
 							>{' in ' + PANE_TITLES[v.pane]}</span
 						>
 					</p>

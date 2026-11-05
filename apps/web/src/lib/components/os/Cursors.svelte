@@ -52,7 +52,7 @@
 <div class="curs" class:hide={!presence.showOthers} aria-hidden="true">
 	{#each presence.others as v (v.id)}
 		<div class="cur" use:track={v.id}>
-			<i style:background={v.color}></i><span style:background={v.color}>{v.name}</span>
+			<i style:background={v.color}></i><span style:background={v.color}><bdi>{v.name}</bdi></span>
 		</div>
 	{/each}
 </div>

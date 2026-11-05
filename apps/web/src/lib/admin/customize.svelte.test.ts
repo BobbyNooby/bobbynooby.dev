@@ -59,13 +59,30 @@ describe('CustomizeState', () => {
 		expect(cz.unsaved).toBe(0);
 	});
 
-	it('markSaved makes the current tables the new baseline', () => {
+	it('markSaved makes the saved tables the new baseline', () => {
 		const cz = new CustomizeState(data());
 		cz.links.items[0].label = 'Git';
-		cz.markSaved();
+		cz.beginSave().markSaved();
 		expect(cz.unsaved).toBe(0);
 		cz.discard();
 		expect(labels(cz)).toEqual(['Git', 'Twitch']);
+	});
+
+	it('a save marks only what it sent as saved, not edits typed while it was out', () => {
+		const cz = new CustomizeState(data());
+		cz.links.items[0].label = 'Git';
+		const sent = cz.beginSave();
+		cz.links.items[1].label = 'Twitch.tv';
+		cz.grid.groups[0].entries.items[0].label = 'Great Teacher';
+		sent.markSaved();
+		expect(JSON.parse(sent.payload.linksTable).map((l: { label: string }) => l.label)).toEqual([
+			'Git',
+			'Twitch'
+		]);
+		expect(cz.unsaved).toBe(2);
+		cz.discard();
+		expect(labels(cz)).toEqual(['Git', 'Twitch']);
+		expect(cz.grid.groups[0].entries.items[0].label).toBe('GTO');
 	});
 
 	it('builds a save payload the server schemas accept', () => {

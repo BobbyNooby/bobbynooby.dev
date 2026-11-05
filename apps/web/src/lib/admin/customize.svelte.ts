@@ -70,7 +70,7 @@ export class CustomizeState {
 		return count;
 	}
 
-	/** The hidden form fields the update action reads. */
+	/** The form fields the update action reads. */
 	payload() {
 		return {
 			linksTable: JSON.stringify(this.links.items),
@@ -79,8 +79,14 @@ export class CustomizeState {
 		};
 	}
 
-	markSaved() {
-		this.#saved = this.#snapshot();
+	/**
+	 * Freezes the tables for a save: the fields to send, and markSaved() to make
+	 * exactly those the baseline once the server accepts them, so anything typed
+	 * while the request is out stays unsaved.
+	 */
+	beginSave() {
+		const sent = this.#snapshot();
+		return { payload: this.payload(), markSaved: () => (this.#saved = sent) };
 	}
 
 	discard() {

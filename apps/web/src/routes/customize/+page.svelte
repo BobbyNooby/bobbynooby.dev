@@ -33,7 +33,6 @@
 	const hidden = new SvelteSet<number>(data.steamHidden);
 	let tab = $state<Tab>('links');
 	let saving = $state(false);
-	const payload = $derived(cz.payload());
 
 	let dialog = $state<HTMLDialogElement>();
 	let pendingLeave: (() => void) | null = null;
@@ -60,13 +59,15 @@
 		confirmLeave(() => goto(to));
 	});
 
-	const save: SubmitFunction = ({ cancel }) => {
+	const save: SubmitFunction = ({ cancel, formData }) => {
 		if (cz.unsaved === 0 || cz.problems > 0) return cancel();
+		const sent = cz.beginSave();
+		for (const [name, value] of Object.entries(sent.payload)) formData.set(name, value);
 		saving = true;
 		return async ({ result, update }) => {
 			saving = false;
 			if (result.type === 'success') {
-				cz.markSaved();
+				sent.markSaved();
 				cz.notify('saved');
 				// Picks up covers for any new AniList ids the save just cached.
 				await update({ reset: false });
@@ -152,11 +153,7 @@
 			/>
 		</div>
 
-		<form id="cz-save" method="POST" action="?/update" hidden use:enhance={save}>
-			<input type="hidden" name="linksTable" value={payload.linksTable} />
-			<input type="hidden" name="projectsTable" value={payload.projectsTable} />
-			<input type="hidden" name="all3x3Data" value={payload.all3x3Data} />
-		</form>
+		<form id="cz-save" method="POST" action="?/update" hidden use:enhance={save}></form>
 
 		<div class="cz-toasts" aria-live="polite">
 			{#if cz.toast}

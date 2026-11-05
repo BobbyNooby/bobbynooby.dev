@@ -18,6 +18,7 @@ export {
 	type PresenceHide,
 	type PresenceState
 } from './presence';
+export { createPresenceRegistry, type PresenceRegistry } from './presenceRegistry';
 
 export type DiscordStatus = 'online' | 'idle' | 'dnd' | 'offline' | 'unknown';
 

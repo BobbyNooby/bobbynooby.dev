@@ -8,7 +8,8 @@
 
 <Pane pane="links" title="/Links" label="Links" program="ls ~/links">
 	<div class="links">
-		{#each links as link (link.label)}
+		<!-- Labels can repeat, and a repeated each key throws. -->
+		{#each links as link, i (i)}
 			{#if safeHref(link.href)}
 				<a
 					href={safeHref(link.href)}

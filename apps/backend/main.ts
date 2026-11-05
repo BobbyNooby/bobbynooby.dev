@@ -9,13 +9,17 @@ import { Presence } from "./modules/presence";
 import { SpotifyClient } from "./modules/spotify";
 import { MongoDBClient } from "./modules/mongodb";
 import { SimpleChat } from "./modules/chat";
-import {
-  createConnectionLimiter,
-  createTokenBucket,
-  pickForwardedIp,
-} from "@bobbynooby/shared";
 import { ExpressAuth, getSession } from "@auth/express";
 import { authConfig } from "./auth";
+import { createChatLimits } from "./sockets/chatLimits";
+import { createGate } from "./sockets/gate";
+import {
+  attachChat,
+  attachDiscord,
+  attachPresence,
+  attachSpotify,
+  MAX_FRAME_LENGTH,
+} from "./sockets/routes";
 
 const IS_PRODUCTION = process.env.IS_PRODUCTION === "true";
 
@@ -29,12 +33,7 @@ const server = app.listen(port, () => {
   consoleBob(`Listening on port ${port}`);
 });
 
-const MAX_FRAME_LENGTH = 16 * 1024;
-// A page opens four sockets, so this allows about eight tabs per address.
-const connectionLimiter = createConnectionLimiter(32);
-
-// Bun's ws implementation does not enforce maxPayload, so the chat handler
-// repeats this check.
+// Bun's ws implementation does not enforce maxPayload; see sockets/routes.ts.
 const wss = new WebSocketServer({ server, maxPayload: MAX_FRAME_LENGTH });
 const mongoDbClient = new MongoDBClient();
 await mongoDbClient.initialize();
@@ -49,87 +48,19 @@ await spotifyClient.initialize();
 
 const chat = new SimpleChat(mongoDbClient, discordBot);
 
-// Per-identity chat rate limiting: 5 messages instantly, then one every 2s.
-// Authed users are keyed by session id, guests by socket address; entries
-// idle for over 5 minutes are evicted on each connect to bound the map.
-const chatBuckets = new Map<
-  string,
-  { bucket: ReturnType<typeof createTokenBucket>; seen: number }
->();
-
-// Every live socket, regardless of subroute. One interval pings them all:
-// browsers answer pings automatically, and a socket that misses its pong is
-// terminated so half-open connections (NAT/proxy timeouts) stop lingering
-// in the per-module broadcast sets and inflating the presence count.
-const allSockets = new Set<WebSocket>();
-const isAlive = new WeakMap<WebSocket, boolean>();
-
-setInterval(() => {
-  for (const ws of allSockets) {
-    if (isAlive.get(ws) === false) {
-      allSockets.delete(ws);
-      ws.terminate();
-      continue;
-    }
-    isAlive.set(ws, false);
-    ws.ping();
-  }
-}, 30_000);
-
-const allowedOrigins = ["https://bobbynooby.dev", "https://www.bobbynooby.dev"];
-if (!IS_PRODUCTION) {
-  allowedOrigins.push("http://localhost:5173", "http://127.0.0.1:5173");
-}
+const gate = createGate(IS_PRODUCTION);
+const chatLimits = createChatLimits();
 
 async function handleConnection(ws: WebSocket, req: IncomingMessage) {
-  // Browsers always send Origin; absent means a non-browser client (curl,
-  // health checks), which we let through.
-  const origin = req.headers.origin;
-  if (origin && !allowedOrigins.includes(origin)) {
-    consoleBob(`Websocket rejected: origin ${origin} not allowed`);
-    ws.close(1008, "Origin not allowed");
-    return;
-  }
-
-  const clientIp = pickForwardedIp(
-    req.headers["x-forwarded-for"]?.toString(),
-    req.socket.remoteAddress || "unknown",
-  );
-  if (!connectionLimiter.tryAcquire(clientIp)) {
-    consoleBob(`Websocket rejected: too many connections from ${clientIp}`);
-    ws.close(1013, "Too many connections");
-    return;
-  }
-
-  allSockets.add(ws);
-  isAlive.set(ws, true);
-  ws.on("pong", () => isAlive.set(ws, true));
-  ws.on("close", () => {
-    allSockets.delete(ws);
-    connectionLimiter.release(clientIp);
-  });
+  const clientIp = gate.admit(ws, req);
+  if (clientIp == null) return;
 
   const subroute = req.url;
 
   // Presence needs no session. Wiring it up before the await below means the
   // hello a client sends on open never arrives before there is a listener.
   if (subroute === "/presence") {
-    presence.addWebSocket(ws, clientIp);
-
-    ws.on("message", (message) => {
-      const text = String(message);
-      if (text.length > MAX_FRAME_LENGTH) {
-        ws.close(1009, "Message too large");
-        return;
-      }
-      presence.onReceive(ws, text);
-    });
-
-    ws.on("error", () => presence.removeWebSocket(ws));
-    ws.on("close", () => {
-      presence.removeWebSocket(ws);
-      consoleBob("WebSocket connection to /presence closed");
-    });
+    attachPresence(ws, clientIp, presence);
     return;
   }
 
@@ -140,68 +71,18 @@ async function handleConnection(ws: WebSocket, req: IncomingMessage) {
   );
 
   const sessionId = session?.user?.id || "skibiditoiletmoment";
-
+  // Every page connect refreshes the visitor's chat bucket, not only /chat.
   const bucketKey = session?.user?.id || clientIp;
-  const nowMs = Date.now();
-  for (const [key, chatEntry] of chatBuckets) {
-    if (nowMs - chatEntry.seen > 5 * 60_000) {
-      chatBuckets.delete(key);
-    }
-  }
-  let chatEntry = chatBuckets.get(bucketKey);
-  if (chatEntry == undefined) {
-    chatEntry = {
-      bucket: createTokenBucket({ capacity: 5, refillPerSecond: 0.5 }),
-      seen: nowMs,
-    };
-    chatBuckets.set(bucketKey, chatEntry);
-  }
-  chatEntry.seen = nowMs;
+  const chatEntry = chatLimits.entryFor(bucketKey);
 
-  if (subroute === "/discord") {
-    await discordBot.addWebSocket(ws);
-
-    ws.on("close", () => {
-      discordBot.removeWebSocket(ws);
-      consoleBob("WebSocket connection to /discord closed");
-    });
-  }
-
-  if (subroute === "/spotify") {
-    await spotifyClient.addWebSocket(ws);
-
-    ws.on("close", () => {
-      spotifyClient.removeWebSocket(ws);
-      consoleBob("WebSocket connection to /spotify closed");
-    });
-  }
-
+  if (subroute === "/discord") await attachDiscord(ws, discordBot);
+  if (subroute === "/spotify") await attachSpotify(ws, spotifyClient);
   if (subroute === "/chat") {
-    await chat.addWebSocket(ws, {
-      id: sessionId,
+    await attachChat(ws, chat, {
+      sessionId,
       name: session?.user?.name ?? undefined,
-    });
-
-    ws.on("message", async (message) => {
-      try {
-        if (chatEntry.bucket.tryTake() == false) {
-          consoleBob(`Chat rate limited: ${bucketKey}`);
-          return;
-        }
-        const text = String(message);
-        if (text.length > MAX_FRAME_LENGTH) {
-          ws.close(1009, "Message too large");
-          return;
-        }
-        await chat.onRecieve(text, sessionId, ws);
-      } catch (e) {
-        consoleBob(`Chat error: ${e}`);
-      }
-    });
-
-    ws.on("close", () => {
-      chat.removeWebSocket(ws);
-      consoleBob("WebSocket connection to /chat closed");
+      chatEntry,
+      bucketKey,
     });
   }
 }

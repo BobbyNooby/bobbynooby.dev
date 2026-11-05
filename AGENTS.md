@@ -74,12 +74,12 @@ files with real credentials are required for dev (`apps/web/.env`,
   - `/shorten` — URL shortener UI; `/[shortURL]` — redirect handler
   - `/customize` — admin-only editor for links/projects/3x3 (guarded in
     `+page.server.ts` via `locals.isAdmin`)
-  - `/api/*` — JSON endpoints: `discord/status`, `spotify/now_playing`,
-    `spotify/last_played`, `twitch/live`, `steam/games`, `steam/game/[appid]`, `links`,
-    `projects` (the three discord/spotify routes send CORS headers restricted to site
-    origins; all `/api/*` GETs are rate-limited per client IP in production;
-    `discord/status` redacts internal errors; the steam routes are Mongo-cached with
-    6h/24h TTLs and stale-serve, no CORS — first-party only)
+  - `/api/*` — JSON endpoints: `spotify/last_played`, `twitch/live`, `steam/games`,
+    `steam/game/[appid]`, `links`, `projects` (`spotify/last_played` sends CORS headers
+    restricted to site origins; all `/api/*` GETs are rate-limited per client IP in
+    production; the steam routes are Mongo-cached with 6h/24h TTLs and stale-serve, no
+    CORS — first-party only). Discord status and now-playing come from the backend's
+    WebSockets, not from these routes.
   - `/signin`, `/signout` — Auth.js entry points
 - **Auth & permissions:** `hooks.server.ts` resolves the session once per request into
   `locals.isAdmin` / `locals.canShorten` (typed in `apps/web/src/app.d.ts`) by looking

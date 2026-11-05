@@ -14,22 +14,6 @@ export const errorLastPlayedSong: SpotifyLastPlayedData = {
 	playedAt: new Date('December 7, 2005 00:00:00').toISOString()
 };
 
-export async function getCurrentSongData(
-	fetch: typeof globalThis.fetch = globalThis.fetch
-): Promise<SpotifySongData> {
-	const { data, error }: { data: SpotifySongData; error: unknown } = await fetch(
-		'/api/spotify/now_playing',
-		{
-			method: 'GET'
-		}
-	).then((res) => res.json());
-
-	if (error) {
-		return errorSong;
-	}
-	return data;
-}
-
 export async function getLastPlayedSongData(
 	fetch: typeof globalThis.fetch = globalThis.fetch
 ): Promise<SpotifyLastPlayedData> {

@@ -9,10 +9,17 @@ import { csp } from '$lib/utils/csp';
 import { handle as authHandle } from './auth';
 
 // Deferred so builds (SvelteKit's post-build analyse imports this module)
-// succeed without a reachable MongoDB; connects on the first request.
+// succeed without a reachable MongoDB; connects on the first request. A failed
+// connect is forgotten so the next request tries again instead of 500ing forever.
 let connecting: Promise<unknown> | undefined;
 const connectOnce = () =>
-	(connecting ??= startMongoDB().then(() => console.log('Connected to MongoDB')));
+	(connecting ??= startMongoDB().then(
+		() => console.log('Connected to MongoDB'),
+		(err) => {
+			connecting = undefined;
+			throw err;
+		}
+	));
 
 // Per-IP limiter for public GET /api/* reads: 30 requests instantly, then
 // one every 2s. Keyed on x-forwarded-for (Coolify's proxy is the direct peer)

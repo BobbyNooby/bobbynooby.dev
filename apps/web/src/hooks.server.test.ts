@@ -94,3 +94,17 @@ describe('api rate limiter', () => {
 		expect([...pages, ...posts].every((s) => s === 200)).toBe(true);
 	});
 });
+
+describe('mongo connect', () => {
+	it('retries on the next request after a failed connect', async () => {
+		const handle = await loadHandle();
+		startMongoDB.mockRejectedValueOnce(new Error('down'));
+		await expect(handle({ event: makeEvent('/', '/'), resolve })).rejects.toThrow('down');
+		await expect(handle({ event: makeEvent('/', '/'), resolve })).resolves.toHaveProperty(
+			'status',
+			200
+		);
+		await handle({ event: makeEvent('/', '/'), resolve });
+		expect(startMongoDB).toHaveBeenCalledTimes(2);
+	});
+});

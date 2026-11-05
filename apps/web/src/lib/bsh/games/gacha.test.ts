@@ -55,7 +55,8 @@ describe('gachaPull', () => {
 	});
 
 	it('pulls nothing from an empty 3x3', () => {
-		for (const empty of [{}, { anime: [], manga: [] }]) {
+		const empties: Record<string, BshMedia[]>[] = [{}, { anime: [], manga: [] }];
+		for (const empty of empties) {
 			expect(gachaPull(empty, draws())).toEqual({
 				pulled: false,
 				lines: [[{ t: 'nothing to pull yet.' }]]

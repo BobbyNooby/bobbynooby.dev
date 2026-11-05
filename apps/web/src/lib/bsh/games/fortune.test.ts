@@ -30,7 +30,8 @@ describe('fortune', () => {
 	});
 
 	it('has no fortunes without reviews', () => {
-		for (const empty of [{}, { anime: [media('A', null)] }]) {
+		const empties: Record<string, BshMedia[]>[] = [{}, { anime: [media('A', null)] }];
+		for (const empty of empties) {
 			expect(fortune(empty, draws())).toEqual([[{ t: 'no fortunes yet.' }]]);
 		}
 	});

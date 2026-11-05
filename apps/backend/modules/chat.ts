@@ -38,12 +38,17 @@ if (IS_PRODUCTION == "true") {
 
 export type ChatIdentity = { id: string; name?: string };
 
+const HISTORY_SIZE = 500;
+
 export class SimpleChat {
   users: Set<WebSocket>;
   identities: WeakMap<WebSocket, ChatIdentity>;
   mongoClient: MongoDBClient;
   discordBot: DiscordBot;
   db: Db;
+  // The last HISTORY_SIZE messages, read from Mongo once and then kept in
+  // step with every insert, so a connect doesn't read them all again.
+  history: Promise<ChatMessage[]> | null;
 
   constructor(mongoDbClient: MongoDBClient, discordBot: DiscordBot) {
     {
@@ -52,6 +57,7 @@ export class SimpleChat {
       this.db = mongoDbClient.dbVPS;
       this.mongoClient = mongoDbClient;
       this.discordBot = discordBot;
+      this.history = null;
     }
   }
 
@@ -85,9 +91,13 @@ export class SimpleChat {
       rank: isOwner ? "owner" : "guest",
     };
 
+    // Loaded before the insert, so the read can't already hold this message.
+    const history = await this.recentMessages();
     await this.db
       .collection(CHAT_COLLECTION || "chat-prod")
       .insertOne(messageObject);
+    history.push(messageObject);
+    if (history.length > HISTORY_SIZE) history.shift();
     // The Discord mirror is best-effort; an outage must not hide a saved message.
     try {
       await this.discordBot.sendDiscordMessage(
@@ -107,7 +117,7 @@ export class SimpleChat {
       this.identities.set(ws, identity);
     }
 
-    const pastMessages: ChatMessage[] = [...(await this.getLastMessages())];
+    const pastMessages: ChatMessage[] = [...(await this.recentMessages())];
 
     if (ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ initialMessages: pastMessages }));
@@ -126,7 +136,15 @@ export class SimpleChat {
     }
   }
 
-  async getLastMessages(count: number = 500): Promise<ChatMessage[]> {
+  recentMessages(): Promise<ChatMessage[]> {
+    this.history ??= this.getLastMessages().catch((e) => {
+      this.history = null;
+      throw e;
+    });
+    return this.history;
+  }
+
+  async getLastMessages(count: number = HISTORY_SIZE): Promise<ChatMessage[]> {
     return await this.db
       .collection<ChatMessage>(CHAT_COLLECTION || "chat-prod")
       .find()

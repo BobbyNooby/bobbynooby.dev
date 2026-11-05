@@ -1,0 +1,80 @@
+/* The two pane columns, the pane frame and title, the Twitch player. */
+.os .panes {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+.os .col-l {
+	flex: 999 1 560px;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.os .col-r {
+	flex: 1 1 320px;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.os .pane {
+	border: 2px solid #3f3f3f;
+	border-radius: 3.2px;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	transition: border-color 0.12s;
+}
+.os .pane.on {
+	border-color: #facc15;
+}
+.os .pane.tw {
+	border-color: #a970ff;
+}
+.os .ph {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 8px;
+	padding: 6px 10px;
+	border-bottom: 1px solid #262626;
+	color: #9ca3af;
+	font-size: 12px;
+}
+.os .ph h2 {
+	margin: 0;
+	font-size: 20px;
+	line-height: 1.2;
+	font-weight: 400;
+	color: #d1d5db;
+}
+.os .pane.on .ph h2 {
+	color: #facc15;
+}
+.os .pane.tw .ph h2 {
+	color: #a970ff;
+}
+.os .livebadge {
+	margin-left: 10px;
+	font-size: 13px;
+	font-weight: 700;
+	color: #a970ff;
+}
+.os .tw-body {
+	padding: 10px 12px 12px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	font-size: 13px;
+}
+.os .player {
+	width: 100%;
+	aspect-ratio: 16/9;
+	background: #141414;
+	border: 1px solid #2a2a2a;
+	border-radius: 3.2px;
+}
+.os .tw-body p {
+	margin: 0;
+}

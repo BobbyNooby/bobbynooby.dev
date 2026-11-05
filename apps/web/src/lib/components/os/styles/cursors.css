@@ -1,0 +1,39 @@
+/* Other visitors' cursors. */
+.os .curs {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	z-index: 12;
+}
+.os .cur {
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: flex;
+	align-items: flex-start;
+	gap: 4px;
+	will-change: transform;
+	transition: opacity 0.3s;
+}
+.os .cur i {
+	display: block;
+	width: 9px;
+	height: 17px;
+	animation: os-blink 1s steps(1) infinite;
+}
+.os .curs.hide .cur {
+	opacity: 0;
+}
+.os .cur span {
+	font-size: 11px;
+	line-height: 17px;
+	color: #0a0a0a;
+	padding: 0 5px;
+	border-radius: 2px;
+	white-space: nowrap;
+}
+@media (pointer: coarse) {
+	.os .curs {
+		display: none;
+	}
+}

@@ -1,0 +1,58 @@
+/* Screen-reader text, keyframes and reduced motion. */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+@keyframes os-blink {
+	0%,
+	49% {
+		opacity: 1;
+	}
+	50%,
+	100% {
+		opacity: 0;
+	}
+}
+@keyframes os-eq {
+	0% {
+		transform: scaleY(0.2);
+	}
+	100% {
+		transform: scaleY(1);
+	}
+}
+@keyframes os-honk {
+	0% {
+		transform: scale(1.2);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+@keyframes os-rot {
+	from {
+		transform: rotate3d(0, 1, 0, 0deg);
+	}
+	to {
+		transform: rotate3d(0, 1, 0, 360deg);
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.os .boot {
+		display: none;
+	}
+	.os *,
+	.os *::before,
+	.os *::after {
+		animation: none !important;
+		transition: none !important;
+	}
+}

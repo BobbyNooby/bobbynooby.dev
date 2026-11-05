@@ -1,0 +1,9 @@
+/* Bigger buttons on touch screens. Lists keep the design's density: phones see
+   the zoomed-out desktop, where taller rows would only make the page longer. */
+@media (pointer: coarse) {
+	.os .wclose,
+	.os .tgb,
+	.os .chatform button {
+		min-height: 44px;
+	}
+}

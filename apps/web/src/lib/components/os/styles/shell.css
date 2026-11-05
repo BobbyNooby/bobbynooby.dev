@@ -1,0 +1,110 @@
+/* The bsh shell: output, tappable names, chips and the prompt. */
+.os .shell {
+	border: 2px solid #fff;
+	border-radius: 3.2px;
+	min-width: 0;
+}
+.os .shell .ph h2 {
+	font-size: 12px;
+	color: #f5f5f5;
+}
+.os .out {
+	height: 16rem;
+	box-sizing: border-box;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	padding: 10px 12px 4px;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	font-size: 13px;
+}
+.os .out > div {
+	flex: 0 0 auto;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+.os .out > div:first-child {
+	margin-top: auto;
+}
+.os .out a {
+	color: #60a5fa;
+}
+.os .out .fx {
+	color: #9ca3af;
+	font-style: italic;
+}
+.os .ol {
+	background: none;
+	border: 0;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	text-decoration: underline dotted;
+	text-underline-offset: 3px;
+}
+.os .ol:hover {
+	text-decoration-style: solid;
+}
+.os .chips {
+	display: none;
+	gap: 6px;
+	padding: 4px 12px 8px;
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+@media (pointer: coarse) {
+	.os .chips {
+		display: flex;
+	}
+}
+.os form.prompt {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 0 6px 6px 12px;
+}
+.os .pl {
+	flex: 1 1 auto;
+	min-width: 0;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+.os .pl > span {
+	color: #4ade80;
+	white-space: nowrap;
+	font-size: 13px;
+}
+.os .pl input,
+.os .chatform input {
+	flex: 1 1 auto;
+	min-width: 0;
+	min-height: 44px;
+	background: transparent;
+	border: 0;
+	color: #f5f5f5;
+	font: inherit;
+	font-size: 13px;
+	caret-color: #facc15;
+	outline: none;
+}
+.os form.prompt button,
+.os .chatform button {
+	min-height: 36px;
+	padding: 0 14px;
+	font-size: 13px;
+	background: #0a0a0a;
+	color: #f5f5f5;
+	border: 1px solid #fff;
+	border-radius: 3.2px;
+	cursor: pointer;
+}
+.os form.prompt button {
+	min-height: 44px;
+}
+.os form.prompt button:hover,
+.os .chatform button:hover {
+	background: #facc15;
+	color: #0a0a0a;
+}

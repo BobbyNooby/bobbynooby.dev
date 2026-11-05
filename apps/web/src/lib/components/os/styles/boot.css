@@ -1,0 +1,42 @@
+/* Boot screen and its no-JS failsafe. */
+.os .boot {
+	position: fixed;
+	inset: 0;
+	z-index: 30;
+	background: #0a0a0a;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	padding-top: 200px;
+	gap: 18px;
+	transition: opacity 0.4s;
+}
+.os .boot img {
+	width: 96px;
+	height: 96px;
+	animation: os-rot 2.4s steps(72) infinite;
+}
+.os .boot pre {
+	margin: 0;
+	font: inherit;
+	font-size: 13px;
+	line-height: 1.7;
+	min-width: 300px;
+	min-height: 160px;
+	color: #d1d5db;
+	white-space: pre-wrap;
+}
+.os .boot.fade {
+	opacity: 0;
+}
+/* If the page script never runs, the boot screen still gets out of the way. */
+.os .boot {
+	animation: os-boot-out 0.4s 4s forwards;
+}
+@keyframes os-boot-out {
+	to {
+		opacity: 0;
+		visibility: hidden;
+	}
+}

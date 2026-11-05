@@ -1,0 +1,12 @@
+/* Phosphor mode (Konami code or 7 title taps). */
+.os.phos {
+	filter: sepia(1) saturate(2.6) hue-rotate(-12deg) brightness(1.05);
+}
+.os.phos::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: 40;
+	pointer-events: none;
+	background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px);
+}

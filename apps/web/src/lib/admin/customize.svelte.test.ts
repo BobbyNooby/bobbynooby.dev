@@ -37,6 +37,14 @@ describe('CustomizeState', () => {
 		expect(cz.problems).toBe(2);
 	});
 
+	it('a new link with the default https:// is a problem until a real URL is typed', () => {
+		const cz = new CustomizeState(data());
+		const uid = cz.links.createNew({ label: 'New_Link', href: 'https://', color: '#FFFFFF' });
+		expect(cz.problems).toBe(1);
+		cz.links.items.find((l) => l.uid === uid)!.href = 'https://example.com';
+		expect(cz.problems).toBe(0);
+	});
+
 	it('retyping a legacy number id as the same digits is not a change', () => {
 		const cz = new CustomizeState(data());
 		const entry = cz.grid.groups[0].entries.items[0];

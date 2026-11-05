@@ -21,8 +21,8 @@ describe('issues', () => {
 		expect(issues(linkSchema, link)).toEqual(new Set(['label', 'href', 'color']));
 	});
 
-	it('accepts site-relative links and colour names', () => {
-		const link = { uid: 1, label: '3x3', href: '/3x3', color: 'red' };
+	it('accepts colour names', () => {
+		const link = { uid: 1, label: 'Blog', href: 'http://example.com', color: 'red' };
 		expect(issues(linkSchema, link)).toEqual(new Set());
 	});
 
@@ -30,6 +30,30 @@ describe('issues', () => {
 		const project = { uid: 1, title: '', description: '', href: 'ftp://x' };
 		expect(issues(projectSchema, project)).toEqual(new Set(['title', 'href']));
 	});
+});
+
+describe('link and project hrefs', () => {
+	// The home page only renders hrefs that parse as an absolute http(s) URL.
+	it.each([
+		'https://',
+		'http://',
+		'https://not a url',
+		'/shorten',
+		'//evil.example',
+		'example.com'
+	])('rejects %j, which the home page would drop', (href) => {
+		const link = { uid: 1, label: 'x', href, color: 'red' };
+		const project = { uid: 1, title: 'x', description: '', href };
+		expect(issues(linkSchema, link)).toEqual(new Set(['href']));
+		expect(issues(projectSchema, project)).toEqual(new Set(['href']));
+	});
+
+	it.each(['https://github.com/b', 'HTTP://example.com/a?b=c#d', 'https://bobbynooby.dev/3x3'])(
+		'accepts %j',
+		(href) => {
+			expect(issues(linkSchema, { uid: 1, label: 'x', href, color: 'red' })).toEqual(new Set());
+		}
+	);
 });
 
 describe('3x3 AniList id', () => {

@@ -68,7 +68,7 @@
 						class="in cz-href"
 						class:bad={bad.has('href')}
 						bind:value={link.href}
-						title="starts with https:// or /"
+						title="a full https:// link"
 						aria-label="Link for {link.label}"
 					/>
 					<div class="cz-acts">

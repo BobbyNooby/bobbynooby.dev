@@ -1,10 +1,15 @@
 import { toAnilistId } from '$lib/anilist/anilistId';
+import { safeHref } from '$lib/bsh/format';
 import { z } from 'zod';
 
 // The save rules for /customize. The server enforces them; the editor runs the
 // same ones so a bad field is marked before Save instead of failing after it.
 
-const safeHref = /^(https?:\/\/|\/)/i;
+// The same check the home page renders links with, so a saved link never disappears there.
+const href = z
+	.string()
+	.max(2048)
+	.refine((value) => safeHref(value) != null);
 const hexOrColorName = /^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)$/;
 const safeListLabel = /^[a-zA-Z0-9 _-]+$/;
 const decimalText = z
@@ -17,7 +22,7 @@ const decimalText = z
 export const linkSchema = z.object({
 	uid: z.number().int(),
 	label: z.string().min(1).max(100),
-	href: z.string().min(1).max(2048).regex(safeHref),
+	href,
 	color: z.string().max(64).regex(hexOrColorName)
 });
 
@@ -25,7 +30,7 @@ export const projectSchema = z.object({
 	uid: z.number().int(),
 	title: z.string().min(1).max(200),
 	description: z.string().max(5000),
-	href: z.string().min(1).max(2048).regex(safeHref)
+	href
 });
 
 // bobscore is stored 0-1. Decimal text is still read as a number in case an

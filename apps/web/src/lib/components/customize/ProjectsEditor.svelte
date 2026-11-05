@@ -93,7 +93,7 @@
 									class="in"
 									class:bad={bad.has('href')}
 									bind:value={project.href}
-									title="starts with https:// or /"
+									title="a full https:// link"
 								/>
 							</label>
 							<label class="cz-field full">

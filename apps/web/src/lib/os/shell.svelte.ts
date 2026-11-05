@@ -90,6 +90,11 @@ export class ShellView {
 		return this.#snake?.key(event) ?? false;
 	}
 
+	/** Stops a running snake game, so its timer does not outlive the page. */
+	destroy() {
+		this.#snake?.stop('restart');
+	}
+
 	#sync() {
 		if (!this.shell) return;
 		this.prompt = this.shell.promptText();

@@ -104,6 +104,23 @@ describe('ShellView', () => {
 		}
 	});
 
+	it('stops a running snake when the page goes away', () => {
+		vi.useFakeTimers();
+		try {
+			const { view } = setup();
+			view.run('snake');
+			view.snakeTurn([0, -1]);
+			const before = view.lines.length;
+			view.destroy();
+			vi.advanceTimersByTime(140 * 40);
+			expect(view.snaking).toBe(false);
+			expect(vi.getTimerCount()).toBe(0);
+			expect(view.lines.length).toBeLessThan(before);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
 	it('leaves keys alone when no game is running', () => {
 		const { view } = setup();
 		expect(view.snakeKey(key('ArrowUp'))).toBe(false);

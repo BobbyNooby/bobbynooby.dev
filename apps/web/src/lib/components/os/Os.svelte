@@ -92,6 +92,7 @@
 		return () => {
 			clearTimeout(wait);
 			stops.forEach((stop) => stop());
+			view.destroy();
 		};
 	});
 

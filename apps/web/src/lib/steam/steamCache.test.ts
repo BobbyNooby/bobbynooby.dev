@@ -20,7 +20,8 @@ const {
 	getSteamGameDetails,
 	getSteamGamesWithDetails,
 	isStale,
-	LIST_TTL_MS
+	LIST_TTL_MS,
+	ownsSteamGame
 } = await import('./steamCache');
 
 afterEach(() => {
@@ -120,6 +121,26 @@ describe('getSteamGames', () => {
 		});
 		const all = await getAllSteamGames();
 		expect(all.map((g) => g.appid)).toEqual([2, 1, 3]);
+	});
+});
+
+describe('ownsSteamGame', () => {
+	it('checks the cached owned list, hidden and zero-hour games included', async () => {
+		const fetchMock = vi.fn();
+		vi.stubGlobal('fetch', fetchMock);
+		getHiddenAppids.mockResolvedValue(new Set([2]));
+		findOne.mockResolvedValue({
+			key: 'games',
+			fetchedAt: new Date(),
+			games: [
+				{ appid: 2, name: 'Hidden', img_icon_url: 'a', playtime_forever: 999 },
+				{ appid: 3, name: 'NeverPlayed', img_icon_url: 'a', playtime_forever: 0 }
+			]
+		});
+		await expect(ownsSteamGame(2)).resolves.toBe(true);
+		await expect(ownsSteamGame(3)).resolves.toBe(true);
+		await expect(ownsSteamGame(4)).resolves.toBe(false);
+		expect(fetchMock).not.toHaveBeenCalled();
 	});
 });
 

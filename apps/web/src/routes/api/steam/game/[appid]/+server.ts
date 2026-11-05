@@ -1,8 +1,9 @@
-import { getSteamGameDetails, steamConfigured } from '$lib/steam/steamCache';
+import { getSteamGameDetails, ownsSteamGame, steamConfigured } from '$lib/steam/steamCache';
 import { error, json } from '@sveltejs/kit';
 
 export async function GET({ params }): Promise<Response> {
-	if (!/^\d+$/.test(params.appid)) {
+	const appid = /^\d+$/.test(params.appid) ? Number(params.appid) : NaN;
+	if (!Number.isSafeInteger(appid)) {
 		error(400, 'invalid appid');
 	}
 	const configured = steamConfigured();
@@ -10,8 +11,12 @@ export async function GET({ params }): Promise<Response> {
 		return json({ success: true, configured, details: null });
 	}
 	try {
+		// Owned games only, so made-up ids never reach Steam or the details cache.
+		if (!(await ownsSteamGame(appid))) {
+			return json({ message: 'unknown appid' }, { status: 404 });
+		}
 		return json(
-			{ success: true, configured, details: await getSteamGameDetails(Number(params.appid)) },
+			{ success: true, configured, details: await getSteamGameDetails(appid) },
 			{ headers: { 'Cache-Control': 'no-store' } }
 		);
 	} catch (err) {

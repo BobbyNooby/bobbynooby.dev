@@ -88,6 +88,10 @@ export async function getAllSteamGames(): Promise<SteamGameSummary[]> {
 	return readGamesList();
 }
 
+export async function ownsSteamGame(appid: number): Promise<boolean> {
+	return (await readGamesList()).some((game) => game.appid === appid);
+}
+
 async function fetchAppDetails(appid: number): Promise<unknown> {
 	const res = await fetch(`${STEAM_STORE}?appids=${appid}&l=english`);
 	if (!res.ok) throw new Error(`appdetails responded ${res.status}`);

@@ -8,6 +8,8 @@ vi.mock('$lib/twitch/twitchLive.svelte', () => ({ twitch: { status: null } }));
 const { OsState } = await import('./os.svelte');
 const { ShellView } = await import('./shell.svelte');
 
+const key = (k: string) => ({ key: k, preventDefault: () => {} }) as unknown as KeyboardEvent;
+
 function setup() {
 	const chat = { send: vi.fn(), rename: vi.fn() };
 	const ctx = {
@@ -17,7 +19,7 @@ function setup() {
 		presence: {}
 	} as unknown as OsContext;
 	const openWindow = vi.fn();
-	const view = new ShellView(ctx, { openWindow, startSnake: vi.fn() });
+	const view = new ShellView(ctx, { openWindow });
 	view.start(fixture, 'Guest_1234');
 	const text = () => textOf(view.lines.map((l) => l.segs));
 	return { view, ctx, chat, openWindow, text };
@@ -73,5 +75,37 @@ describe('ShellView', () => {
 		const { view } = setup();
 		for (let i = 0; i < 150; i++) view.run('pwd');
 		expect(view.lines.length).toBe(200);
+	});
+
+	it('runs snake in the output: board, pad, quit', () => {
+		const { view, text } = setup();
+		view.run('snake');
+		expect(view.snaking).toBe(true);
+		expect(view.lines.some((l) => l.kind === 'snake')).toBe(true);
+		expect(view.lines.some((l) => l.kind === 'pad')).toBe(true);
+		expect(text()).toContain('press a direction to start');
+		expect(view.snakeKey(key('q'))).toBe(true);
+		expect(view.snaking).toBe(false);
+		expect(view.lines.some((l) => l.kind === 'pad')).toBe(false);
+		expect(text()).toContain('quit. score 0   (10 unlocks something)');
+	});
+
+	it('ends snake with game over when it hits a wall', () => {
+		vi.useFakeTimers();
+		try {
+			const { view, text } = setup();
+			view.run('snake');
+			view.snakeTurn([0, -1]);
+			vi.advanceTimersByTime(140 * 40);
+			expect(view.snaking).toBe(false);
+			expect(text()).toMatch(/game over\. score \d+/);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
+	it('leaves keys alone when no game is running', () => {
+		const { view } = setup();
+		expect(view.snakeKey(key('ArrowUp'))).toBe(false);
 	});
 });

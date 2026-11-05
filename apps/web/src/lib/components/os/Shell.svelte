@@ -2,7 +2,14 @@
 	import type { ShellView } from '$lib/os/shell.svelte';
 	import { tick } from 'svelte';
 
-	let { view, onkey }: { view: ShellView; onkey?: (e: KeyboardEvent) => boolean } = $props();
+	let { view }: { view: ShellView } = $props();
+
+	const PAD: [string, [number, number], string][] = [
+		['↑', [0, -1], 'up'],
+		['←', [-1, 0], 'left'],
+		['↓', [0, 1], 'down'],
+		['→', [1, 0], 'right']
+	];
 
 	const CHIPS = ['ls', 'tree', 'cd ..', 'neofetch', 'honk', 'help'];
 
@@ -33,7 +40,7 @@
 	}
 
 	function keydown(event: KeyboardEvent) {
-		if (onkey?.(event)) return;
+		if (view.snakeKey(event)) return;
 		const history = view.shell?.state.history ?? [];
 		if (event.key === 'Tab') {
 			event.preventDefault();
@@ -66,22 +73,38 @@
 	</div>
 	<div class="out" bind:this={out} role="log" aria-live="polite">
 		{#each view.lines as line (line.id)}
-			<div>
-				{#each line.segs as s, j (j)}
-					{#if s.href}
-						<a href={s.href} target="_blank" rel="noopener noreferrer" style:color={s.c}>{s.t}</a>
-					{:else if s.run}
-						{@const cmd = s.run}
-						<button type="button" class="ol" style:color={s.c || '#f5f5f5'} onclick={() => run(cmd)}
-							>{s.t}</button
+			{#if line.kind === 'snake'}
+				<div class="snake">{line.segs[0]?.t}</div>
+			{:else if line.kind === 'pad'}
+				<div class="snakepad">
+					{#each PAD as [label, dir, name] (name)}
+						<button type="button" aria-label="Snake {name}" onclick={() => view.snakeTurn(dir)}
+							>{label}</button
 						>
-					{:else if s.fx}
-						<span class="fx">{s.t}</span>
-					{:else}
-						<span style:color={s.c}>{s.t}</span>
-					{/if}
-				{/each}
-			</div>
+					{/each}
+					<button type="button" onclick={() => view.snakeQuit()}>quit</button>
+				</div>
+			{:else}
+				<div>
+					{#each line.segs as s, j (j)}
+						{#if s.href}
+							<a href={s.href} target="_blank" rel="noopener noreferrer" style:color={s.c}>{s.t}</a>
+						{:else if s.run}
+							{@const cmd = s.run}
+							<button
+								type="button"
+								class="ol"
+								style:color={s.c || '#f5f5f5'}
+								onclick={() => run(cmd)}>{s.t}</button
+							>
+						{:else if s.fx}
+							<span class="fx">{s.t}</span>
+						{:else}
+							<span style:color={s.c}>{s.t}</span>
+						{/if}
+					{/each}
+				</div>
+			{/if}
 		{/each}
 	</div>
 	<div class="chips">

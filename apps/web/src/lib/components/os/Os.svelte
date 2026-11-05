@@ -52,8 +52,7 @@
 				w.kind === 'game'
 					? { kind: 'game', appid: w.game.appid }
 					: { kind: 'media', category: w.category, index: w.index };
-		},
-		startSnake: () => {}
+		}
 	});
 
 	let games = $derived(getSteamGamesState() ?? []);

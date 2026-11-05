@@ -173,3 +173,14 @@ describe('nmap', () => {
 		expect(textOf(runOn(fixture, ['Nmap  example.com']))).toContain('report for example.com');
 	});
 });
+
+describe('sl', () => {
+	it('runs a cat past, in any case', () => {
+		for (const cmd of ['sl', ' SL ']) {
+			expect(runOn(fixture, [cmd]).slice(1)).toEqual([
+				[{ t: 'sl: did you mean ls? a cat runs past instead.', c: '#9ca3af' }],
+				[{ t: ' '.repeat(34) + '=^@.@^=  ~', c: '#facc15' }]
+			]);
+		}
+	});
+});

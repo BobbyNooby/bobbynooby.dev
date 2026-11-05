@@ -108,7 +108,9 @@ export class SimpleChat {
 
     const pastMessages: ChatMessage[] = [...(await this.getLastMessages())];
 
-    ws.send(JSON.stringify({ initialMessages: pastMessages }));
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ initialMessages: pastMessages }));
+    }
   }
 
   removeWebSocket(ws: WebSocket) {

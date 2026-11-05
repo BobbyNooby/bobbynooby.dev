@@ -71,6 +71,8 @@ async function handleConnection(ws: WebSocket, req: IncomingMessage) {
   }
 
   const session = await getSession(convertReq(req, app), authConfig);
+  // Closed during the lookup: its close event has passed, so nothing would remove it.
+  if (ws.readyState !== WebSocket.OPEN) return;
 
   consoleBob(
     `Websocket Connected. User : ${session?.user?.name}, ID : ${session?.user?.id}`,

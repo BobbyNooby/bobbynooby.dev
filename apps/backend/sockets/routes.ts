@@ -11,7 +11,8 @@ import type { ChatEntry } from "./chatLimits";
 export const MAX_FRAME_LENGTH = 16 * 1024;
 
 // One function per socket subroute: hand the socket to its module and clean
-// up when it closes.
+// up when it closes. Close is listened for before any await, so a socket that
+// closes mid-setup is still removed.
 
 export function attachPresence(
   ws: WebSocket,
@@ -37,24 +38,24 @@ export function attachPresence(
 }
 
 export async function attachDiscord(ws: WebSocket, discordBot: DiscordBot) {
-  await discordBot.addWebSocket(ws);
-
   ws.on("close", () => {
     discordBot.removeWebSocket(ws);
     consoleBob("WebSocket connection to /discord closed");
   });
+
+  await discordBot.addWebSocket(ws);
 }
 
 export async function attachSpotify(
   ws: WebSocket,
   spotifyClient: SpotifyClient,
 ) {
-  await spotifyClient.addWebSocket(ws);
-
   ws.on("close", () => {
     spotifyClient.removeWebSocket(ws);
     consoleBob("WebSocket connection to /spotify closed");
   });
+
+  await spotifyClient.addWebSocket(ws);
 }
 
 export async function attachChat(
@@ -68,7 +69,10 @@ export async function attachChat(
   },
 ) {
   const { sessionId, chatEntry, bucketKey } = opts;
-  await chat.addWebSocket(ws, { id: sessionId, name: opts.name });
+  ws.on("close", () => {
+    chat.removeWebSocket(ws);
+    consoleBob("WebSocket connection to /chat closed");
+  });
 
   ws.on("message", async (message) => {
     try {
@@ -87,8 +91,5 @@ export async function attachChat(
     }
   });
 
-  ws.on("close", () => {
-    chat.removeWebSocket(ws);
-    consoleBob("WebSocket connection to /chat closed");
-  });
+  await chat.addWebSocket(ws, { id: sessionId, name: opts.name });
 }

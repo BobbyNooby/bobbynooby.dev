@@ -2,6 +2,7 @@
 	import type { BshData, BshLink, BshProject, PaneKey, Win } from '$lib/bsh/types';
 	import type { GridEntry } from '$lib/media/homeGrid';
 	import { ChatState } from '$lib/os/chat.svelte';
+	import { KONAMI, createTitleTaps, konamiStep } from '$lib/os/eggs';
 	import { LiveState } from '$lib/os/live.svelte';
 	import { OsState, setOsContext } from '$lib/os/os.svelte';
 	import { PresenceState } from '$lib/os/presence.svelte';
@@ -115,6 +116,31 @@
 		if (view.ready) untrack(() => view.unlock('live'));
 	});
 
+	let konamiPos = 0;
+	const titleTaps = createTitleTaps();
+
+	// Konami code or 7 quick title taps: amber phosphor, on and off.
+	function phosphor() {
+		os.phosphor = !os.phosphor;
+		view.print([
+			{
+				t: os.phosphor
+					? '↑ ↑ ↓ ↓ ← → ← → B A · phosphor mode on. do it again to turn it off.'
+					: 'phosphor mode off.',
+				c: '#facc15'
+			}
+		]);
+		view.unlock('konami');
+	}
+
+	function keydown(event: KeyboardEvent) {
+		konamiPos = konamiStep(konamiPos, event.key ?? '');
+		if (konamiPos === KONAMI.length) {
+			konamiPos = 0;
+			phosphor();
+		}
+	}
+
 	function honk() {
 		if (view.shell) view.honk();
 		else playAudio(`${staticFilesUrl}/honk.mp3`);
@@ -131,9 +157,17 @@
 	}
 </script>
 
-<div class="os" bind:this={root} onpointermove={pointer} role="presentation">
+<svelte:window onkeydown={keydown} />
+
+<div
+	class="os"
+	class:phos={os.phosphor}
+	bind:this={root}
+	onpointermove={pointer}
+	role="presentation"
+>
 	<h1 class="sr-only">bobbynooby.dev</h1>
-	<Bar>
+	<Bar onbrand={() => titleTaps(performance.now()) && phosphor()}>
 		{#snippet here()}<HerePopover />{/snippet}
 	</Bar>
 

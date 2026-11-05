@@ -6,6 +6,7 @@ import type { BshData, Line, ShellCtx, Win } from '$lib/bsh/types';
 import { twitch } from '$lib/twitch/twitchLive.svelte';
 import { staticFilesUrl } from '$lib/utils/externalURLs';
 import { playAudio } from '$lib/utils/playAudio';
+import { isNightOwl } from './eggs';
 import type { OsContext } from './os.svelte';
 
 export type ShellLine = { id: number; segs: Line };
@@ -107,6 +108,10 @@ export class ShellView {
 			]);
 		}
 		for (const cmd of ['ls', 'cat about_me.txt', 'ls projects']) this.shell.run(cmd);
+		if (isNightOwl(new Date())) {
+			this.print([{ t: "it's past 2am in London. bobby is probably still up too.", c: '#9ca3af' }]);
+			this.shell.unlock('owl');
+		}
 		this.#sync();
 		this.ready = true;
 	}

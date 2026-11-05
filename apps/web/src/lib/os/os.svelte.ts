@@ -11,6 +11,7 @@ export type OsWindow =
 export class OsState {
 	focused = $state<PaneKey>('about');
 	win = $state<OsWindow | null>(null);
+	phosphor = $state(false);
 	gridCat = $state('anime');
 	toastText = $state('');
 	toastShown = $state(false);

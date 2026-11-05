@@ -3,6 +3,7 @@ import { createAchievementStore, type StorageLike } from './achievements';
 import { createShell, PANE_TITLES } from './engine';
 import fixtureJson from './fixtures/site-data.json';
 import { pathOf } from './fs';
+import { snakeBoard, type Point } from './games/snake';
 import type { BshData, Line, PaneKey, ShellCtx } from './types';
 
 export const fixture = fixtureJson as unknown as BshData;
@@ -68,7 +69,19 @@ function recorder(data: BshData, o: RecordOptions, storage: StorageLike) {
 		},
 		later: (fn) => fn(),
 		animate: (frames) => lines.push([{ t: frames[frames.length - 1], c: '#facc15' }]),
-		startSnake: () => {},
+		// The sheet's record() has no live snake, so the prototype printed this still board.
+		startSnake: () => {
+			const body: Point[] = [
+				[9, 4],
+				[8, 4],
+				[7, 4],
+				[6, 4]
+			];
+			lines.push([{ t: snakeBoard({ body, food: [17, 2] }, 26, 8), c: '#4ade80' }]);
+			lines.push([
+				{ t: 'score 0   arrows or WASD · q quits (plays live in the frames)', c: '#9ca3af' }
+			]);
+		},
 		live: () => ({
 			discord: 'online',
 			twitchLive: false,
@@ -114,6 +127,11 @@ export function record(cmds: string[], o: RecordOptions = {}): Line[] {
 		} else r.sh.run(c);
 	}
 	return r.lines();
+}
+
+export function liveShell(data: BshData = fixture, storage = memoryStorage()) {
+	const r = recorder(data, {}, storage);
+	return { shell: r.sh, lines: r.lines };
 }
 
 export function runOn(data: BshData, cmds: string[], storage = memoryStorage()): Line[] {

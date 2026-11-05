@@ -341,6 +341,7 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		if (/^((brew|make) )?coffee$/.test(raw.toLowerCase().replace(/\s+/g, ' '))) {
 			return print("418 I'm a teapot. this shell only brews tea. (try honk)", '#facc15');
 		}
+		if (c === 'snake') return ctx.startSnake();
 		print('bsh: command not found: ' + c + '. try help', '#ef4444');
 	};
 

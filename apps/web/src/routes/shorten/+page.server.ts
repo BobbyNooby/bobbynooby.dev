@@ -1,5 +1,5 @@
 import { createShortURL } from '$lib/shortURL/shortURL';
-import { isValidURL } from '$lib/shortURL/isValidURL';
+import { normalizeURL } from '$lib/shortURL/normalizeURL';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
@@ -28,8 +28,8 @@ export const actions = {
 			});
 		}
 
-		// URL validation
-		if (!isValidURL(longURL)) {
+		const normalizedURL = normalizeURL(longURL);
+		if (!normalizedURL) {
 			return fail(400, {
 				error: true,
 				message: 'Invalid URL format. Please provide a valid URL.'
@@ -37,7 +37,7 @@ export const actions = {
 		}
 
 		try {
-			const shortURLResponse = await createShortURL(longURL);
+			const shortURLResponse = await createShortURL(normalizedURL);
 
 			if (shortURLResponse.success) {
 				return {

@@ -3,6 +3,7 @@ import { ACH, type AchievementStore, type AchKey } from './achievements';
 import { bar } from './format';
 import { buildFs, pathOf, resolve, treeText } from './fs';
 import { huntTurn, startHunt } from './games/hunt';
+import { answerTrivia, startTrivia } from './games/trivia';
 import { createMounts } from './mounts';
 import { mulberry32 } from './rng';
 import type { BshData, DirNode, FileNode, FsNode, Line, PaneKey, ShellCtx, Win } from './types';
@@ -188,6 +189,20 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 			if (turn.end) endMode();
 		});
 	};
+	const trivia = () => {
+		const start = startTrivia(opts.data, rng);
+		printAll(start.lines);
+		if (!start.state) return;
+		let t = start.state;
+		enterMode('answer>', (raw) => {
+			const step = answerTrivia(t, raw);
+			t = step.state;
+			printAll(step.lines);
+			if (!step.done) return;
+			if (t.score === t.qs.length) unlock('trivia');
+			endMode();
+		});
+	};
 
 	const run = (input: string) => {
 		const raw = input.trim();
@@ -367,6 +382,7 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		}
 		if (c === 'snake') return ctx.startSnake();
 		if (c === 'hunt') return hunt();
+		if (c === 'trivia') return trivia();
 		print('bsh: command not found: ' + c + '. try help', '#ef4444');
 	};
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { snakeBoard } from './games/snake';
 import { fixture, liveShell, runOn, textOf } from './testing';
+import type { BshData } from './types';
 
 const PROMPT = 'guest_4821@bobbynooby.dev:~$';
 
@@ -58,5 +59,60 @@ describe('hunt', () => {
 			shell.run(cmd);
 			expect(shell.promptText()).toBe('hunt>');
 		}
+	});
+});
+
+describe('trivia', () => {
+	const noShortReviews: BshData = {
+		...fixture,
+		threeByThree: {
+			...fixture.threeByThree,
+			manga: fixture.threeByThree.manga.map((m) => ({ ...m, review: null }))
+		}
+	};
+
+	it('takes over the prompt until the last answer', () => {
+		const { shell } = liveShell();
+		shell.run('trivia');
+		expect(shell.promptText()).toBe('answer>');
+		shell.run('x');
+		shell.run('c');
+		shell.run('a');
+		expect(shell.promptText()).toBe('answer>');
+		shell.run('d');
+		expect(shell.promptText()).toBe(PROMPT);
+		expect(shell.state.history).toEqual(['trivia']);
+	});
+
+	it('unlocks Know Your Bobby only on 3/3', () => {
+		const perfect = textOf(runOn(fixture, ['trivia', 'c', 'a', 'b']));
+		expect(perfect).toContain('score 3/3. you know your bobby.\n+ achievement: Know Your Bobby  [');
+		const flop = textOf(runOn(fixture, ['trivia', 'c', 'a', 'd']));
+		expect(flop).toContain('score 2/3. study harder.');
+		expect(flop).not.toContain('Know Your Bobby');
+	});
+
+	it('asks two questions with fewer than 3 games', () => {
+		const out = textOf(runOn({ ...fixture, games: fixture.games.slice(0, 2) }, ['trivia']));
+		expect(out).toContain('Q1/2  Which game has bobby put the most hours into?');
+		expect(out).not.toContain('How many hours');
+	});
+
+	it('asks two questions with no short manga review', () => {
+		const out = textOf(runOn(noShortReviews, ['trivia', 'c']));
+		expect(out).toContain('Q1/2');
+		expect(out).toContain('Q2/2  How many hours has bobby played Monster Hunter Wilds?');
+	});
+
+	it('refuses with nothing to ask and stays at the shell prompt', () => {
+		const { shell, lines } = liveShell({ ...noShortReviews, games: [] });
+		shell.run('trivia');
+		expect(lines().at(-1)).toEqual([{ t: 'trivia needs your site data.', c: '#ef4444' }]);
+		expect(shell.promptText()).toBe(PROMPT);
+	});
+
+	it('takes odd casing and spacing', () => {
+		const out = textOf(runOn(fixture, ['  TRIVIA ', '  C  ', 'A', ' b']));
+		expect(out).toContain('score 3/3');
 	});
 });

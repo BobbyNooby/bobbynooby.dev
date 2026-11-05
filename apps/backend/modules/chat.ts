@@ -1,6 +1,6 @@
 import { Db } from "mongodb";
 import WebSocket from "ws";
-import { chatIntakeSchema } from "@bobbynooby/shared";
+import { chatIntakeSchema, isReservedName } from "@bobbynooby/shared";
 import { MongoDBClient } from "./mongodb";
 import { ChatMessage, RecievedChatMessage } from "../types";
 import { DiscordBot } from "./discord";
@@ -74,14 +74,15 @@ export class SimpleChat {
 
     // Authed users speak under their Discord name; only guests may pick one.
     const identity = ws ? this.identities.get(ws) : undefined;
-    const name = identity?.name ?? parsed.data.name;
+    const name = (identity?.name ?? parsed.data.name).slice(0, 50);
+    const isOwner = (await this.mongoClient.isAdmin(sessionId)) == true;
 
     const messageObject: ChatMessage = {
-      name: name.slice(0, 50),
+      // Only the owner may go by the owner's names.
+      name: !isOwner && isReservedName(name) ? "Guest" : name,
       created_at: new Date().toISOString(),
       message: parsed.data.message,
-      rank:
-        (await this.mongoClient.isAdmin(sessionId)) == true ? "owner" : "guest",
+      rank: isOwner ? "owner" : "guest",
     };
 
     await this.db

@@ -20,7 +20,7 @@ export {
 	type PresenceState
 } from './presence';
 export { createPresenceRegistry, type PresenceRegistry } from './presenceRegistry';
-export { cleanText } from './text';
+export { cleanText, isReservedName } from './text';
 
 export type DiscordStatus = 'online' | 'idle' | 'dnd' | 'offline' | 'unknown';
 

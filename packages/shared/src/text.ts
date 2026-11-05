@@ -18,3 +18,15 @@ export function cleanText(text: string): string {
 		)
 		.trim();
 }
+
+// The owner's names, compared by letters and digits only.
+const RESERVED_NAMES = new Set(['bobbynooby', 'bobbynoobydev']);
+
+/** Whether a name reads as the owner's however it is cased, spaced, accented or decorated. */
+export function isReservedName(name: string): boolean {
+	const key = cleanText(name)
+		.normalize('NFKD')
+		.replace(/[^\p{L}\p{N}]/gu, '')
+		.toLowerCase();
+	return RESERVED_NAMES.has(key);
+}

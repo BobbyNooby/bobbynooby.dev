@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cleanText } from './text';
+import { cleanText, isReservedName } from './text';
 import { chatIntakeSchema } from './index';
 
 describe('cleanText', () => {
@@ -46,6 +46,34 @@ describe('cleanText', () => {
 			expect(cleanText(emoji)).toBe(emoji);
 		}
 	});
+});
+
+describe('isReservedName', () => {
+	it.each([
+		'BobbyNooby',
+		'bobbynooby',
+		'BOBBYNOOBY',
+		'Bobby Nooby',
+		'  bobbynooby.dev  ',
+		'bobbynooby . dev',
+		'Bobby_Nooby',
+		'**BobbyNooby**',
+		'👑BobbyNooby',
+		'BóbbyNooby',
+		'Bobby\u200bNooby',
+		'Bobby\u3164Nooby',
+		'\u202eBobbyNooby',
+		'ＢｏｂｂｙＮｏｏｂｙ'
+	])('reserves %j', (name) => {
+		expect(isReservedName(name)).toBe(true);
+	});
+
+	it.each(['Bobby', 'BobbyNoobyFan', 'NotBobbyNooby', 'Guest_1234', 'bobbynooby.de', 'bsh'])(
+		'allows %j',
+		(name) => {
+			expect(isReservedName(name)).toBe(false);
+		}
+	);
 });
 
 describe('chatIntakeSchema', () => {

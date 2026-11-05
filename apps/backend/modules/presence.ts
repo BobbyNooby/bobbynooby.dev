@@ -3,6 +3,7 @@ import WebSocket from "ws";
 import {
   createPresenceRegistry,
   createTokenBucket,
+  isReservedName,
   presenceClientMessageSchema,
   type TokenBucket,
 } from "@bobbynooby/shared";
@@ -57,9 +58,11 @@ export class Presence {
 
     if (message.t === "hello") {
       if (this.sockets.get(ws)?.hello.tryTake() !== true) return;
+      // There is no login here, so no cursor may use the owner's names.
+      const name = isReservedName(message.name) ? "Guest" : message.name;
       // A refused socket stays open as an uncounted viewer, so a busy shared
       // network still sees everyone instead of reconnecting in a loop.
-      if (!this.registry.hello(ws, message.id, message.name)) {
+      if (!this.registry.hello(ws, message.id, name)) {
         consoleBob("[Presence] hello refused: too many ids from one address");
       }
       this.greeted.add(ws);

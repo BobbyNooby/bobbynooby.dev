@@ -50,10 +50,13 @@ const say: Command = (env, { raw }) => {
 	// was sent when the server would drop it.
 	const check = chatIntakeSchema.safeParse({ name: env.st.user, message: msg });
 	if (!check.success) {
+		const issue = check.error.issues.find((i) => i.path[0] === 'message');
 		return env.print(
-			check.error.issues.some((i) => i.path[0] === 'message')
-				? 'say: messages can be at most ' + CHAT_MAX_MESSAGE_LENGTH + ' characters'
-				: 'say: your name does not fit in /Chat. try username <name>',
+			!issue
+				? 'say: your name does not fit in /Chat. try username <name>'
+				: issue.code === 'too_small'
+					? 'say: that message has nothing visible in it'
+					: 'say: messages can be at most ' + CHAT_MAX_MESSAGE_LENGTH + ' characters',
 			'#ef4444'
 		);
 	}

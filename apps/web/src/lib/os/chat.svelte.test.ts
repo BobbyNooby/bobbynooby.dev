@@ -61,6 +61,14 @@ describe('ChatState.submit', () => {
 		expect(chat.submit('   ')).toBe(false);
 	});
 
+	it('explains a refused message without calling an invisible one too long', () => {
+		const chat = startedChat();
+		expect(chat.submit('​ㅤ')).toBe(false);
+		expect(chat.messages.at(-1)?.message).toBe(
+			"That message can't be sent: it needs visible text and at most 1900 characters."
+		);
+	});
+
 	it('says false when sending too fast', () => {
 		const chat = startedChat();
 		const results = Array.from({ length: 6 }, () => chat.submit('hi'));

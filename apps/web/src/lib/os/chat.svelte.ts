@@ -4,7 +4,7 @@ import type { ChatSendResult } from '$lib/bsh/types';
 import type { ChatMessage } from '$lib/types';
 import { createLiveSocket, type LiveSocket } from '$lib/utils/liveSocket';
 import { playAudio } from '$lib/utils/playAudio';
-import { chatIntakeSchema, createTokenBucket } from '@bobbynooby/shared';
+import { CHAT_MAX_MESSAGE_LENGTH, chatIntakeSchema, createTokenBucket } from '@bobbynooby/shared';
 
 const STARTERS = [
 	'Welcome to the chat! Use /username to change your username.',
@@ -21,7 +21,7 @@ const system = (message: string): ChatMessage => ({
 const SEND_NOTES: Record<Exclude<ChatSendResult, 'sent'>, string> = {
 	offline: '/Chat is reconnecting. Try again in a moment.',
 	'too-fast': 'Slow down: chat takes 5 messages, then one every 2 seconds.',
-	invalid: 'That message is too long to send.'
+	invalid: `That message can't be sent: it needs visible text and at most ${CHAT_MAX_MESSAGE_LENGTH} characters.`
 };
 const guest = () => `Guest_${Math.floor(1000 + Math.random() * 9000)}`;
 

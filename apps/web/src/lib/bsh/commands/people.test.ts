@@ -20,6 +20,13 @@ describe('say', () => {
 		expect(out).toContain('shows up in /Chat as <Guest_4821> hello    there  :  )');
 	});
 
+	it('says a message with nothing visible in it is empty, not too long', () => {
+		const out = textOf(record(['say ​ㅤ']));
+		expect(out).toContain('say: that message has nothing visible in it');
+		expect(out).not.toContain('at most');
+		expect(out).not.toContain('(sent to /Chat)');
+	});
+
 	it('says so when sending too fast', () => {
 		const out = textOf(record(['say hi'], { chat: 'too-fast' }));
 		expect(out).toContain('say: slow down. /Chat takes 5 messages, then one every 2 seconds.');

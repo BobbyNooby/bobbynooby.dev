@@ -1,3 +1,4 @@
+import { createHash, randomBytes } from "node:crypto";
 import WebSocket from "ws";
 import {
   createPresenceRegistry,
@@ -10,7 +11,13 @@ import { consoleBob } from "../utils";
 const BROADCAST_INTERVAL_MS = 100;
 
 export class Presence {
-  registry = createPresenceRegistry<WebSocket>();
+  // Others see a salted hash, so nobody can read a visitor's id off the wire
+  // and say hello with it to take over their cursor.
+  salt = randomBytes(16);
+  registry = createPresenceRegistry<WebSocket>({
+    publicId: (id) =>
+      createHash("sha256").update(this.salt).update(id).digest("base64url").slice(0, 16),
+  });
   // Every open /presence socket, with the bucket that rate-limits its cursor.
   sockets = new Map<WebSocket, TokenBucket>();
   sentVersion = this.registry.version();

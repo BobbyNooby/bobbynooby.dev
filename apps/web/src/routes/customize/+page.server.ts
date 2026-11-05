@@ -138,9 +138,11 @@ export const actions = {
 			return fail(403, { message: 'You are not authorized to make changes.' });
 		}
 		const formData = await event.request.formData();
-		const appid = Number(formData.get('appid'));
+		const raw = formData.get('appid');
+		// Number() reads a missing or blank appid as 0, and also takes '-1', '1e3' and '0x10'.
+		const appid = typeof raw === 'string' && /^\d{1,10}$/.test(raw) ? Number(raw) : NaN;
 		const hide = formData.get('hide');
-		if (!Number.isInteger(appid) || (hide !== 'true' && hide !== 'false')) {
+		if (Number.isNaN(appid) || (hide !== 'true' && hide !== 'false')) {
 			return fail(400, { message: 'Invalid game.' });
 		}
 		try {

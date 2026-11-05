@@ -104,6 +104,20 @@ describe('customize toggleGame action', () => {
 		expect(getHiddenAppids).not.toHaveBeenCalled();
 	});
 
+	it('rejects an appid that is not plain digits instead of hiding game 0', async () => {
+		const clicks: Record<string, string>[] = [
+			{ hide: 'true' },
+			...['', ' ', '-1', '1e3', '0x10', '1.5', '730 ', '99999999999'].map((appid) => ({
+				appid,
+				hide: 'true'
+			}))
+		];
+		for (const fields of clicks) {
+			await expect(actions.toggleGame(post(fields))).resolves.toMatchObject({ status: 400 });
+		}
+		expect(setAppidHidden).not.toHaveBeenCalled();
+	});
+
 	it('rejects a click that does not say whether to hide or show', async () => {
 		const clicks: Record<string, string>[] = [{ appid: '730' }, { appid: '730', hide: 'yes' }];
 		for (const fields of clicks) {

@@ -2,7 +2,9 @@ import { CHAT_MAX_MESSAGE_LENGTH, chatIntakeSchema } from '@bobbynooby/shared';
 import { ACH, type AchievementStore, type AchKey } from './achievements';
 import { bar } from './format';
 import { buildFs, pathOf, resolve, treeText } from './fs';
+import { huntTurn, startHunt } from './games/hunt';
 import { createMounts } from './mounts';
+import { mulberry32 } from './rng';
 import type { BshData, DirNode, FileNode, FsNode, Line, PaneKey, ShellCtx, Win } from './types';
 
 export const PANE_TITLES: Record<PaneKey, string> = {
@@ -103,10 +105,20 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		sudos: 0,
 		exits: 0
 	};
+	const rng = mulberry32(opts.seed ?? Date.now() & 0x7fffffff);
 	store.unlock('visit');
 
 	const print = (segs: string | Line, color?: string) =>
 		ctx.print(typeof segs === 'string' ? [{ t: segs, c: color }] : segs);
+	const printAll = (lines: Line[]) => lines.forEach((l) => ctx.print(l));
+	const enterMode = (prompt: string, handle: Mode['handle']) => {
+		st.mode = { prompt, handle };
+		ctx.onPrompt('mode');
+	};
+	const endMode = () => {
+		st.mode = null;
+		ctx.onPrompt('mode');
+	};
 	const locked = (n: FsNode | null) => !!(n && n.type === 'dir' && n.locked && !store.trusted());
 	const find = (path: string) => resolve(root, st.cwd, path, store.trusted());
 	const promptText = () =>
@@ -164,6 +176,18 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 	};
 	const fakeRm = () =>
 		RM_LINES.forEach(([t, color], i) => ctx.later(() => print(t, color), (i + 1) * 280));
+	const hunt = () => {
+		const start = startHunt();
+		let g = start.state;
+		printAll(start.lines);
+		enterMode('hunt>', (raw) => {
+			const turn = huntTurn(g, raw, rng);
+			g = turn.state;
+			printAll(turn.lines);
+			if (turn.end === 'won') unlock('hunter');
+			if (turn.end) endMode();
+		});
+	};
 
 	const run = (input: string) => {
 		const raw = input.trim();
@@ -342,6 +366,7 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 			return print("418 I'm a teapot. this shell only brews tea. (try honk)", '#facc15');
 		}
 		if (c === 'snake') return ctx.startSnake();
+		if (c === 'hunt') return hunt();
 		print('bsh: command not found: ' + c + '. try help', '#ef4444');
 	};
 

@@ -112,11 +112,17 @@
 		});
 	});
 
-	// Going live puts the stream first, and being here for it is an achievement.
+	// Going live puts the stream first, once; each poll after that leaves focus alone.
+	let wasLive = false;
 	$effect(() => {
-		if (!twitch.status?.live) return;
-		untrack(() => os.focus('twitch'));
-		if (view.ready) untrack(() => view.unlock('live'));
+		const isLive = !!twitch.status?.live;
+		if (isLive && !wasLive) untrack(() => os.focus('twitch'));
+		wasLive = isLive;
+	});
+
+	// Being here while Bobby is live is an achievement (unlock is a no-op after the first).
+	$effect(() => {
+		if (twitch.status?.live && view.ready) untrack(() => view.unlock('live'));
 	});
 
 	let konamiPos = 0;

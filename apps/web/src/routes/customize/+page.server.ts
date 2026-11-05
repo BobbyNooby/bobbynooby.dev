@@ -68,14 +68,18 @@ export const actions = {
 			links = parsePayload(z.array(linkSchema), formData.get('linksTable'), 'links');
 			projects = parsePayload(z.array(projectSchema), formData.get('projectsTable'), 'projects');
 			all3x3 = parsePayload(z.array(listSchema), formData.get('all3x3Data'), '3x3 lists');
+			assertUniqueUids(links, 'links');
+			assertUniqueUids(projects, 'projects');
+			const names = new Set<string>();
+			for (const list of all3x3) {
+				assertUniqueUids(list.data, `3x3 list "${list.label}"`);
+				// Labels map to collections by lowercase, so these two would overwrite each other.
+				const name = list.label.toLowerCase();
+				if (names.has(name)) throw new Error(`Duplicate 3x3 list: ${name}`);
+				names.add(name);
+			}
 		} catch (err) {
 			return fail(400, { message: err instanceof Error ? err.message : 'Invalid data' });
-		}
-
-		assertUniqueUids(links, 'links');
-		assertUniqueUids(projects, 'projects');
-		for (const list of all3x3) {
-			assertUniqueUids(list.data, `3x3 list "${list.label}"`);
 		}
 
 		// Only write to 3x3 collections that already exist in the routes doc,

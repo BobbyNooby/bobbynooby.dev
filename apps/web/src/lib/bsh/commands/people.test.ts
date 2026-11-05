@@ -15,6 +15,11 @@ describe('say', () => {
 		expect(out).not.toContain('Said Something');
 	});
 
+	it('keeps the spacing of the message', () => {
+		const out = textOf(record(['say   hello    there  :  )']));
+		expect(out).toContain('shows up in /Chat as <Guest_4821> hello    there  :  )');
+	});
+
 	it('says so when sending too fast', () => {
 		const out = textOf(record(['say hi'], { chat: 'too-fast' }));
 		expect(out).toContain('say: slow down. /Chat takes 5 messages, then one every 2 seconds.');

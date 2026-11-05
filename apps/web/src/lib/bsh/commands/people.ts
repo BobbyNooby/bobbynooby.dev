@@ -42,11 +42,13 @@ const username: Command = (env, { arg }) => {
 	return env.unlock('rename');
 };
 
-const say: Command = (env, { arg }) => {
-	if (!arg) return env.print('say: what do you want to say?', '#ef4444');
+const say: Command = (env, { raw }) => {
+	// From the raw line, so the message keeps the spacing it was typed with.
+	const msg = raw.replace(/^\S+\s*/, '');
+	if (!msg) return env.print('say: what do you want to say?', '#ef4444');
 	// Same schema the backend enforces, so the shell never claims a message
 	// was sent when the server would drop it.
-	const check = chatIntakeSchema.safeParse({ name: env.st.user, message: arg });
+	const check = chatIntakeSchema.safeParse({ name: env.st.user, message: msg });
 	if (!check.success) {
 		return env.print(
 			check.error.issues.some((i) => i.path[0] === 'message')
@@ -55,7 +57,7 @@ const say: Command = (env, { arg }) => {
 			'#ef4444'
 		);
 	}
-	const result = env.ctx.sendChat(env.st.user, arg);
+	const result = env.ctx.sendChat(env.st.user, msg);
 	if (result !== 'sent') return env.print(SAY_FAILED[result], '#ef4444');
 	env.print('(sent to /Chat)', '#9ca3af');
 	return env.unlock('say');

@@ -70,10 +70,13 @@ export function startTrivia(
 	return { state, lines: [line('bobby trivia. answer a, b, c or d.', '#9ca3af'), ...ask(state)] };
 }
 
+// "a or b", "a, b or c", "a, b, c or d"
+const choices = (n: number) => [...KEYS.slice(0, n)].join(', ').replace(/, (\w)$/, ' or $1');
+
 export function answerTrivia(s: TriviaState, input: string): TriviaStep {
-	const k = KEYS.indexOf(input.trim().toLowerCase()[0] ?? '?');
-	if (k < 0) return { state: s, lines: [line('a, b, c or d', '#9ca3af')], done: false };
 	const q = s.qs[s.i];
+	const k = KEYS.slice(0, q.opts.length).indexOf(input.trim().toLowerCase()[0] ?? '?');
+	if (k < 0) return { state: s, lines: [line(choices(q.opts.length), '#9ca3af')], done: false };
 	const right = k === q.ans;
 	const state = { ...s, i: s.i + 1, score: s.score + (right ? 1 : 0) };
 	const lines = [

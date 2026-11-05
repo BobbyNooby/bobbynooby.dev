@@ -138,6 +138,20 @@ describe('answerTrivia', () => {
 		}
 	});
 
+	it('asks again on a letter that is not an option for this question', () => {
+		const two: TriviaState = { qs: [{ q: '?', opts: ['x', 'y'], ans: 0 }], i: 0, score: 0 };
+		for (const input of ['c', 'd', 'D']) {
+			expect(answerTrivia(two, input)).toEqual({
+				state: two,
+				lines: [[{ t: 'a or b', c: '#9ca3af' }]],
+				done: false
+			});
+		}
+		const three: TriviaState = { qs: [{ q: '?', opts: ['x', 'y', 'z'], ans: 0 }], i: 0, score: 0 };
+		expect(answerTrivia(three, 'd').lines).toEqual([[{ t: 'a, b or c', c: '#9ca3af' }]]);
+		expect(answerTrivia(three, 'c').state.i).toBe(1);
+	});
+
 	it('reads the first letter in any case', () => {
 		expect(answerTrivia(start(), '  C  ').state.score).toBe(1);
 		expect(answerTrivia(start(), 'Counter').state.score).toBe(1);

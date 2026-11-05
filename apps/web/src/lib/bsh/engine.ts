@@ -1,18 +1,11 @@
-import { CHAT_MAX_MESSAGE_LENGTH, chatIntakeSchema } from '@bobbynooby/shared';
 import { ACH, type AchievementStore, type AchKey } from './achievements';
+import { COMMAND_TABLE, PASS, type Call, type ShellEnv, type ShellState } from './commands';
+import { honk, MAX_USERNAME } from './commands/people';
 import { bar } from './format';
-import { buildFs, pathOf, resolve, treeText } from './fs';
-import { catsay } from './games/catsay';
-import { fortune } from './games/fortune';
-import { gachaPull } from './games/gacha';
-import { huntTurn, startHunt } from './games/hunt';
-import { nmap } from './games/nmap';
-import { slFrames } from './games/sl';
-import { answerTrivia, startTrivia } from './games/trivia';
-import { vimInput, vimSplash } from './games/vim';
+import { buildFs, isHidden, pathOf, resolve } from './fs';
 import { createMounts } from './mounts';
 import { mulberry32 } from './rng';
-import type { BshData, DirNode, FileNode, FsNode, Line, PaneKey, ShellCtx, Win } from './types';
+import type { BshData, FsNode, Line, PaneKey, ShellCtx, Win } from './types';
 
 export const PANE_TITLES: Record<PaneKey, string> = {
 	about: '/About_Me',
@@ -25,50 +18,6 @@ export const PANE_TITLES: Record<PaneKey, string> = {
 	grid: '/3x3',
 	twitch: '/Twitch'
 };
-
-// [usage, description] for man. Hidden games are deliberately not here.
-export const COMMANDS: readonly [string, string][] = [
-	['ls [-a] [dir]', 'List a folder. Folder and file names in the output are tappable.'],
-	['cd <dir>', 'Move into a folder and focus its pane. cd .. and cd ~ work too.'],
-	['pwd', 'Print where you are.'],
-	['tree [dir]', 'Print the folder tree.'],
-	['cat <file>', 'Print a file with its link. Games and 3x3 entries also open their window.'],
-	['open <file>', 'Open a link file in a new tab, or a game or 3x3 window.'],
-	['say <msg>', 'Post to /Chat through the chat socket.'],
-	['username <name>', 'Rename yourself. No slash needed here; the chat box still wants /username.'],
-	['whoami · neofetch · honk', 'Who you are, the host card, and the honk.'],
-	['history · clear', 'List what you typed, or clear the screen.'],
-	['help · man <cmd>', 'List the commands, or explain one.'],
-	['achievements', 'List every achievement. Hidden ones show as ??? until found.'],
-	[
-		'sudo · rm · exit',
-		'Jokes. Nothing happens except achievements. The hidden games are not listed here.'
-	],
-	['Tab · ↑ ↓', 'Complete a path, or walk your history (keyboard).']
-];
-
-const SUDO_REPLIES = [
-	'guest is not in the sudoers file. This incident will be reported to bobby.',
-	'still no.',
-	'bobby has been notified. he will do nothing about it.',
-	'the cat has revoked your sudo privileges, permanently.'
-];
-const EXIT_REPLIES = [
-	'there is no exit. only honk.',
-	'seriously, your browser tab has a close button.',
-	'logging out guest ... jk. you live here now.'
-];
-const RM_LINES: [string, string][] = [
-	['removing ~/projects ...', '#ef4444'],
-	['removing ~/links ...', '#ef4444'],
-	['removing ~/3x3 ...', '#ef4444'],
-	['removing the cat ...', '#ef4444'],
-	['the cat refuses.', '#facc15'],
-	['just kidding. everything is still here.', '#9ca3af']
-];
-const MAX_USERNAME = 24;
-
-type Mode = { prompt: string; handle: (raw: string) => void };
 
 export type ShellOptions = {
 	data: BshData;
@@ -95,8 +44,8 @@ export type Shell = {
 	};
 };
 
-const isHidden = (n: FsNode) => n.type === 'dir' && !!n.hidden;
-
+// The shell: its state, the prompt, tab completion, and the helpers every
+// command shares. The commands themselves live in ./commands.
 export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 	const { store } = opts;
 	const root = buildFs(
@@ -106,29 +55,19 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 			timeZone: opts.timeZone
 		})
 	);
-	const st = {
-		cwd: [] as string[],
-		history: [] as string[],
+	const st: ShellState = {
+		cwd: [],
+		history: [],
 		user: opts.user,
-		mode: null as Mode | null,
+		mode: null,
 		sudos: 0,
 		exits: 0,
 		pulls: 0
 	};
-	const rng = mulberry32(opts.seed ?? Date.now() & 0x7fffffff);
 	store.unlock('visit');
 
 	const print = (segs: string | Line, color?: string) =>
 		ctx.print(typeof segs === 'string' ? [{ t: segs, c: color }] : segs);
-	const printAll = (lines: Line[]) => lines.forEach((l) => ctx.print(l));
-	const enterMode = (prompt: string, handle: Mode['handle']) => {
-		st.mode = { prompt, handle };
-		ctx.onPrompt('mode');
-	};
-	const endMode = () => {
-		st.mode = null;
-		ctx.onPrompt('mode');
-	};
 	const locked = (n: FsNode | null) => !!(n && n.type === 'dir' && n.locked && !store.trusted());
 	const find = (path: string) => resolve(root, st.cwd, path, store.trusted());
 	const promptText = () =>
@@ -144,90 +83,35 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		);
 		ctx.toast('+ ' + a.name + '  ' + n + '/' + ACH.length);
 	};
-	const focusFor = (node: FsNode) => {
-		if (node.pane) ctx.focus(node.pane);
-		if (node.gridCat) ctx.showCat(node.gridCat);
-	};
-	const openWindow = (w: Win) => {
-		ctx.openWindow(w);
-		unlock(w.kind === 'game' ? 'window' : 'media');
-	};
-	const lsLine = (node: DirNode, parts: string[], all: boolean) => {
-		const names = Object.keys(node.kids).filter((n) => all || !isHidden(node.kids[n]));
-		if (!names.length) return print('(empty)', '#9ca3af');
-		const segs: Line = [];
-		names.forEach((n, i) => {
-			const abs = pathOf(parts.concat(n));
-			segs.push(
-				node.kids[n].type === 'dir'
-					? { t: n + '/', c: '#60a5fa', run: 'cd ' + abs }
-					: { t: n, c: '#f5f5f5', run: 'cat ' + abs }
-			);
-			if (i < names.length - 1) segs.push({ t: '  ' });
-		});
-		print(segs);
-	};
 
-	const honk = () => {
-		const wasTrusted = store.trusted();
-		const n = store.addHonk();
-		print(n >= 25 ? 'HONK HONK HONK' : 'HONK!', '#facc15');
-		ctx.honked(n);
-		unlock('honk');
-		if (!wasTrusted && store.trusted()) {
-			print([
-				{ t: 'the cat trusts you now. ', c: '#f472b6' },
-				{ t: '.secrets/', c: '#60a5fa', run: 'ls ~/.secrets' },
-				{ t: ' is open.', c: '#f472b6' }
-			]);
-			unlock('trusted');
-		}
-		if (n >= 25) unlock('addict');
-	};
-	const fakeRm = () =>
-		RM_LINES.forEach(([t, color], i) => ctx.later(() => print(t, color), (i + 1) * 280));
-	const hunt = () => {
-		const start = startHunt();
-		let g = start.state;
-		printAll(start.lines);
-		enterMode('hunt>', (raw) => {
-			const turn = huntTurn(g, raw, rng);
-			g = turn.state;
-			printAll(turn.lines);
-			if (turn.end === 'won') unlock('hunter');
-			if (turn.end) endMode();
-		});
-	};
-	const trivia = () => {
-		const start = startTrivia(opts.data, rng);
-		printAll(start.lines);
-		if (!start.state) return;
-		let t = start.state;
-		enterMode('answer>', (raw) => {
-			const step = answerTrivia(t, raw);
-			t = step.state;
-			printAll(step.lines);
-			if (!step.done) return;
-			if (t.score === t.qs.length) unlock('trivia');
-			endMode();
-		});
-	};
-	const gacha = () => {
-		const pull = gachaPull(opts.data.threeByThree, rng);
-		printAll(pull.lines);
-		if (!pull.pulled) return;
-		st.pulls++;
-		if (st.pulls >= 5) unlock('gacha');
-	};
-	const vim = () => {
-		printAll(vimSplash());
-		enterMode(':', (raw) => {
-			const r = vimInput(raw);
-			printAll(r.lines);
-			if (!r.quit) return;
-			unlock('vim');
-			endMode();
-		});
+	const env: ShellEnv = {
+		ctx,
+		data: opts.data,
+		store,
+		st,
+		rng: mulberry32(opts.seed ?? Date.now() & 0x7fffffff),
+		print,
+		printAll: (lines) => lines.forEach((l) => ctx.print(l)),
+		enterMode: (prompt, handle) => {
+			st.mode = { prompt, handle };
+			ctx.onPrompt('mode');
+		},
+		endMode: () => {
+			st.mode = null;
+			ctx.onPrompt('mode');
+		},
+		find,
+		locked,
+		unlock,
+		focusFor: (node) => {
+			if (node.pane) ctx.focus(node.pane);
+			if (node.gridCat) ctx.showCat(node.gridCat);
+		},
+		openWindow: (w: Win) => {
+			ctx.openWindow(w);
+			unlock(w.kind === 'game' ? 'window' : 'media');
+		},
+		honk: () => honk(env)
 	};
 
 	const run = (input: string) => {
@@ -240,185 +124,11 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		if (!raw) return;
 		st.history.push(raw);
 		const parts = raw.split(/\s+/);
-		const c = parts[0].toLowerCase();
 		const args = parts.slice(1);
-		const arg = args.join(' ');
-
-		if (c === 'clear') return ctx.clear();
-		if (c === 'help') {
-			print(
-				'ls  cd  pwd  tree  cat  open  say  username  whoami  neofetch  honk  achievements  history  clear  man <cmd>'
-			);
-			return print('there are more commands than this. the cat knows.', '#6b6b6b');
-		}
-		if (c === 'man') {
-			const row = COMMANDS.find((r) => r[0].split(/[\s·]+/).includes(args[0] || ''));
-			return row
-				? print([{ t: row[0], c: '#facc15' }, { t: '  ' + row[1] }])
-				: print('man: no entry for ' + (args[0] || '?'), '#ef4444');
-		}
-		if (c === 'pwd') return print(pathOf(st.cwd));
-		if (c === 'ls') {
-			const all = args.includes('-a') || args.includes('-la');
-			const target = args.filter((x) => !x.startsWith('-')).join(' ');
-			const r = find(target);
-			if (r.locked || locked(r.node)) {
-				print('ls: permission denied. the cat does not trust you yet.', '#ef4444');
-				return unlock('secret');
-			}
-			if (!r.node) return print('ls: no such file or folder: ' + target, '#ef4444');
-			if (r.node.type === 'file') return print(target);
-			return lsLine(r.node, r.parts, all);
-		}
-		if (c === 'cd') {
-			const r = find(arg || '~');
-			if (r.locked || locked(r.node)) {
-				print('bsh: permission denied. the cat is watching.', '#ef4444');
-				return unlock('secret');
-			}
-			if (!r.node) return print('cd: no such folder: ' + arg, '#ef4444');
-			if (r.node.type !== 'dir') return print('cd: not a folder: ' + arg + ' (try cat)', '#ef4444');
-			st.cwd = r.parts;
-			ctx.onPrompt('cd');
-			return focusFor(r.node);
-		}
-		if (c === 'tree') {
-			const r = find(arg);
-			if (!r.node || r.node.type !== 'dir' || locked(r.node)) {
-				return print('tree: not a folder: ' + (arg || '.'), '#ef4444');
-			}
-			print(pathOf(r.parts), '#60a5fa');
-			for (const t of treeText(r.node, store.trusted())) {
-				print(t, t.trim().endsWith('/') ? '#60a5fa' : '#d1d5db');
-			}
-			return unlock('tree');
-		}
-		if (c === 'cat' || c === 'open') {
-			if (!arg) return print(c + ': which file?', '#ef4444');
-			const r = find(arg);
-			if (r.locked) {
-				print(c + ': permission denied. the cat does not trust you yet.', '#ef4444');
-				return unlock('secret');
-			}
-			if (!r.node) return print(c + ': no such file: ' + arg, '#ef4444');
-			if (r.node.type === 'dir')
-				return print(c + ': ' + arg + ' is a folder (try ls or cd)', '#ef4444');
-			const file: FileNode = r.node;
-			if (c === 'cat') {
-				for (const l of file.lines()) print(l);
-				focusFor(file);
-				if (file.win) openWindow(file.win);
-				return;
-			}
-			if (file.win) {
-				focusFor(file);
-				return openWindow(file.win);
-			}
-			if (file.href) {
-				print([{ t: 'opening ' }, { t: file.href, href: file.href }]);
-				return ctx.openLink(file.href);
-			}
-			return print('open: nothing to open in ' + arg + ' (try cat)', '#9ca3af');
-		}
-		if (c === 'whoami') return print(st.user + ' (you)');
-		if (c === 'history') {
-			const start = Math.max(0, st.history.length - 12);
-			st.history
-				.slice(start)
-				.forEach((x, i) => print('  ' + (start + i + 1) + '  ' + x, '#9ca3af'));
-			return;
-		}
-		if (c === 'neofetch') {
-			print(st.user.toLowerCase() + '@bobbynooby.dev', '#facc15');
-			print('OS      bobbyOS (SvelteKit 2 + Svelte 5)');
-			print('Host    bob - i7 12700k');
-			print('Memory  8 GiB (32 GiB soon, trust)');
-			return print('Shell   bsh 0.1 · Langs JS / TS / English');
-		}
-		if (c === 'honk') return honk();
-		if (c === 'achievements' || c === 'ach') {
-			const n = store.count();
-			print(
-				'achievements ' + n + '/' + ACH.length + '  [' + bar(n, ACH.length, 20) + ']',
-				'#00ff00'
-			);
-			for (const a of ACH) {
-				const got = store.has(a.key);
-				const show = got || !a.hidden;
-				print([
-					{ t: got ? '[x] ' : '[ ] ', c: got ? '#00ff00' : '#6b6b6b' },
-					{ t: show ? a.name : '???', c: got ? '#00ff00' : '#d1d5db' },
-					{ t: '  ' + (show ? a.how : 'hidden. keep poking around.'), c: '#9ca3af' }
-				]);
-			}
-			return;
-		}
-		if (c === '/username' || c === 'username') {
-			if (!arg) {
-				return print(
-					'usage: username <name>   (the slash is only needed in the chat box)',
-					'#ef4444'
-				);
-			}
-			st.user = arg.slice(0, MAX_USERNAME);
-			ctx.rename(st.user);
-			print('Username changed to ' + st.user, '#FDE047');
-			return unlock('rename');
-		}
-		if (c === 'say') {
-			if (!arg) return print('say: what do you want to say?', '#ef4444');
-			// Same schema the backend enforces, so the shell never claims a message
-			// was sent when the server would drop it.
-			const check = chatIntakeSchema.safeParse({ name: st.user, message: arg });
-			if (!check.success) {
-				return print(
-					check.error.issues.some((i) => i.path[0] === 'message')
-						? 'say: messages can be at most ' + CHAT_MAX_MESSAGE_LENGTH + ' characters'
-						: 'say: your name does not fit in /Chat. try username <name>',
-					'#ef4444'
-				);
-			}
-			ctx.sendChat(st.user, arg);
-			print('(sent to /Chat)', '#9ca3af');
-			return unlock('say');
-		}
-		if (c === 'sudo') {
-			st.sudos++;
-			if (args[0] === 'honk') {
-				print('(running honk as root. the one thing root can do.)', '#9ca3af');
-				honk();
-				return unlock('sudo');
-			}
-			if (args[0] === 'rm') {
-				fakeRm();
-				return unlock('sudo');
-			}
-			print(SUDO_REPLIES[Math.min(st.sudos, SUDO_REPLIES.length) - 1], '#ef4444');
-			return unlock('sudo');
-		}
-		if (c === 'rm') return fakeRm();
-		if (c === 'exit' || c === 'logout') {
-			st.exits++;
-			print(EXIT_REPLIES[Math.min(st.exits, EXIT_REPLIES.length) - 1], '#facc15');
-			if (st.exits >= 3) unlock('exit');
-			return;
-		}
-		if (/^((brew|make) )?coffee$/.test(raw.toLowerCase().replace(/\s+/g, ' '))) {
-			return print("418 I'm a teapot. this shell only brews tea. (try honk)", '#facc15');
-		}
-		if (c === 'snake') return ctx.startSnake();
-		if (c === 'hunt') return hunt();
-		if (c === 'trivia') return trivia();
-		if (c === 'gacha' || c === 'pull') return gacha();
-		if (c === 'catsay' || c === 'cowsay') return printAll(catsay(arg));
-		if (c === 'fortune') return printAll(fortune(opts.data.threeByThree, rng));
-		if (c === 'nmap' || c === 'agamoto') return printAll(nmap(arg, opts.data.projects));
-		if (c === 'sl') {
-			print('sl: did you mean ls? a cat runs past instead.', '#9ca3af');
-			return ctx.animate(slFrames(), 60);
-		}
-		if (c === 'vim' || c === 'vi' || c === 'nvim') return vim();
-		print('bsh: command not found: ' + c + '. try help', '#ef4444');
+		const call: Call = { name: parts[0].toLowerCase(), args, arg: args.join(' '), raw };
+		const command = COMMAND_TABLE.get(call.name);
+		if (command && command(env, call) !== PASS) return;
+		print('bsh: command not found: ' + call.name + '. try help', '#ef4444');
 	};
 
 	const complete = (v: string) => {
@@ -443,7 +153,7 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		run,
 		complete,
 		unlock,
-		honk,
+		honk: env.honk,
 		promptText,
 		setUser: (name: string) => {
 			const clean = name.trim().slice(0, MAX_USERNAME);

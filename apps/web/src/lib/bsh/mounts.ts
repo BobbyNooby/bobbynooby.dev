@@ -6,7 +6,7 @@ type MountEnv = { live: () => LiveStatus; now: () => Date; timeZone?: string };
 
 const DISCORD = { online: '#23A55A', idle: '#F0B232', dnd: '#F23F43', offline: '#80848E' };
 const PLAYLIST = 'https://open.spotify.com/playlist/4XMKgF2w5YScCmVCaODvlC';
-const HIDDEN_COMMANDS = [
+export const HIDDEN_COMMANDS = [
 	'snake',
 	'hunt',
 	'trivia',

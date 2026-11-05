@@ -18,6 +18,9 @@ export function buildFs(mounts: Mount[]): DirNode {
 	return root;
 }
 
+/** Hidden folders (.secrets) only show with ls -a or when completing a dot name. */
+export const isHidden = (n: FsNode) => n.type === 'dir' && !!n.hidden;
+
 const isLocked = (n: FsNode | null, trusted: boolean) =>
 	!!(n && n.type === 'dir' && n.locked && !trusted);
 

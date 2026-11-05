@@ -36,6 +36,14 @@
 			: '~/3x3/' + win.category + '/' + (slug(media?.label ?? '') || 'entry') + '.txt — anilist'
 	);
 
+	// Hand focus back to whatever opened the window when it closes.
+	$effect(() => {
+		const opener = document.activeElement as HTMLElement | null;
+		return () => {
+			if (opener?.isConnected) opener.focus({ preventScroll: true });
+		};
+	});
+
 	// Open next to the pane it came from, like the sheet does.
 	$effect(() => {
 		const pane = document.querySelector<HTMLElement>(

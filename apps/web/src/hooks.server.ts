@@ -16,7 +16,9 @@ const connectOnce = () =>
 
 // Per-IP limiter for public GET /api/* reads: 30 requests instantly, then
 // one every 2s. Keyed on x-forwarded-for (Coolify's proxy is the direct peer)
-// and bounded by evicting entries idle over 10 minutes.
+// and bounded by evicting entries idle over 10 minutes. HEAD runs the GET
+// handler, and the route id is matched rather than the raw path so encoded
+// paths like /%61pi/links are counted too.
 const apiBuckets = new Map<
 	string,
 	{ bucket: ReturnType<typeof createTokenBucket>; seen: number }
@@ -32,7 +34,8 @@ export const handle = sequence(authHandle, async ({ event, resolve }) => {
 		return resolve(event);
 	}
 
-	if (event.request.method === 'GET' && event.url.pathname.startsWith('/api/')) {
+	const { method } = event.request;
+	if ((method === 'GET' || method === 'HEAD') && event.route.id?.startsWith('/api/')) {
 		const ip = pickClientIp(event.request.headers, event.getClientAddress());
 		const now = Date.now();
 		for (const [key, entry] of apiBuckets) {

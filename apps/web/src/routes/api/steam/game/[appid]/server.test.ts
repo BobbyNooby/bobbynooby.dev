@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { getSteamGameDetails, ownsSteamGame } = vi.hoisted(() => ({
+const { getSteamGameDetails, isShownSteamGame } = vi.hoisted(() => ({
 	getSteamGameDetails: vi.fn(),
-	ownsSteamGame: vi.fn()
+	isShownSteamGame: vi.fn()
 }));
 vi.mock('$lib/steam/steamCache', () => ({
 	steamConfigured: () => true,
 	getSteamGameDetails,
-	ownsSteamGame
+	isShownSteamGame
 }));
 
 const { GET } = await import('./+server');
@@ -16,8 +16,8 @@ const get = (appid: string) => GET({ params: { appid } } as unknown as Parameter
 
 beforeEach(() => {
 	getSteamGameDetails.mockReset();
-	ownsSteamGame.mockReset();
-	ownsSteamGame.mockImplementation(async (appid: number) => appid === 570);
+	isShownSteamGame.mockReset();
+	isShownSteamGame.mockImplementation(async (appid: number) => appid === 570);
 	getSteamGameDetails.mockResolvedValue({ appid: 570, name: 'Dota 2' });
 });
 
@@ -40,6 +40,6 @@ describe('GET /api/steam/game/[appid]', () => {
 		for (const appid of ['abc', '1e5', '-5', '9007199254740993', '9'.repeat(30)]) {
 			await expect(get(appid), appid).rejects.toMatchObject({ status: 400 });
 		}
-		expect(ownsSteamGame).not.toHaveBeenCalled();
+		expect(isShownSteamGame).not.toHaveBeenCalled();
 	});
 });

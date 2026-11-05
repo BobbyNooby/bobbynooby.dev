@@ -21,7 +21,7 @@ const {
 	getSteamGamesWithDetails,
 	isStale,
 	LIST_TTL_MS,
-	ownsSteamGame
+	isShownSteamGame
 } = await import('./steamCache');
 
 afterEach(() => {
@@ -124,8 +124,8 @@ describe('getSteamGames', () => {
 	});
 });
 
-describe('ownsSteamGame', () => {
-	it('checks the cached owned list, hidden and zero-hour games included', async () => {
+describe('isShownSteamGame', () => {
+	it('checks the cached owned list, zero-hour games included but hidden ones not', async () => {
 		const fetchMock = vi.fn();
 		vi.stubGlobal('fetch', fetchMock);
 		getHiddenAppids.mockResolvedValue(new Set([2]));
@@ -137,9 +137,9 @@ describe('ownsSteamGame', () => {
 				{ appid: 3, name: 'NeverPlayed', img_icon_url: 'a', playtime_forever: 0 }
 			]
 		});
-		await expect(ownsSteamGame(2)).resolves.toBe(true);
-		await expect(ownsSteamGame(3)).resolves.toBe(true);
-		await expect(ownsSteamGame(4)).resolves.toBe(false);
+		await expect(isShownSteamGame(2)).resolves.toBe(false);
+		await expect(isShownSteamGame(3)).resolves.toBe(true);
+		await expect(isShownSteamGame(4)).resolves.toBe(false);
 		expect(fetchMock).not.toHaveBeenCalled();
 	});
 });

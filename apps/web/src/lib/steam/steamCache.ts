@@ -88,8 +88,10 @@ export async function getAllSteamGames(): Promise<SteamGameSummary[]> {
 	return readGamesList();
 }
 
-export async function ownsSteamGame(appid: number): Promise<boolean> {
-	return (await readGamesList()).some((game) => game.appid === appid);
+// A game hidden in /customize must not be readable by guessing its appid either.
+export async function isShownSteamGame(appid: number): Promise<boolean> {
+	const [games, hidden] = await Promise.all([readGamesList(), getHiddenAppids()]);
+	return !hidden.has(appid) && games.some((game) => game.appid === appid);
 }
 
 async function fetchAppDetails(appid: number): Promise<unknown> {

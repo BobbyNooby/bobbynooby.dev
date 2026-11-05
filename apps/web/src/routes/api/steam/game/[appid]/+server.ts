@@ -1,4 +1,4 @@
-import { getSteamGameDetails, ownsSteamGame, steamConfigured } from '$lib/steam/steamCache';
+import { getSteamGameDetails, isShownSteamGame, steamConfigured } from '$lib/steam/steamCache';
 import { error, json } from '@sveltejs/kit';
 
 export async function GET({ params }): Promise<Response> {
@@ -12,7 +12,7 @@ export async function GET({ params }): Promise<Response> {
 	}
 	try {
 		// Owned games only, so made-up ids never reach Steam or the details cache.
-		if (!(await ownsSteamGame(appid))) {
+		if (!(await isShownSteamGame(appid))) {
 			return json({ message: 'unknown appid' }, { status: 404 });
 		}
 		return json(

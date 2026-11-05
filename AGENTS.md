@@ -22,8 +22,9 @@ The live widgets are powered by `apps/backend`:
 - **Backend modules** (`apps/backend/modules/`): `discord` (Discord bot presence relayed
   over WS), `spotify` (now-playing / last-played with token refresh), `presence`
   (visitor count + live cursors; logic in `packages/shared/src/presenceRegistry.ts`),
-  `chat` (simple chat persisted to Mongo, mirrored to a Discord log channel), `mongodb`
-  (dual clients: Atlas + VPS)
+  `chat` (simple chat persisted to Mongo, mirrored to a Discord log channel as escaped
+  text; recent history is cached in memory, so a message deleted straight in Mongo stays
+  visible until the backend restarts), `mongodb` (dual clients: Atlas + VPS)
 - **Coupling:** frontend and backend share the Discord OAuth session via an
   httpOnly cookie scoped to `.bobbynooby.dev` (see `sameSite: none; domain` config in
   both `apps/web/src/auth.ts` and `apps/backend/auth.ts`). WebSocket subroutes: `/discord`,

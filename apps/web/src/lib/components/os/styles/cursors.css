@@ -32,8 +32,16 @@
 	border-radius: 2px;
 	white-space: nowrap;
 }
+/* Phones see the page zoomed out to about a third, so cursors are drawn twice
+   the size there to stay visible. Touch never sends a cursor of its own. */
 @media (pointer: coarse) {
-	.os .curs {
-		display: none;
+	.os .cur i {
+		width: 18px;
+		height: 34px;
+	}
+	.os .cur span {
+		font-size: 22px;
+		line-height: 34px;
+		padding: 0 10px;
 	}
 }

@@ -14,12 +14,16 @@ const hunt: Command = (env) => {
 	const start = startHunt();
 	let g = start.state;
 	env.printAll(start.lines);
-	env.enterMode('hunt>', (raw) => {
-		const turn = huntTurn(g, raw, env.rng);
-		g = turn.state;
-		env.printAll(turn.lines);
-		if (turn.end === 'won') env.unlock('hunter');
-		if (turn.end) env.endMode();
+	env.enterMode({
+		name: 'hunt',
+		prompt: 'hunt>',
+		handle: (raw) => {
+			const turn = huntTurn(g, raw, env.rng);
+			g = turn.state;
+			env.printAll(turn.lines);
+			if (turn.end === 'won') env.unlock('hunter');
+			if (turn.end) env.endMode();
+		}
 	});
 };
 
@@ -28,13 +32,17 @@ const trivia: Command = (env) => {
 	env.printAll(start.lines);
 	if (!start.state) return;
 	let t = start.state;
-	env.enterMode('answer>', (raw) => {
-		const step = answerTrivia(t, raw);
-		t = step.state;
-		env.printAll(step.lines);
-		if (!step.done) return;
-		if (t.score === t.qs.length) env.unlock('trivia');
-		env.endMode();
+	env.enterMode({
+		name: 'trivia',
+		prompt: 'answer>',
+		handle: (raw) => {
+			const step = answerTrivia(t, raw);
+			t = step.state;
+			env.printAll(step.lines);
+			if (!step.done) return;
+			if (t.score === t.qs.length) env.unlock('trivia');
+			env.endMode();
+		}
 	});
 };
 
@@ -48,12 +56,18 @@ const gacha: Command = (env) => {
 
 const vim: Command = (env) => {
 	env.printAll(vimSplash());
-	env.enterMode(':', (raw) => {
-		const r = vimInput(raw);
-		env.printAll(r.lines);
-		if (!r.quit) return;
-		env.unlock('vim');
-		env.endMode();
+	// Not being able to type exit out of vim is the joke; q is one of its own quits.
+	env.enterMode({
+		name: 'vim',
+		prompt: ':',
+		ownsQuit: true,
+		handle: (raw) => {
+			const r = vimInput(raw);
+			env.printAll(r.lines);
+			if (!r.quit) return;
+			env.unlock('vim');
+			env.endMode();
+		}
 	});
 };
 

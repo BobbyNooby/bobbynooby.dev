@@ -19,6 +19,8 @@ export const PANE_TITLES: Record<PaneKey, string> = {
 	twitch: '/Twitch'
 };
 
+const QUIT_WORDS = new Set(['q', 'quit', 'exit']);
+
 export type ShellOptions = {
 	data: BshData;
 	user: string;
@@ -92,8 +94,8 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		rng: mulberry32(opts.seed ?? Date.now() & 0x7fffffff),
 		print,
 		printAll: (lines) => lines.forEach((l) => ctx.print(l)),
-		enterMode: (prompt, handle) => {
-			st.mode = { prompt, handle };
+		enterMode: (mode) => {
+			st.mode = mode;
 			ctx.onPrompt('mode');
 		},
 		endMode: () => {
@@ -120,7 +122,13 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 			{ t: promptText() + ' ', c: '#4ade80' },
 			{ t: raw, c: '#f5f5f5' }
 		]);
-		if (st.mode) return st.mode.handle(raw);
+		if (st.mode) {
+			if (QUIT_WORDS.has(raw.toLowerCase()) && !st.mode.ownsQuit) {
+				print('left ' + st.mode.name + '.', '#9ca3af');
+				return env.endMode();
+			}
+			return st.mode.handle(raw);
+		}
 		if (!raw) return;
 		st.history.push(raw);
 		const parts = raw.split(/\s+/);

@@ -3,7 +3,13 @@ import type { resolve } from '../fs';
 import type { Rng } from '../rng';
 import type { BshData, FsNode, Line, ShellCtx, Win } from '../types';
 
-export type Mode = { prompt: string; handle: (raw: string) => void };
+/** A game that takes over the prompt. q, quit and exit leave it unless it handles them itself. */
+export type Mode = {
+	name: string;
+	prompt: string;
+	handle: (raw: string) => void;
+	ownsQuit?: boolean;
+};
 
 export type ShellState = {
 	cwd: string[];
@@ -24,7 +30,7 @@ export type ShellEnv = {
 	rng: Rng;
 	print(segs: string | Line, color?: string): void;
 	printAll(lines: Line[]): void;
-	enterMode(prompt: string, handle: Mode['handle']): void;
+	enterMode(mode: Mode): void;
 	endMode(): void;
 	find(path: string): ReturnType<typeof resolve>;
 	locked(node: FsNode | null): boolean;

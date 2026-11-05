@@ -33,6 +33,31 @@ describe('snake', () => {
 	});
 });
 
+describe('leaving a game', () => {
+	it.each(['hunt', 'trivia'])('q, quit or exit leaves %s in any case', (game) => {
+		for (const word of ['q', 'quit', 'exit', 'Q', ' EXIT ', 'Quit']) {
+			const { shell, lines } = liveShell();
+			shell.run(game);
+			shell.run(word);
+			expect(lines().at(-1)).toEqual([{ t: 'left ' + game + '.', c: '#9ca3af' }]);
+			expect(shell.promptText()).toBe(PROMPT);
+			expect(shell.state.mode).toBeNull();
+		}
+	});
+
+	it('lets vim keep its own q, quit and exit', () => {
+		const { shell, lines } = liveShell();
+		shell.run('vim');
+		shell.run('exit');
+		shell.run('quit');
+		expect(shell.promptText()).toBe(':');
+		shell.run('q');
+		expect(textOf(lines())).toContain('you escaped vim. most people never do.');
+		expect(textOf(lines())).not.toContain('left vim.');
+		expect(shell.promptText()).toBe(PROMPT);
+	});
+});
+
 describe('hunt', () => {
 	it('takes over the prompt until you run', () => {
 		const { shell } = liveShell();

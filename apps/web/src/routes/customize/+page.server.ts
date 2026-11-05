@@ -3,7 +3,7 @@ import { linkSchema, listSchema, projectSchema } from '$lib/admin/schemas';
 import { db, getMongoClient } from '$lib/db/mongo';
 import { getAll3x3Data, getKnown3x3Routes, getLinks, getProjects } from '$lib/db/mongoUtils.js';
 import { getHiddenAppids, setHiddenAppids } from '$lib/db/siteConfig';
-import { warmMediaCache } from '$lib/media/mediaCache';
+import { getCachedCovers, warmMediaCache } from '$lib/media/mediaCache';
 import { dropSteamCache, getAllSteamGames, getSteamCacheMeta } from '$lib/steam/steamCache';
 import type { SteamGameSummary } from '$lib/steam/steamTypes';
 import { fail, type Actions } from '@sveltejs/kit';
@@ -19,6 +19,7 @@ export const load = async ({ locals }) => {
 			all3x3Data: [],
 			steam: { games: [], lastRefresh: null },
 			steamHidden: [],
+			covers: {},
 			isSessionValid: false
 		};
 	}
@@ -27,6 +28,12 @@ export const load = async ({ locals }) => {
 	const links = await getLinks();
 	const projects = await getProjects();
 	const steamHidden = await getHiddenAppids().catch(() => new Set<number>());
+	const covers = await getCachedCovers(
+		all3x3Data.flatMap((list) => list.data.map((entry) => entry.id))
+	).catch((err) => {
+		console.error('[mediaCache] cover read failed for customize:', err);
+		return {};
+	});
 	let steam: { games: SteamGameSummary[]; lastRefresh: string | null } = {
 		games: [],
 		lastRefresh: null
@@ -43,7 +50,8 @@ export const load = async ({ locals }) => {
 		isSessionValid: true,
 		all3x3Data,
 		steam,
-		steamHidden: [...steamHidden]
+		steamHidden: [...steamHidden],
+		covers
 	};
 };
 

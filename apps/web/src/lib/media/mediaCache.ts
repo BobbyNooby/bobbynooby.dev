@@ -59,6 +59,40 @@ export async function getMediaCached(id: string | number): Promise<CachedMedia |
 }
 
 /**
+ * Cover and title for each id that is already cached, for the customize editor.
+ * Never calls AniList: ids that are not cached yet get their cover after a save
+ * warms them.
+ */
+export async function getCachedCovers(
+	ids: (string | number)[]
+): Promise<Record<string, { cover: string; title: string }>> {
+	const mediaIds = [...new Set(ids.map(toMediaId).filter((id): id is number => id != null))];
+	if (mediaIds.length === 0) {
+		return {};
+	}
+	const docs = await db
+		.collection<CacheDoc>(COLLECTION)
+		.find(
+			{ media_id: { $in: mediaIds } },
+			{
+				projection: {
+					_id: 0,
+					media_id: 1,
+					'media.coverImage.large': 1,
+					'media.title.userPreferred': 1
+				}
+			}
+		)
+		.toArray();
+	return Object.fromEntries(
+		docs.map((doc) => [
+			String(doc.media_id),
+			{ cover: doc.media.coverImage.large, title: doc.media.title.userPreferred }
+		])
+	);
+}
+
+/**
  * Fetches and caches every id that is not cached yet, in batched aliased
  * queries (one HTTP request per BATCH_SIZE ids instead of one per id).
  * Best-effort: failures are logged and self-heal on the next page view.

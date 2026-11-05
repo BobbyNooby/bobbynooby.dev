@@ -883,6 +883,9 @@
 	height: 17px;
 	animation: os-blink 1s steps(1) infinite;
 }
+.os .curs.hide .cur {
+	opacity: 0;
+}
 .os .cur span {
 	font-size: 11px;
 	line-height: 17px;

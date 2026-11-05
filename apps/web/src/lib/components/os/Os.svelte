@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { BshData, BshLink, BshProject, Win } from '$lib/bsh/types';
+	import type { BshData, BshLink, BshProject, PaneKey, Win } from '$lib/bsh/types';
 	import type { GridEntry } from '$lib/media/homeGrid';
 	import { ChatState } from '$lib/os/chat.svelte';
 	import { LiveState } from '$lib/os/live.svelte';
@@ -13,6 +13,8 @@
 	import { playAudio } from '$lib/utils/playAudio';
 	import { onMount, untrack } from 'svelte';
 	import Bar from './Bar.svelte';
+	import Cursors from './Cursors.svelte';
+	import HerePopover from './HerePopover.svelte';
 	import './os.css';
 	import AboutPane from './panes/AboutPane.svelte';
 	import ChatPane from './panes/ChatPane.svelte';
@@ -55,9 +57,33 @@
 
 	let games = $derived(getSteamGamesState() ?? []);
 	let waited = $state(false);
+	let root = $state<HTMLDivElement>();
+
+	// A rename in the chat box or the shell updates the name on our cursor.
+	$effect(() => {
+		void chat.username;
+		untrack(() => presence.hello());
+	});
+
+	function pointer(event: PointerEvent) {
+		if (event.pointerType === 'touch') return;
+		const pane = (event.target as Element).closest<HTMLElement>('[data-pane]');
+		if (!pane) return;
+		const r = pane.getBoundingClientRect();
+		presence.move(
+			pane.dataset.pane as PaneKey,
+			(event.clientX - r.left) / r.width,
+			(event.clientY - r.top) / r.height
+		);
+	}
 
 	onMount(() => {
-		const stops = [live.start(), chat.start(), presence.start(), startSteamGames()];
+		const stops = [
+			live.start(),
+			chat.start(),
+			presence.start(() => chat.username),
+			startSteamGames()
+		];
 		const wait = setTimeout(() => (waited = true), 4000);
 		return () => {
 			clearTimeout(wait);
@@ -105,14 +131,10 @@
 	}
 </script>
 
-<div class="os">
+<div class="os" bind:this={root} onpointermove={pointer} role="presentation">
 	<h1 class="sr-only">bobbynooby.dev</h1>
 	<Bar>
-		{#snippet here()}
-			<div class="here">
-				<button class="herebtn" type="button">{presence.here} here</button>
-			</div>
-		{/snippet}
+		{#snippet here()}<HerePopover />{/snippet}
 	</Bar>
 
 	<div class="panes">
@@ -136,4 +158,5 @@
 	{#if os.win}
 		<Window win={os.win} {games} {grid} onclose={() => (os.win = null)} />
 	{/if}
+	<Cursors {root} />
 </div>

@@ -12,10 +12,15 @@ const MAX_BACKOFF_MS = 30_000;
  * A WebSocket that reconnects with exponential backoff until close() is
  * called. Widgets used to open bare WebSockets with no onclose handler, so
  * a dropped connection (backend restart, NAT timeout) froze them until a
- * page refresh. Returns a do-nothing stub during SSR, where sockets can't
- * exist.
+ * page refresh. onOpen runs on every (re)connect, for sockets that must
+ * introduce themselves. Returns a do-nothing stub during SSR, where sockets
+ * can't exist.
  */
-export function createLiveSocket<T>(path: string, onMessage: (data: T) => void): LiveSocket {
+export function createLiveSocket<T>(
+	path: string,
+	onMessage: (data: T) => void,
+	onOpen?: () => void
+): LiveSocket {
 	if (!browser) {
 		return { send: () => {}, close: () => {} };
 	}
@@ -29,6 +34,7 @@ export function createLiveSocket<T>(path: string, onMessage: (data: T) => void):
 		ws = new WebSocket(`${PUBLIC_WEBSOCKET_BASE_URL}${path}`);
 		ws.onopen = () => {
 			attempt = 0;
+			onOpen?.();
 		};
 		ws.onmessage = (event) => {
 			try {

@@ -4,8 +4,13 @@ import type { ChatState } from './chat.svelte';
 import type { LiveState } from './live.svelte';
 import type { PresenceState } from './presence.svelte';
 
+export type OsWindow =
+	| { kind: 'game'; appid: number }
+	| { kind: 'media'; category: string; index: number };
+
 export class OsState {
 	focused = $state<PaneKey>('about');
+	win = $state<OsWindow | null>(null);
 	gridCat = $state('anime');
 	toastText = $state('');
 	toastShown = $state(false);

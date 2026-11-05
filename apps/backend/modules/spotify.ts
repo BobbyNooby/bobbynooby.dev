@@ -53,7 +53,7 @@ export class SpotifyClient {
       this.startPolling();
     } catch (e) {
       // A bad or expired refresh token must not kill the whole backend:
-      // discord, chat and userCount all live in this process. Log and
+      // discord, chat and presence all live in this process. Log and
       // retry until the token endpoint accepts us.
       this.consoleBob(`Error connecting to Spotify : ${e}`);
       setTimeout(() => this.initialize(), 30000);

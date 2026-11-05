@@ -5,7 +5,7 @@ import express from "express";
 import { consoleBob, convertReq } from "./utils";
 import { WebSocket, WebSocketServer } from "ws";
 import { DiscordBot } from "./modules/discord";
-import { UserCount } from "./modules/userCount";
+import { Presence } from "./modules/presence";
 import { SpotifyClient } from "./modules/spotify";
 import { MongoDBClient } from "./modules/mongodb";
 import { SimpleChat } from "./modules/chat";
@@ -42,7 +42,7 @@ await mongoDbClient.initialize();
 const discordBot = new DiscordBot();
 await discordBot.initialize();
 
-const userCount = new UserCount();
+const presence = new Presence();
 
 const spotifyClient = new SpotifyClient(mongoDbClient);
 await spotifyClient.initialize();
@@ -60,7 +60,7 @@ const chatBuckets = new Map<
 // Every live socket, regardless of subroute. One interval pings them all:
 // browsers answer pings automatically, and a socket that misses its pong is
 // terminated so half-open connections (NAT/proxy timeouts) stop lingering
-// in the per-module broadcast sets and inflating userCount.
+// in the per-module broadcast sets and inflating the presence count.
 const allSockets = new Set<WebSocket>();
 const isAlive = new WeakMap<WebSocket, boolean>();
 
@@ -110,6 +110,29 @@ async function handleConnection(ws: WebSocket, req: IncomingMessage) {
   });
 
   const subroute = req.url;
+
+  // Presence needs no session. Wiring it up before the await below means the
+  // hello a client sends on open never arrives before there is a listener.
+  if (subroute === "/presence") {
+    presence.addWebSocket(ws, clientIp);
+
+    ws.on("message", (message) => {
+      const text = String(message);
+      if (text.length > MAX_FRAME_LENGTH) {
+        ws.close(1009, "Message too large");
+        return;
+      }
+      presence.onReceive(ws, text);
+    });
+
+    ws.on("error", () => presence.removeWebSocket(ws));
+    ws.on("close", () => {
+      presence.removeWebSocket(ws);
+      consoleBob("WebSocket connection to /presence closed");
+    });
+    return;
+  }
+
   const session = await getSession(convertReq(req, app), authConfig);
 
   consoleBob(
@@ -141,15 +164,6 @@ async function handleConnection(ws: WebSocket, req: IncomingMessage) {
     ws.on("close", () => {
       discordBot.removeWebSocket(ws);
       consoleBob("WebSocket connection to /discord closed");
-    });
-  }
-
-  if (subroute === "/userCount") {
-    userCount.addWebSocket(ws);
-
-    ws.on("close", () => {
-      userCount.removeWebSocket(ws);
-      consoleBob("WebSocket connection to /userCount closed");
     });
   }
 

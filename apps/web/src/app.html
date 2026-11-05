@@ -4,6 +4,15 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script>
+			// The boot screen plays once per tab. Mark repeat loads before the first
+			// paint, so the server-rendered overlay never flashes on a reload.
+			try {
+				if (sessionStorage.getItem('bsh:booted') === '1') {
+					document.documentElement.dataset.booted = '';
+				}
+			} catch {}
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

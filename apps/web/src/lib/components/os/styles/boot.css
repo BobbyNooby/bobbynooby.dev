@@ -40,3 +40,7 @@
 		visibility: hidden;
 	}
 }
+/* Already booted in this tab (set by the script in app.html): skip it entirely. */
+html[data-booted] .os .boot {
+	display: none;
+}

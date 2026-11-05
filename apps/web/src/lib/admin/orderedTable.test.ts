@@ -110,6 +110,30 @@ describe('OrderedTable', () => {
 		table.createNew({ name: 'c' });
 		expect(table.items[1].uid).toBe(2);
 	});
+
+	it('createNew returns the new row uid', () => {
+		const table = new OrderedTable([{ uid: 4, name: 'a' }]);
+		expect(table.createNew({ name: 'b' })).toBe(5);
+	});
+
+	it('insertAt puts a removed row back where it was', () => {
+		const table = new OrderedTable([
+			{ uid: 0, name: 'a' },
+			{ uid: 1, name: 'b' },
+			{ uid: 2, name: 'c' }
+		]);
+		const removed = table.items[1];
+		table.deleteByUid(1);
+		table.insertAt(1, removed);
+		expect(table.items.map((item) => item.name)).toEqual(['a', 'b', 'c']);
+	});
+
+	it('insertAt clamps out-of-range indexes to the ends', () => {
+		const table = new OrderedTable([{ uid: 0, name: 'a' }]);
+		table.insertAt(-3, { uid: 1, name: 'first' });
+		table.insertAt(99, { uid: 2, name: 'last' });
+		expect(table.items.map((item) => item.name)).toEqual(['first', 'a', 'last']);
+	});
 });
 
 describe('ThreeByThreeCollection', () => {

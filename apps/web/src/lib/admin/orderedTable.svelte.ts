@@ -25,8 +25,15 @@ export class OrderedTable<T extends WithUid> {
 		this.items = items;
 	}
 
-	createNew(blank: Omit<T, 'uid'>) {
-		this.items.push({ ...blank, uid: this.#nextUid++ } as T);
+	createNew(blank: Omit<T, 'uid'>): number {
+		const uid = this.#nextUid++;
+		this.items.push({ ...blank, uid } as T);
+		return uid;
+	}
+
+	/** Puts a row at `index`, clamped to the ends (used to undo a delete). */
+	insertAt(index: number, item: T) {
+		this.items.splice(Math.max(0, Math.min(index, this.items.length)), 0, item);
 	}
 
 	/** Moves the row at index1 to index2. Out-of-bounds or no-op moves are ignored. */

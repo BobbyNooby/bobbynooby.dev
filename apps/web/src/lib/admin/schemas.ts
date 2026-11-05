@@ -1,5 +1,6 @@
 import { toAnilistId } from '$lib/anilist/anilistId';
 import { safeHref } from '$lib/bsh/format';
+import { isLinkColor } from './color';
 import { z } from 'zod';
 
 // The save rules for /customize. The server enforces them; the editor runs the
@@ -16,7 +17,6 @@ const name = (max: number) =>
 		.string()
 		.max(max)
 		.refine((value) => value.trim() !== '');
-const hexOrColorName = /^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)$/;
 const safeListLabel = /^[a-zA-Z0-9 _-]+$/;
 const decimalText = z
 	.string()
@@ -29,7 +29,7 @@ export const linkSchema = z.object({
 	uid: z.number().int(),
 	label: name(100),
 	href,
-	color: z.string().max(64).regex(hexOrColorName)
+	color: z.string().refine(isLinkColor)
 });
 
 export const projectSchema = z.object({

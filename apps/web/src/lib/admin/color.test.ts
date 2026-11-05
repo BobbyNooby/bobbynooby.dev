@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { swatchValue } from './color';
+import { isLinkColor, swatchValue } from './color';
 
 describe('swatchValue', () => {
 	it('passes six-digit hex through', () => {
@@ -18,4 +18,20 @@ describe('swatchValue', () => {
 		expect(swatchValue('red')).toBe('#ffffff');
 		expect(swatchValue('')).toBe('#ffffff');
 	});
+});
+
+describe('isLinkColor', () => {
+	it.each(['#fff', '#FF0000', '#11223380', 'red', 'RebeccaPurple', 'lightgoldenrodyellow'])(
+		'accepts %j',
+		(color) => {
+			expect(isLinkColor(color)).toBe(true);
+		}
+	);
+
+	it.each(['#12345', '#1234567', '#ggg', 'fff', 'notacolour', 'red;', ' red', ''])(
+		'rejects %j',
+		(color) => {
+			expect(isLinkColor(color)).toBe(false);
+		}
+	);
 });

@@ -21,6 +21,13 @@ describe('issues', () => {
 		expect(issues(linkSchema, link)).toEqual(new Set(['label', 'href', 'color']));
 	});
 
+	it('rejects hex of the wrong length and words that are not colours', () => {
+		for (const color of ['#12345', 'notacolour']) {
+			const link = { uid: 1, label: 'Blog', href: 'http://example.com', color };
+			expect(issues(linkSchema, link)).toEqual(new Set(['color']));
+		}
+	});
+
 	it('accepts colour names', () => {
 		const link = { uid: 1, label: 'Blog', href: 'http://example.com', color: 'red' };
 		expect(issues(linkSchema, link)).toEqual(new Set());

@@ -55,7 +55,10 @@ export const handle = sequence(authHandle, async ({ event, resolve }) => {
 		}
 		entry.seen = now;
 		if (!entry.bucket.tryTake()) {
-			return json({ success: false, error: 'rate_limited' }, { status: 429 });
+			return json(
+				{ success: false, error: 'rate_limited' },
+				{ status: 429, headers: { 'Content-Security-Policy': csp } }
+			);
 		}
 	}
 

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { RequestEvent } from '@sveltejs/kit';
+import { csp } from '$lib/utils/csp';
 
 const { startMongoDB } = vi.hoisted(() => ({ startMongoDB: vi.fn() }));
 
@@ -92,6 +93,15 @@ describe('api rate limiter', () => {
 			40
 		);
 		expect([...pages, ...posts].every((s) => s === 200)).toBe(true);
+	});
+
+	it('sends the CSP header on a 429 too', async () => {
+		const handle = await loadHandle();
+		const make = () => makeEvent('/api/links', '/api/links', 'GET', 'c');
+		await hammer(handle, make, 30);
+		const res = await handle({ event: make(), resolve });
+		expect(res.status).toBe(429);
+		expect(res.headers.get('Content-Security-Policy')).toBe(csp);
 	});
 });
 

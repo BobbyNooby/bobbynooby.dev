@@ -50,9 +50,21 @@ describe('turnSnake', () => {
 		expect(s).toMatchObject({ next: [0, -1], dir: [1, 0], started: true });
 	});
 
-	it('ignores a turn straight back into the snake', () => {
-		const s = createSnake(mulberry32(SEED));
-		expect(turnSnake(s, [-1, 0])).toBe(s);
+	it('starts heading left on a first press of left, turning the snake around', () => {
+		const s = turnSnake(createSnake(mulberry32(SEED)), [-1, 0]);
+		expect(s).toMatchObject({ dir: [-1, 0], next: [-1, 0], started: true });
+		expect(s.body).toEqual([
+			[5, 5],
+			[6, 5],
+			[7, 5],
+			[8, 5]
+		]);
+		const moved = stepSnake(s, mulberry32(1));
+		expect(moved.over).toBe(false);
+		expect(moved.body[0]).toEqual([4, 5]);
+	});
+
+	it('ignores a turn straight back into a moving snake', () => {
 		const up = playing({ dir: [0, -1], next: [0, -1] });
 		expect(turnSnake(up, [0, 1])).toBe(up);
 	});

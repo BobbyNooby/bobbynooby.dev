@@ -46,7 +46,11 @@ export function createSnake(rng: Rng): SnakeState {
 }
 
 export function turnSnake(s: SnakeState, d: Point): SnakeState {
-	if (s.over || (d[0] === -s.dir[0] && d[1] === -s.dir[1])) return s;
+	const back = d[0] === -s.dir[0] && d[1] === -s.dir[1];
+	// Before the first move the snake can just face the other way.
+	if (back && !s.started)
+		return { ...s, body: [...s.body].reverse(), dir: d, next: d, started: true };
+	if (s.over || back) return s;
 	return { ...s, next: d, started: true };
 }
 

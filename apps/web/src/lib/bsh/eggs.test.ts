@@ -116,3 +116,28 @@ describe('trivia', () => {
 		expect(out).toContain('score 3/3');
 	});
 });
+
+describe('gacha', () => {
+	const count = (s: string, part: string) => s.split(part).length - 1;
+
+	it('unlocks Gacha Brain on the fifth pull, once', () => {
+		const four = textOf(runOn(fixture, ['gacha', 'pull', 'gacha', 'pull']));
+		expect(four).not.toContain('Gacha Brain');
+		const six = textOf(runOn(fixture, ['gacha', 'pull', 'gacha', 'pull', 'gacha', 'gacha']));
+		expect(count(six, '+ achievement: Gacha Brain')).toBe(1);
+		expect(six.split('\n').at(-1)).not.toContain('Gacha Brain');
+	});
+
+	it('pulls nothing, and counts nothing, from an empty 3x3', () => {
+		const empty = { ...fixture, threeByThree: {} };
+		const out = textOf(runOn(empty, Array(5).fill('gacha')));
+		expect(count(out, 'nothing to pull yet.')).toBe(5);
+		expect(out).not.toContain('Gacha Brain');
+	});
+
+	it('takes odd casing and spacing', () => {
+		for (const cmd of ['GACHA', '  Pull ']) {
+			expect(textOf(runOn(fixture, [cmd]))).toContain('┌');
+		}
+	});
+});

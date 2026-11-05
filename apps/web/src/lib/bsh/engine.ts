@@ -2,6 +2,7 @@ import { CHAT_MAX_MESSAGE_LENGTH, chatIntakeSchema } from '@bobbynooby/shared';
 import { ACH, type AchievementStore, type AchKey } from './achievements';
 import { bar } from './format';
 import { buildFs, pathOf, resolve, treeText } from './fs';
+import { gachaPull } from './games/gacha';
 import { huntTurn, startHunt } from './games/hunt';
 import { answerTrivia, startTrivia } from './games/trivia';
 import { createMounts } from './mounts';
@@ -104,7 +105,8 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		user: opts.user,
 		mode: null as Mode | null,
 		sudos: 0,
-		exits: 0
+		exits: 0,
+		pulls: 0
 	};
 	const rng = mulberry32(opts.seed ?? Date.now() & 0x7fffffff);
 	store.unlock('visit');
@@ -202,6 +204,13 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 			if (t.score === t.qs.length) unlock('trivia');
 			endMode();
 		});
+	};
+	const gacha = () => {
+		const pull = gachaPull(opts.data.threeByThree, rng);
+		printAll(pull.lines);
+		if (!pull.pulled) return;
+		st.pulls++;
+		if (st.pulls >= 5) unlock('gacha');
 	};
 
 	const run = (input: string) => {
@@ -383,6 +392,7 @@ export function createShell(ctx: ShellCtx, opts: ShellOptions): Shell {
 		if (c === 'snake') return ctx.startSnake();
 		if (c === 'hunt') return hunt();
 		if (c === 'trivia') return trivia();
+		if (c === 'gacha' || c === 'pull') return gacha();
 		print('bsh: command not found: ' + c + '. try help', '#ef4444');
 	};
 

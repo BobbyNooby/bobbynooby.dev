@@ -1,14 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { mulberry32, type Rng } from '../rng';
-import { textOf } from '../testing';
+import { mulberry32 } from '../rng';
+import { draws, textOf } from '../testing';
 import { huntTurn, startHunt, type HuntState } from './hunt';
 
-const draws =
-	(...xs: number[]): Rng =>
-	() => {
-		if (!xs.length) throw new Error('unexpected rng draw');
-		return xs.shift()!;
-	};
 const fresh = (): HuntState => startHunt().state;
 
 describe('startHunt', () => {

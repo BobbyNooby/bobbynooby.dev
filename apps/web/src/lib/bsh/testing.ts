@@ -4,6 +4,7 @@ import { createShell, PANE_TITLES } from './engine';
 import fixtureJson from './fixtures/site-data.json';
 import { pathOf } from './fs';
 import { snakeBoard, type Point } from './games/snake';
+import type { Rng } from './rng';
 import type { BshData, Line, PaneKey, ShellCtx } from './types';
 
 export const fixture = fixtureJson as unknown as BshData;
@@ -21,6 +22,14 @@ export function memoryStorage(initial: Record<string, string> = {}): StorageLike
 	return {
 		getItem: (key) => data.get(key) ?? null,
 		setItem: (key, value) => void data.set(key, String(value))
+	};
+}
+
+// An rng that returns exactly these values, so a test pins how many draws a move takes.
+export function draws(...xs: number[]): Rng {
+	return () => {
+		if (!xs.length) throw new Error('unexpected rng draw');
+		return xs.shift()!;
 	};
 }
 

@@ -11,6 +11,13 @@
 
 	let { cz }: { cz: CustomizeState } = $props();
 
+	// The picker's value is set from script, not server-rendered: hydration
+	// briefly clears a rendered value, and Chrome warns about every one.
+	function swatch(node: HTMLInputElement, color: string) {
+		node.value = swatchValue(color);
+		return { update: (next: string) => (node.value = swatchValue(next)) };
+	}
+
 	function add() {
 		const uid = cz.links.createNew({ label: 'New_Link', href: 'https://', color: '#FFFFFF' });
 		flushSync();
@@ -40,7 +47,7 @@
 					<input
 						type="color"
 						class="cz-swatch"
-						value={swatchValue(link.color)}
+						use:swatch={link.color}
 						oninput={(e) => (link.color = e.currentTarget.value.toUpperCase())}
 						aria-label="Pick a colour for {link.label}"
 					/>
